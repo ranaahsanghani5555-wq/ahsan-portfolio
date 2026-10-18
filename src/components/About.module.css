@@ -1,0 +1,150 @@
+/* =========================================================================
+   About.module.css — who I am, how I work, what I look for.
+   Editorial two-column composition on desktop, stacked on small screens.
+   ========================================================================= */
+
+.grid {
+  row-gap: var(--space-8);
+}
+
+.aside {
+  display: grid;
+  align-content: start;
+  gap: var(--space-4);
+}
+
+.name {
+  font-size: var(--type-h3);
+}
+
+.role {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-muted);
+}
+
+.body {
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+}
+
+.lead {
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--text-strong);
+}
+
+.body p:not(.lead):not(.honest) {
+  max-width: var(--measure);
+  color: var(--text);
+}
+
+/* The one line I want to be held to, set off by a hairline. */
+.honest {
+  max-width: var(--measure);
+  padding-inline-start: var(--space-5);
+  border-inline-start: 2px solid var(--pine);
+  color: var(--text-strong);
+}
+
+.subhead {
+  margin-block-start: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tool {
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-pill);
+  font-size: var(--step--1);
+  color: var(--text-strong);
+}
+
+/* --- three-principle pull-quote strip (replaces testimonials) ------------- */
+.principles {
+  margin-block-start: var(--space-10);
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--border-strong);
+}
+
+.principlesHead {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 42rem;
+}
+
+.principlesTitle {
+  font-size: var(--type-h3);
+}
+
+.principleList {
+  display: grid;
+  gap: var(--space-6);
+  margin: var(--space-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.principle {
+  display: grid;
+  gap: var(--space-3);
+  padding-block-start: var(--space-5);
+  border-block-start: 1px solid var(--line);
+}
+
+.principleNum {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-wide);
+  color: var(--accent-text);
+}
+
+/* The pull-quote itself: display type, in my voice. */
+.principleQuote {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1.2;
+  letter-spacing: var(--tracking-snug);
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+
+.principleBody {
+  max-width: 42ch;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+@media (min-width: 60rem) {
+  .principleList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-7);
+  }
+
+  /* A single hairline rule across the top of the strip, then vertical rules. */
+  .principle {
+    padding-inline-end: var(--space-6);
+    border-inline-end: 1px solid var(--line);
+  }
+
+  .principle:last-child {
+    padding-inline-end: 0;
+    border-inline-end: 0;
+  }
+}

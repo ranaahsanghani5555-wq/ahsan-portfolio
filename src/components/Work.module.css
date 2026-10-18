@@ -1,0 +1,108 @@
+.head {
+  max-width: 52rem;
+}
+
+.title {
+  margin-block-start: var(--space-4);
+  font-size: var(--type-h2);
+  max-width: 24ch;
+}
+
+.note {
+  max-width: var(--measure);
+  margin-block-start: var(--space-5);
+  font-size: var(--step-0);
+  color: var(--text);
+}
+
+/* --- sticky filter + counter bar ------------------------------------------ */
+.toolbar {
+  position: sticky;
+  top: 4.5rem;
+  z-index: var(--z-sticky);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-block: var(--space-9) var(--space-7);
+  padding-block: var(--space-3);
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-block-end: 1px solid var(--hairline);
+}
+
+.filters {
+  display: flex;
+  gap: var(--space-2);
+  min-inline-size: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-block: var(--space-1);
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex: 0 0 auto;
+  padding: var(--space-2) var(--space-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text);
+  font-size: var(--step--1);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-snug);
+  white-space: nowrap;
+  transition:
+    background-color var(--dur-fast) var(--ease-out-soft),
+    border-color var(--dur-fast) var(--ease-out-soft),
+    color var(--dur-fast) var(--ease-out-soft);
+}
+
+.chip:hover {
+  border-color: var(--ink);
+  color: var(--text-strong);
+}
+
+.chip[aria-pressed='true'] {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.counter {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-1);
+  margin-inline-start: auto;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-wide);
+  color: var(--text-muted);
+}
+
+.counterNow {
+  font-size: var(--step-1);
+  color: var(--text-strong);
+}
+
+.counterSep {
+  color: var(--text-muted);
+}
+
+@media (min-width: 36rem) {
+  .filters {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .toolbar {
+    top: 4.5rem;
+    margin-block: var(--space-8) var(--space-6);
+  }
+}

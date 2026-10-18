@@ -1,0 +1,977 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="robots" content="noindex" />
+    <title>Cadenza — one screen for the whole deal (concept)</title>
+    <meta
+      name="description"
+      content="Cadenza is a B2B pipeline and CRM concept: keep every deal on one screen, from Lead to Won. A self-initiated concept project by Ahsan Ghani."
+    />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/schibsted-grotesk.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/ibm-plex-mono.woff2"
+    />
+    <link rel="stylesheet" href="fonts.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="../motion.js"></script>
+    <script>
+      /* Progressive enhancement for the scroll reveals.
+         The hidden start state only ever applies while <html> carries the "js"
+         gate class added here, before first paint (so there is no flash). The
+         motion code drops the class as soon as it has armed the animations, and
+         a 1.5s failsafe removes it after DOMContentLoaded if the motion code
+         never ran — so a missing or failed GSAP can never leave content
+         invisible. */
+      (function () {
+        var doc = document.documentElement;
+        if (!window.__motionOK()) return;
+        doc.classList.add('js');
+        window.addEventListener('DOMContentLoaded', function () {
+          window.setTimeout(function () {
+            if (!doc.classList.contains('reveal-armed')) doc.classList.remove('js');
+          }, 1500);
+        });
+      })();
+    </script>
+    <!--
+      ============================================================================
+      CADENZA — design rationale (self-initiated concept, not client work)
+      ============================================================================
+      AUDIENCE
+        Sales leads at 10–50 person companies who are comparing three CRM tools
+        on a Friday afternoon. They have seen every "all-in-one revenue platform"
+        the category can produce and they don't want another feature wall; they
+        want to know whether the pipeline view would make Monday easier. They
+        read on a laptop between meetings and shortlist a tool long before they
+        ever book a demo.
+
+      HIERARCHY
+        1. One decision: book a walkthrough. The hero, the pipeline section, the
+           tabbed features, pricing and the closing band all return to the same
+           action; nothing else competes for the click.
+        2. Proof before promise: the signature pinned pipeline board actually
+           moves sample deals from Lead to Won as the visitor scrolls, so the
+           product demonstrates itself instead of describing itself.
+        3. Dense, quiet, grid-lined: an enterprise surface (slate panels, thin
+           rules, monospace figures) that reads as a tool rather than a brochure.
+        4. Feature depth lives behind an accessible tab set, so the page stays
+           one scroll long without hiding the detail a buyer will ask about.
+
+      CONVERSION STRATEGY
+        The page asks for a walkthrough, not a signup, because the buyer is
+        comparing tools and needs a guided look. The pinned board is the hook:
+        it is memorable, it is the product, and it gives the visitor something
+        to point at when they forward the link to a colleague. Pricing is
+        transparent and per-seat so a lead can model their own team without
+        talking to sales first.
+
+      HONESTY GUARDRAILS (specific to a B2B software concept)
+        - No real CRM brand is named, compared or implied — Cadenza is an
+          invented product and every competitor reference stays generic.
+        - Every deal, company, contact and amount is invented and labelled
+          "Sample content". The sample figures add up
+          ($48,000 + $120,000 + $36,500 + $210,000 = $414,500; open $246,500,
+          won $168,000) so the animation can be checked, but they are not a
+          record of results.
+        - Testimonials, logos and standings are all labelled sample content.
+        - No invented company outcome ("revenue up 40%"). The only numbers shown
+          are arithmetic on the sample deals, plus clearly-labelled sample copy.
+
+      WHAT I'D TEST NEXT
+        - Pinned pipeline board vs. a static screenshot: does the scroll-driven
+          board hold attention past the hero, or does it delay the fold?
+        - CTA verb: "Book a walkthrough" vs. "See a live pipeline" vs.
+          "Start free trial".
+        - Tab order: which of Pipeline / Contacts / Automations / Reporting
+          deserves the first tab for this audience.
+        - Density: does the mono-figure enterprise styling read as trustworthy
+          or as cold to a 12-person team?
+
+      MOTION
+        Motion is mechanical and purposeful: the pipeline board is pinned while
+        sample deals cross-fade through Lead → Qualified → Proposal → Won and
+        the open/won totals count as they move. Everything is transform/opacity
+        only, driven by scroll (scrub), never autoplaying. Under 900px or under
+        prefers-reduced-motion the board does not pin: it shows the final,
+        readable state with a one-line caption for each stage.
+      ============================================================================
+    -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="nav" data-nav>
+      <div class="nav__inner container">
+        <a class="brand" href="#top" aria-label="Cadenza home">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M3 20V4M8 20V9M13 20v-7M18 20v-4M21 20V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="brand__word">cadenza</span>
+        </a>
+
+        <nav class="nav__links" aria-label="Primary">
+          <a href="#product">Product</a>
+          <a href="#pipeline">Pipeline</a>
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+
+        <div class="nav__actions">
+          <a class="btn btn--quiet nav__signin" href="#pricing">Sign in</a>
+          <a class="btn btn--primary" href="#pricing">Book a walkthrough</a>
+          <button
+            class="nav__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            data-menu-toggle
+          >
+            <span class="visually-hidden">Menu</span>
+            <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-menu>
+        <nav class="mobile-menu__links" aria-label="Mobile">
+          <a href="#product"><span>01</span>Product</a>
+          <a href="#pipeline"><span>02</span>Pipeline</a>
+          <a href="#features"><span>03</span>Features</a>
+          <a href="#pricing"><span>04</span>Pricing</a>
+          <a href="#faq"><span>05</span>FAQ</a>
+        </nav>
+        <a class="btn btn--primary mobile-menu__cta" href="#pricing">Book a walkthrough</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============================================================= HERO -->
+      <section class="hero" id="top">
+        <div class="container hero__grid">
+          <div class="hero__copy">
+            <p class="pill">
+              <span class="pill__dot" aria-hidden="true"></span>
+              Concept project · B2B pipeline &amp; CRM
+            </p>
+            <h1 class="hero__title">
+              Every deal, one clear <em>next step.</em>
+            </h1>
+            <p class="hero__lead">
+              Cadenza keeps the whole quarter on a single screen — who is in,
+              what has stalled, and what closes this week — so a sales lead can
+              make the call without opening six tabs.
+            </p>
+
+            <div class="hero__cta">
+              <a class="btn btn--primary btn--lg" href="#pricing">Book a walkthrough</a>
+              <a class="btn btn--quiet btn--lg" href="#pipeline">
+                See the pipeline
+                <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+
+            <p class="hero__proof" data-reveal>
+              <span class="sample-tag">Sample content</span>
+              Written for revenue teams of 10–50 — invented for this concept, not a real customer list.
+            </p>
+
+            <ul class="hero__chips" aria-label="Product areas — sample content">
+              <li>Lead to Won</li>
+              <li>Contacts</li>
+              <li>Automations</li>
+              <li>Reporting</li>
+              <li class="hero__chips-note">Sample areas</li>
+            </ul>
+          </div>
+
+          <!-- Product mockup, drawn entirely in HTML/CSS/SVG (no screenshot). -->
+          <div class="hero__visual" data-reveal>
+            <div class="rec" aria-hidden="true">
+              <div class="rec__bar">
+                <span class="rec__dots"><i></i><i></i><i></i></span>
+                <span class="rec__title">Deal · Northwind Retail</span>
+                <span class="rec__badge">$210,000</span>
+              </div>
+              <div class="rec__body">
+                <div class="rec__main">
+                  <p class="rec__label">Stage</p>
+                  <ol class="stepper">
+                    <li class="stepper__step is-done">Lead</li>
+                    <li class="stepper__step is-done">Qualified</li>
+                    <li class="stepper__step is-current" aria-current="step">Proposal</li>
+                    <li class="stepper__step">Won</li>
+                  </ol>
+                  <div class="rec__rows">
+                    <div class="rec__row"><span>Owner</span><b>Ayesha K.</b></div>
+                    <div class="rec__row"><span>Close date</span><b>Sample · 14 Sep</b></div>
+                    <div class="rec__row"><span>Weighted value</span><b>$168,000</b></div>
+                  </div>
+                </div>
+                <div class="rec__side">
+                  <p class="rec__label">Activity</p>
+                  <ul class="feed">
+                    <li class="feed__item">
+                      <span class="feed__dot"></span>
+                      <div><p class="feed__t">Proposal sent</p><p class="feed__m">Sample · today</p></div>
+                    </li>
+                    <li class="feed__item">
+                      <span class="feed__dot"></span>
+                      <div><p class="feed__t">Call booked with buying team</p><p class="feed__m">Sample · 2 days ago</p></div>
+                    </li>
+                    <li class="feed__item">
+                      <span class="feed__dot feed__dot--open"></span>
+                      <div><p class="feed__t">Security review requested</p><p class="feed__m">Sample · open task</p></div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= LOGO BAR -->
+      <section class="logos" aria-label="Used by teams like these — sample content">
+        <div class="container">
+          <p class="logos__label">
+            <span class="sample-tag">Sample content</span>
+            Invented company marks — a look at the kind of buyer the page is written for.
+          </p>
+          <ul class="logos__row">
+            <li class="logotype logotype--wide">MERIDIAN</li>
+            <li class="logotype logotype--italic">Halcyon</li>
+            <li class="logotype logotype--mono">brightline</li>
+            <li class="logotype">NORTHWIND</li>
+            <li class="logotype logotype--serif">Kestrel</li>
+            <li class="logotype logotype--mono">VANTAGE</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ==================================================== PROBLEM / SOLVE -->
+      <section class="split" id="product" aria-labelledby="problem-title">
+        <div class="container split__grid">
+          <div class="split__col" data-reveal>
+            <p class="eyebrow">The problem</p>
+            <h2 id="problem-title" class="h2">A pipeline nobody actually trusts.</h2>
+            <ul class="pain">
+              <li>The forecast lives in one tab, the activity in another, and the truth in a spreadsheet somebody edited on Friday.</li>
+              <li>A deal "looks" healthy until a rep admits it has been stalled for three weeks.</li>
+              <li>Nobody can answer "what closes this month?" without a meeting.</li>
+            </ul>
+          </div>
+
+          <div class="split__col split__col--solve" data-reveal>
+            <p class="eyebrow">The approach</p>
+            <h2 class="h2">One board that tells you the next move.</h2>
+            <p class="split__body">
+              Cadenza puts every deal on one screen and keeps the context beside
+              it: the stage, the owner, the last touch and the amount. When a
+              deal moves, the totals move with it — so the number at the top is
+              always the number underneath.
+            </p>
+
+            <div class="readout" aria-hidden="true">
+              <div class="readout__row"><span>Open pipeline</span><span>$246,500</span></div>
+              <div class="readout__row"><span>Won this cycle</span><span>$168,000</span></div>
+              <div class="readout__row readout__row--total"><span>Total tracked</span><span>$414,500</span></div>
+              <p class="readout__note">Sample arithmetic across four invented deals.</p>
+            </div>
+
+            <ul class="ticks">
+              <li>One board per team, one board for the forecast.</li>
+              <li>Every stage has a definition, so "Qualified" means something.</li>
+              <li>Totals recalculate as deals move — no separate report to reconcile.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================== SIGNATURE PIPELINE -->
+      <section class="pipeline" id="pipeline" data-pipeline aria-labelledby="pipeline-title">
+        <div class="pipeline__intro container" data-reveal>
+          <p class="eyebrow">The signature view</p>
+          <h2 id="pipeline-title" class="h2">Scroll the quarter. Watch the pipeline move.</h2>
+          <p class="pipeline__lead">
+            Four sample deals move left to right through Lead, Qualified,
+            Proposal and Won as you scroll. The open and won totals move with
+            them, so the board keeps its own score.
+          </p>
+        </div>
+
+        <div class="pipeline__pin" data-pin>
+          <div class="container">
+            <div class="board" data-board>
+              <div class="board__metrics">
+                <div class="metric">
+                  <p class="metric__label">Open pipeline</p>
+                  <p class="metric__value" data-metric="open">$246,500</p>
+                </div>
+                <div class="metric">
+                  <p class="metric__label">Won this cycle</p>
+                  <p class="metric__value" data-metric="won">$168,000</p>
+                </div>
+                <div class="metric">
+                  <p class="metric__label">Total tracked</p>
+                  <p class="metric__value" data-metric="total">$414,500</p>
+                </div>
+                <p class="board__tag">
+                  <span class="sample-tag">Sample content</span>
+                  Four invented deals
+                </p>
+              </div>
+
+              <div class="board__grid">
+                <!-- LEAD -->
+                <div class="board__col board__col--lead" data-stage="lead">
+                  <div class="board__head">
+                    <p class="board__name">Lead</p>
+                    <span class="board__count" data-count="lead">0</span>
+                  </div>
+                  <p class="board__caption">New enquiries, not yet qualified.</p>
+                  <p class="board__colval">Value <span data-colsum="lead">$0</span></p>
+                  <div class="board__body" data-body="lead">
+                    <p class="board__empty">No open leads</p>
+                    <article class="deal deal--a" data-deal="a" data-stage="lead">
+                      <div class="deal__top"><p class="deal__name">Meridian Freight</p><p class="deal__amount">$48,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">RM</span><span>Inbound · 6 days</span></div>
+                    </article>
+                    <article class="deal deal--b" data-deal="b" data-stage="lead">
+                      <div class="deal__top"><p class="deal__name">Halcyon Health</p><p class="deal__amount">$120,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">JP</span><span>Referral · 12 days</span></div>
+                    </article>
+                    <article class="deal deal--c" data-deal="c" data-stage="lead">
+                      <div class="deal__top"><p class="deal__name">Brightline Labs</p><p class="deal__amount">$36,500</p></div>
+                      <div class="deal__meta"><span class="deal__owner">RM</span><span>Trial · 3 days</span></div>
+                    </article>
+                    <article class="deal deal--d" data-deal="d" data-stage="lead">
+                      <div class="deal__top"><p class="deal__name">Northwind Retail</p><p class="deal__amount">$210,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">AK</span><span>Expansion · 21 days</span></div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- QUALIFIED -->
+                <div class="board__col board__col--qualified" data-stage="qualified">
+                  <div class="board__head">
+                    <p class="board__name">Qualified</p>
+                    <span class="board__count" data-count="qualified">1</span>
+                  </div>
+                  <p class="board__caption">Budget, need and owner confirmed.</p>
+                  <p class="board__colval">Value <span data-colsum="qualified">$210,000</span></p>
+                  <div class="board__body" data-body="qualified">
+                    <p class="board__empty">No deals at this stage</p>
+                    <article class="deal deal--a" data-deal="a" data-stage="qualified">
+                      <div class="deal__top"><p class="deal__name">Meridian Freight</p><p class="deal__amount">$48,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">RM</span><span>Discovery done</span></div>
+                    </article>
+                    <article class="deal deal--b" data-deal="b" data-stage="qualified">
+                      <div class="deal__top"><p class="deal__name">Halcyon Health</p><p class="deal__amount">$120,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">JP</span><span>Champion found</span></div>
+                    </article>
+                    <article class="deal deal--c" data-deal="c" data-stage="qualified">
+                      <div class="deal__top"><p class="deal__name">Brightline Labs</p><p class="deal__amount">$36,500</p></div>
+                      <div class="deal__meta"><span class="deal__owner">RM</span><span>Use case clear</span></div>
+                    </article>
+                    <article class="deal deal--d" data-deal="d" data-stage="qualified" data-final>
+                      <div class="deal__top"><p class="deal__name">Northwind Retail</p><p class="deal__amount">$210,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">AK</span><span>Needs sign-off</span></div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- PROPOSAL -->
+                <div class="board__col board__col--proposal" data-stage="proposal">
+                  <div class="board__head">
+                    <p class="board__name">Proposal</p>
+                    <span class="board__count" data-count="proposal">1</span>
+                  </div>
+                  <p class="board__caption">Pricing and scope are with the buyer.</p>
+                  <p class="board__colval">Value <span data-colsum="proposal">$36,500</span></p>
+                  <div class="board__body" data-body="proposal">
+                    <p class="board__empty">No deals at this stage</p>
+                    <article class="deal deal--a" data-deal="a" data-stage="proposal">
+                      <div class="deal__top"><p class="deal__name">Meridian Freight</p><p class="deal__amount">$48,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">RM</span><span>Proposal sent</span></div>
+                    </article>
+                    <article class="deal deal--b" data-deal="b" data-stage="proposal">
+                      <div class="deal__top"><p class="deal__name">Halcyon Health</p><p class="deal__amount">$120,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">JP</span><span>Security review</span></div>
+                    </article>
+                    <article class="deal deal--c" data-deal="c" data-stage="proposal" data-final>
+                      <div class="deal__top"><p class="deal__name">Brightline Labs</p><p class="deal__amount">$36,500</p></div>
+                      <div class="deal__meta"><span class="deal__owner">RM</span><span>Negotiating</span></div>
+                    </article>
+                  </div>
+                </div>
+
+                <!-- WON -->
+                <div class="board__col board__col--won" data-stage="won">
+                  <div class="board__head">
+                    <p class="board__name">Won</p>
+                    <span class="board__count" data-count="won">2</span>
+                  </div>
+                  <p class="board__caption">Signed and handed to delivery.</p>
+                  <p class="board__colval">Value <span data-colsum="won">$168,000</span></p>
+                  <div class="board__body" data-body="won">
+                    <p class="board__empty">Nothing closed yet</p>
+                    <article class="deal deal--a" data-deal="a" data-stage="won" data-final>
+                      <div class="deal__top"><p class="deal__name">Meridian Freight</p><p class="deal__amount">$48,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">RM</span><span>Closed — sample</span></div>
+                    </article>
+                    <article class="deal deal--b" data-deal="b" data-stage="won" data-final>
+                      <div class="deal__top"><p class="deal__name">Halcyon Health</p><p class="deal__amount">$120,000</p></div>
+                      <div class="deal__meta"><span class="deal__owner">JP</span><span>Closed — sample</span></div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="pipeline__foot container">
+          <span class="pipeline__note pipeline__note--pin">Keep scrolling — the sample deals advance as you go.</span>
+          <span class="pipeline__note pipeline__note--static">
+            Shown at its final state: Northwind in Qualified, Brightline in
+            Proposal, Meridian and Halcyon won. All figures are sample content.
+          </span>
+        </p>
+      </section>
+
+      <!-- ================================================ FEATURE EXPLORER -->
+      <section class="features" id="features" aria-labelledby="features-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">Feature explorer</p>
+            <h2 id="features-title" class="h2">Four views. One dataset underneath.</h2>
+            <p class="section-head__lead">
+              Use the tabs to look around the workspace. Each view is drawn in
+              HTML and CSS for this concept — no screenshots.
+            </p>
+          </header>
+
+          <div class="tabs" data-tabs>
+            <div class="tabs__list" role="tablist" aria-label="Cadenza product areas" data-tablist>
+              <button class="tab" type="button" role="tab" id="tab-pipeline" aria-selected="true" aria-controls="panel-pipeline" tabindex="0" data-tab>
+                <span class="tab__k">01</span>Pipeline
+              </button>
+              <button class="tab" type="button" role="tab" id="tab-contacts" aria-selected="false" aria-controls="panel-contacts" tabindex="-1" data-tab>
+                <span class="tab__k">02</span>Contacts
+              </button>
+              <button class="tab" type="button" role="tab" id="tab-automations" aria-selected="false" aria-controls="panel-automations" tabindex="-1" data-tab>
+                <span class="tab__k">03</span>Automations
+              </button>
+              <button class="tab" type="button" role="tab" id="tab-reporting" aria-selected="false" aria-controls="panel-reporting" tabindex="-1" data-tab>
+                <span class="tab__k">04</span>Reporting
+              </button>
+            </div>
+
+            <div class="tabs__panels">
+              <!-- Panel 1 — Pipeline -->
+              <div class="panel" role="tabpanel" id="panel-pipeline" aria-labelledby="tab-pipeline" tabindex="0" data-panel>
+                <div class="panel__grid">
+                  <div class="panel__mock">
+                    <div class="mock mock--board" aria-hidden="true">
+                      <div class="mock__bar">
+                        <span class="mock__dots"><i></i><i></i><i></i></span>
+                        <span class="mock__title">Pipeline · Q3 · sample</span>
+                      </div>
+                      <div class="mini">
+                        <div class="mini__col">
+                          <p class="mini__name">Lead <b>4</b></p>
+                          <span class="mini__card"></span><span class="mini__card mini__card--sm"></span><span class="mini__card"></span>
+                        </div>
+                        <div class="mini__col">
+                          <p class="mini__name">Qualified <b>1</b></p>
+                          <span class="mini__card mini__card--amber"></span><span class="mini__card mini__card--sm"></span>
+                        </div>
+                        <div class="mini__col">
+                          <p class="mini__name">Won <b>2</b></p>
+                          <span class="mini__card mini__card--ink"></span><span class="mini__card mini__card--sm mini__card--ink"></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel__copy">
+                    <h3 class="panel__title">The pipeline is the product</h3>
+                    <p class="panel__body">
+                      One board for the team, one board for the number. Drag a
+                      deal to a new stage and the column values and the forecast
+                      update in the same motion — no separate report to
+                      reconcile.
+                    </p>
+                    <ul class="panel__list">
+                      <li>Stage definitions you set once, applied everywhere.</li>
+                      <li>Rotting-deal flags when a card sits too long.</li>
+                      <li>Weighted and raw totals on every column.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Panel 2 — Contacts -->
+              <div class="panel" role="tabpanel" id="panel-contacts" aria-labelledby="tab-contacts" tabindex="0" data-panel hidden>
+                <div class="panel__grid">
+                  <div class="panel__mock">
+                    <div class="mock mock--list" aria-hidden="true">
+                      <div class="mock__bar">
+                        <span class="mock__dots"><i></i><i></i><i></i></span>
+                        <span class="mock__title">Contacts · sample</span>
+                      </div>
+                      <ul class="rows">
+                        <li class="rows__item">
+                          <span class="rows__who"><span class="avatar">AK</span>Ayesha Kazi</span>
+                          <span class="rows__org">Northwind Retail</span>
+                          <span class="badge badge--proposal">Proposal</span>
+                          <span class="rows__mono">2d</span>
+                        </li>
+                        <li class="rows__item">
+                          <span class="rows__who"><span class="avatar">TN</span>Tom Nash</span>
+                          <span class="rows__org">Halcyon Health</span>
+                          <span class="badge badge--qualified">Qualified</span>
+                          <span class="rows__mono">5d</span>
+                        </li>
+                        <li class="rows__item">
+                          <span class="rows__who"><span class="avatar">RM</span>Rhea Mehta</span>
+                          <span class="rows__org">Meridian Freight</span>
+                          <span class="badge badge--won">Won</span>
+                          <span class="rows__mono">1d</span>
+                        </li>
+                        <li class="rows__item">
+                          <span class="rows__who"><span class="avatar">LB</span>Leo Brandt</span>
+                          <span class="rows__org">Brightline Labs</span>
+                          <span class="badge badge--lead">Lead</span>
+                          <span class="rows__mono">3d</span>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="panel__copy">
+                    <h3 class="panel__title">One record, not five tabs</h3>
+                    <p class="panel__body">
+                      A contact, their company, the deals they touch and every
+                      email or call are the same object. Open a name and the
+                      history is there — including the notes the last rep left.
+                    </p>
+                    <ul class="panel__list">
+                      <li>Company and contact linked automatically.</li>
+                      <li>Every activity stamped with owner and date.</li>
+                      <li>Fields you add show up on the board and the report.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Panel 3 — Automations -->
+              <div class="panel" role="tabpanel" id="panel-automations" aria-labelledby="tab-automations" tabindex="0" data-panel hidden>
+                <div class="panel__grid">
+                  <div class="panel__mock">
+                    <div class="mock mock--flow" aria-hidden="true">
+                      <div class="mock__bar">
+                        <span class="mock__dots"><i></i><i></i><i></i></span>
+                        <span class="mock__title">Automation · sample</span>
+                      </div>
+                      <ol class="flow">
+                        <li class="flow__step"><span class="flow__k">When</span><p class="flow__t">A deal enters Qualified</p></li>
+                        <li class="flow__step"><span class="flow__k">Then</span><p class="flow__t">Create a task for the owner</p></li>
+                        <li class="flow__step"><span class="flow__k">Then</span><p class="flow__t">Wait 3 days if no reply</p></li>
+                        <li class="flow__step flow__step--end"><span class="flow__k">Finally</span><p class="flow__t">Flag the deal as stalling</p></li>
+                      </ol>
+                    </div>
+                  </div>
+                  <div class="panel__copy">
+                    <h3 class="panel__title">Quiet rules that keep the board honest</h3>
+                    <p class="panel__body">
+                      Automations in Cadenza are for housekeeping, not spam.
+                      Build them from plain sentences — when this, then that —
+                      and watch them run on a log you can read.
+                    </p>
+                    <ul class="panel__list">
+                      <li>Triggers on stage, date or field changes.</li>
+                      <li>Every run logged with what it touched.</li>
+                      <li>Pause any rule without losing its history.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Panel 4 — Reporting -->
+              <div class="panel" role="tabpanel" id="panel-reporting" aria-labelledby="tab-reporting" tabindex="0" data-panel hidden>
+                <div class="panel__grid">
+                  <div class="panel__mock">
+                    <div class="mock mock--chart" aria-hidden="true">
+                      <div class="mock__bar">
+                        <span class="mock__dots"><i></i><i></i><i></i></span>
+                        <span class="mock__title">Closed won · sample</span>
+                      </div>
+                      <div class="chart">
+                        <div class="chart__bars">
+                          <div class="chart__bar" style="--h: 42%"><span>$18k</span></div>
+                          <div class="chart__bar" style="--h: 64%"><span>$31k</span></div>
+                          <div class="chart__bar" style="--h: 52%"><span>$24k</span></div>
+                          <div class="chart__bar chart__bar--amber" style="--h: 88%"><span>$48k</span></div>
+                          <div class="chart__bar" style="--h: 70%"><span>$36k</span></div>
+                        </div>
+                        <div class="chart__axis">
+                          <span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
+                        </div>
+                      </div>
+                      <div class="chart__legend">
+                        <span><i class="chart__swatch"></i>Closed won</span>
+                        <span><i class="chart__swatch chart__swatch--amber"></i>Best month</span>
+                        <span class="chart__note">Sample figures</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="panel__copy">
+                    <h3 class="panel__title">Reports that match the board</h3>
+                    <p class="panel__body">
+                      Because the report reads the same deals as the pipeline,
+                      the closed-won chart can never disagree with the board.
+                      Slice by owner, stage or source and the number follows.
+                    </p>
+                    <ul class="panel__list">
+                      <li>Win rate, cycle time and average deal size.</li>
+                      <li>Filter by owner, source or close date.</li>
+                      <li>Export a snapshot, or schedule one weekly.</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================== TESTIMONIALS -->
+      <section class="quotes" aria-labelledby="quotes-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">What people say</p>
+            <h2 id="quotes-title" class="h2">Notes from the people it's built for.</h2>
+            <p class="section-head__lead">
+              <span class="sample-tag">Sample content</span>
+              Illustrative quotes for this concept — invented names, no real customers.
+            </p>
+          </header>
+
+          <ul class="quote-grid">
+            <li class="quote" data-reveal>
+              <p class="quote__text">
+                "Our forecast used to be a Friday argument. Now it's a board we
+                all look at, and the number at the top is the number we agree
+                on."
+              </p>
+              <p class="quote__who"><span class="avatar">MK</span> Mariam K., head of sales</p>
+            </li>
+            <li class="quote" data-reveal>
+              <p class="quote__text">
+                "The stalling flags are the quiet hero. A deal can't sit for
+                three weeks now without the board telling me about it."
+              </p>
+              <p class="quote__who"><span class="avatar">DO</span> Daniel O., account executive</p>
+            </li>
+            <li class="quote" data-reveal>
+              <p class="quote__text">
+                "I showed a prospect my own pipeline on a call. That did more
+                than any slide deck ever did."
+              </p>
+              <p class="quote__who"><span class="avatar">SA</span> Sana A., revenue operations</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ======================================================== PRICING -->
+      <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+        <div class="container">
+          <header class="section-head section-head--center" data-reveal>
+            <p class="eyebrow">Pricing</p>
+            <h2 id="pricing-title" class="h2">Per seat, per month. No mystery tier.</h2>
+            <p class="section-head__lead">
+              <span class="sample-tag">Sample pricing</span>
+              Illustrative plans in USD for this concept — nothing is charged.
+            </p>
+
+            <div class="billing" role="group" aria-label="Billing period" data-billing>
+              <button type="button" class="billing__option" data-period="monthly" aria-pressed="true">
+                Monthly
+              </button>
+              <button type="button" class="billing__option" data-period="yearly" aria-pressed="false">
+                Yearly
+                <span class="billing__save">2 months free</span>
+              </button>
+            </div>
+          </header>
+
+          <div class="plans">
+            <article class="plan" data-reveal>
+              <h3 class="plan__name">Solo</h3>
+              <p class="plan__tag">For the first pipeline you own.</p>
+              <p class="plan__price">
+                <span class="plan__amount" data-price data-monthly="0" data-yearly="0">$0</span>
+                <span class="plan__per" data-per>/ seat / month</span>
+              </p>
+              <ul class="plan__list">
+                <li>One pipeline, up to 100 deals</li>
+                <li>Contacts and activity timeline</li>
+                <li>Board and basic reporting</li>
+              </ul>
+              <a class="btn btn--quiet plan__cta" href="#top">Book a walkthrough</a>
+            </article>
+
+            <article class="plan plan--featured" data-reveal>
+              <p class="plan__flag">Most popular</p>
+              <h3 class="plan__name">Team</h3>
+              <p class="plan__tag">For a sales team working one board.</p>
+              <p class="plan__price">
+                <span class="plan__amount" data-price data-monthly="24" data-yearly="20">$24</span>
+                <span class="plan__per" data-per>/ seat / month</span>
+              </p>
+              <ul class="plan__list">
+                <li>Unlimited deals and stages</li>
+                <li>Stalling flags and automations</li>
+                <li>Weighted forecast on every column</li>
+                <li>Owner-level reporting</li>
+              </ul>
+              <a class="btn btn--primary plan__cta" href="#top">Book a walkthrough</a>
+            </article>
+
+            <article class="plan" data-reveal>
+              <h3 class="plan__name">Scale</h3>
+              <p class="plan__tag">For teams that need rules and roles.</p>
+              <p class="plan__price">
+                <span class="plan__amount" data-price data-monthly="49" data-yearly="41">$49</span>
+                <span class="plan__per" data-per>/ seat / month</span>
+              </p>
+              <ul class="plan__list">
+                <li>Everything in Team</li>
+                <li>Field-level permissions and roles</li>
+                <li>Scheduled report delivery</li>
+                <li>Priority support</li>
+              </ul>
+              <a class="btn btn--quiet plan__cta" href="#top">Book a walkthrough</a>
+            </article>
+          </div>
+          <p class="pricing__fine">
+            Sample pricing in USD. No payment is taken and no plan is real — this is a concept page.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ FAQ -->
+      <section class="faq" id="faq" aria-labelledby="faq-title">
+        <div class="container faq__grid">
+          <div class="faq__intro" data-reveal>
+            <p class="eyebrow">FAQ</p>
+            <h2 id="faq-title" class="h2">Fair questions.</h2>
+            <p class="faq__intro-body">
+              The answers below describe the concept, not a shipping product.
+              Everything on the page is invented and labelled as sample content.
+            </p>
+          </div>
+
+          <div class="faq__list" data-accordion>
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-1" id="faq-btn-1">
+                  <span>Is the pipeline board animated with real data?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-1" role="region" aria-labelledby="faq-btn-1">
+                <div class="faq__panel-inner">
+                  <p>
+                    No. The board is a hand-drawn mockup and the four deals are
+                    invented. Their amounts add up to a clean total so the
+                    animation can be checked, but they represent no real company
+                    or result.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-2" id="faq-btn-2">
+                  <span>Does Cadenza integrate with the tools we already use?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-2" role="region" aria-labelledby="faq-btn-2">
+                <div class="faq__panel-inner">
+                  <p>
+                    On this concept page there are no named integrations or
+                    partner logos — those would imply real relationships. A real
+                    build would ship email, calendar and CRM-import connectors,
+                    but none are claimed here.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-3" id="faq-btn-3">
+                  <span>What happens to the pipeline board on a phone?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-3" role="region" aria-labelledby="faq-btn-3">
+                <div class="faq__panel-inner">
+                  <p>
+                    Below 900px, and for anyone who prefers reduced motion, the
+                    board does not pin. It shows the final, readable state with a
+                    short caption for each stage instead of the scroll animation.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-4" id="faq-btn-4">
+                  <span>Can I model my own team on the pricing?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-4" role="region" aria-labelledby="faq-btn-4">
+                <div class="faq__panel-inner">
+                  <p>
+                    Yes — the plans are priced per seat and the toggle switches
+                    between monthly and yearly, so the arithmetic is yours to do.
+                    The figures are illustrative sample pricing for a concept,
+                    not a quote.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-5" id="faq-btn-5">
+                  <span>Is any of this a real product?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-5" role="region" aria-labelledby="faq-btn-5">
+                <div class="faq__panel-inner">
+                  <p>
+                    No. Cadenza is a self-initiated concept project by Ahsan
+                    Ghani. The brand, the deals, the contacts, the logo marks and
+                    the figures are invented to show how the product could feel.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== FINAL CTA -->
+      <section class="cta-band" aria-labelledby="cta-title">
+        <div class="container cta-band__inner" data-reveal>
+          <h2 id="cta-title" class="cta-band__title">See your quarter on one screen.</h2>
+          <p class="cta-band__text">
+            Bring a real pipeline and watch it land on the board. Thirty
+            minutes, no slides, and you keep the sample workspace afterwards.
+          </p>
+          <div class="cta-band__actions">
+            <a class="btn btn--primary btn--lg" href="#pricing">Book a walkthrough</a>
+            <a class="btn btn--quiet btn--lg" href="#pipeline">Replay the pipeline</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================================================ FOOTER -->
+    <footer class="footer">
+      <div class="container footer__grid">
+        <div class="footer__brand">
+          <a class="brand" href="#top" aria-label="Cadenza home">
+            <span class="brand__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M3 20V4M8 20V9M13 20v-7M18 20v-4M21 20V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </span>
+            <span class="brand__word">cadenza</span>
+          </a>
+          <p class="footer__blurb">
+            A B2B pipeline and CRM concept: one screen for the whole deal. A
+            self-initiated concept project by Ahsan Ghani — invented brand, no
+            real customers or results.
+          </p>
+        </div>
+
+        <nav class="footer__col" aria-label="Product">
+          <h3>Product</h3>
+          <ul>
+            <li><a href="#product">Overview</a></li>
+            <li><a href="#pipeline">Pipeline</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Company">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="#top">About</a></li>
+            <li><a href="#top">Careers</a></li>
+            <li><a href="#top">Changelog</a></li>
+            <li><a href="#top">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Resources">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#top">Sales playbook</a></li>
+            <li><a href="#top">Pipeline guide</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#top">Status</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="container footer__base">
+        <p>© 2026 Cadenza — invented brand for a concept project.</p>
+        <ul class="footer__legal">
+          <li><a href="#top">Privacy</a></li>
+          <li><a href="#top">Terms</a></li>
+          <li><a href="#top">Cookies</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Small ribbon: uses target="_top" so it leaves the portfolio's preview iframe. -->
+    <nav class="ribbon-nav" aria-label="Portfolio">
+  <a class="ribbon" href="../../index.html" target="_top" rel="noopener">
+        <span class="ribbon__dot" aria-hidden="true"></span>
+        Concept project by Ahsan Ghani
+      </a>
+  </nav>
+
+    <script defer src="../vendor/gsap.min.js"></script>
+    <script defer src="../vendor/ScrollTrigger.min.js"></script>
+    <script defer src="script.js"></script>
+  </body>
+</html>

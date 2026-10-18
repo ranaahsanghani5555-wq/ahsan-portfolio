@@ -1,0 +1,73 @@
+/* The whole custom-cursor layer is opt-out by default and only switched on
+   for fine pointers WITH motion allowed; the live logic in Cursor.jsx also
+   bails on reduced motion. Without the reduced-motion gate the two elements
+   still rendered (opacity 1) at their static top/left origin, because the
+   GSAP step that hides them never runs — a stray dot and ring stuck in the
+   viewport corner. */
+.layer {
+  display: none;
+  /* Belt and braces: the dot and ring are pointer-events: none, and the
+     layer itself is 0×0, but nothing on this layer may ever intercept a
+     click aimed at page content. */
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .layer {
+    display: block;
+  }
+}
+
+/* Same when the visitor forces motion ON (html[data-motion='full'],
+   src/lib/motion.js) on an OS that asks for reduce. Still hover-gated:
+   touch devices never get the custom cursor. */
+@media (hover: hover) and (pointer: fine) {
+  html[data-motion='full'] .layer {
+    display: block;
+  }
+}
+
+.dot,
+.ring {
+  position: fixed;
+  z-index: var(--z-cursor);
+  top: 0;
+  left: 0;
+  /* Hidden until the first mousemove fades them in. A base of 0 also covers
+     the single frame before the deferred GSAP setup runs. */
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dot {
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: var(--radius-pill);
+  background-color: var(--ink);
+}
+
+.ring {
+  display: grid;
+  place-items: center;
+  inline-size: 34px;
+  block-size: 34px;
+}
+
+.border {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-pill);
+  will-change: transform;
+}
+
+.label {
+  position: relative;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+  opacity: 0;
+}

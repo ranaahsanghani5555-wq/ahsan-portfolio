@@ -1,0 +1,598 @@
+/* =========================================================================
+   ProjectPreview.module.css
+   Six small, invented interfaces drawn from each demo's own palette.
+   The parent .art element is a size container, so everything here can scale
+   with cqw (1cqw = 1% of the preview width) instead of the viewport.
+   ========================================================================= */
+
+.pv {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  color: var(--pv-ink, currentcolor);
+  font-family: var(--pv-body, system-ui, sans-serif);
+}
+
+/* Shared bar — stands in for a value so no invented numbers are shown. */
+.bar {
+  display: block;
+  block-size: 0.9cqw;
+  min-block-size: 4px;
+  inline-size: var(--w, 50%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pv-ink) 26%, transparent);
+}
+
+/* ------------------------------------------------------------------ inkflow */
+.inkflow {
+  display: grid;
+  place-items: center;
+}
+
+.editor {
+  inline-size: 66cqw;
+  max-inline-size: 30rem;
+  padding: 3.4cqw 3.6cqw 3.8cqw;
+  border: 1px solid var(--pv-line);
+  border-radius: 2.4cqw;
+  background: color-mix(in srgb, var(--pv-ink) 7%, var(--pv-surface));
+  box-shadow: 0 24px 50px -26px rgb(0 0 0 / 70%);
+}
+
+.editorBar {
+  display: flex;
+  align-items: center;
+  gap: 1cqw;
+  padding-block-end: 2.4cqw;
+  border-block-end: 1px solid var(--pv-line);
+}
+
+.editorBar i {
+  inline-size: 1.4cqw;
+  block-size: 1.4cqw;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--pv-ink) 28%, transparent);
+}
+
+.editorBar i:first-child {
+  background: var(--pv-accent);
+}
+
+.editorTitle {
+  margin-inline-start: auto;
+  font-family: var(--pv-mono, monospace);
+  font-size: 1.7cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pv-ink) 52%, transparent);
+}
+
+.editorBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2cqw;
+  padding-block: 3.2cqw;
+}
+
+.editorBody .bar {
+  block-size: 0.9cqw;
+}
+
+.line {
+  position: relative;
+  display: block;
+  block-size: 0.9cqw;
+  min-block-size: 4px;
+  inline-size: var(--w, 50%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pv-accent) 60%, transparent);
+}
+
+.caret {
+  position: absolute;
+  inset-block: -0.6cqw;
+  inset-inline-end: 0;
+  inline-size: 0.35cqw;
+  background: var(--pv-accent);
+}
+
+.suggestion {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 1.1cqw 2.4cqw;
+  border-radius: 999px;
+  background: var(--pv-accent);
+  color: var(--pv-surface);
+  font-size: 1.8cqw;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* ------------------------------------------------------------------- hisaab */
+.hisaab {
+  display: grid;
+  place-items: center;
+}
+
+.invoice {
+  display: flex;
+  flex-direction: column;
+  gap: 2.6cqw;
+  inline-size: 64cqw;
+  max-inline-size: 27rem;
+  padding: 3.6cqw 3.9cqw;
+  border: 1px solid color-mix(in srgb, var(--pv-ink) 12%, transparent);
+  border-radius: 2.4cqw;
+  background: #fff;
+  color: var(--pv-ink);
+  box-shadow: 0 24px 50px -28px rgb(12 31 26 / 55%);
+}
+
+.invoiceTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2cqw;
+}
+
+.pillLabel {
+  font-family: var(--pv-mono, monospace);
+  font-size: 1.7cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pv-ink) 82%, transparent);
+}
+
+.paid {
+  padding: 0.6cqw 1.8cqw;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pv-accent) 14%, #fff);
+  color: color-mix(in srgb, var(--pv-accent) 40%, var(--pv-ink));
+  font-size: 1.6cqw;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.amount {
+  display: flex;
+  align-items: center;
+  gap: 1.4cqw;
+}
+
+.currency {
+  font-family: var(--pv-display, serif);
+  font-size: 6cqw;
+  line-height: 1;
+}
+
+.amountBar {
+  block-size: 3.4cqw;
+  min-block-size: 8px;
+  border-radius: 1cqw;
+  background: color-mix(in srgb, var(--pv-ink) 82%, transparent);
+}
+
+.txns {
+  display: flex;
+  flex-direction: column;
+  gap: 2cqw;
+  padding-block-start: 2.6cqw;
+  border-block-start: 1px solid color-mix(in srgb, var(--pv-ink) 12%, transparent);
+}
+
+.txn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3cqw;
+}
+
+.txnLabel {
+  font-size: 2.1cqw;
+  color: color-mix(in srgb, var(--pv-ink) 78%, transparent);
+}
+
+.txn .bar {
+  inline-size: var(--w);
+}
+
+.txnNet .txnLabel {
+  font-weight: 700;
+  color: var(--pv-ink);
+}
+
+.txnNet .bar {
+  background: var(--pv-accent);
+}
+
+.hisaabBars {
+  position: absolute;
+  inset-block-end: 9%;
+  inset-inline-start: 8%;
+  display: flex;
+  align-items: flex-end;
+  gap: 1.6cqw;
+}
+
+.hisaabBars i {
+  display: block;
+  inline-size: 3cqw;
+  border-radius: 1cqw 1cqw 0 0;
+  background: color-mix(in srgb, var(--pv-accent) 55%, transparent);
+}
+
+.hisaabBars i:nth-child(1) {
+  block-size: 10cqw;
+}
+.hisaabBars i:nth-child(2) {
+  block-size: 16cqw;
+}
+.hisaabBars i:nth-child(3) {
+  block-size: 7cqw;
+}
+
+/* ----------------------------------------------------------------- cadenza */
+.cadenza {
+  display: grid;
+  place-items: center;
+}
+
+.panel {
+  inline-size: 68cqw;
+  max-inline-size: 30rem;
+  padding: 3.4cqw;
+  border: 1px solid color-mix(in srgb, var(--pv-ink) 12%, transparent);
+  border-radius: 2cqw;
+  background: color-mix(in srgb, #fff 72%, var(--pv-surface));
+  box-shadow: 0 24px 50px -30px rgb(18 21 28 / 55%);
+}
+
+.panelTop {
+  display: flex;
+  align-items: center;
+  gap: 1.6cqw;
+}
+
+.panelDot {
+  inline-size: 1.6cqw;
+  block-size: 1.6cqw;
+  border-radius: 50%;
+  background: var(--pv-accent);
+}
+
+.chart {
+  inline-size: 100%;
+  block-size: auto;
+  margin-block: 2.4cqw;
+  overflow: visible;
+}
+
+.chartLine {
+  stroke: var(--pv-accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.panelRows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6cqw;
+}
+
+.panelChip {
+  position: absolute;
+  inset-block-end: 13%;
+  inset-inline-end: 7%;
+  padding: 1.4cqw 2.8cqw;
+  border-radius: 999px;
+  background: var(--pv-ink);
+  color: #fff;
+  font-size: 2cqw;
+  font-weight: 600;
+}
+
+/* ----------------------------------------------------------- atelier-noor */
+.noor {
+  display: grid;
+  align-content: end;
+  padding: 7cqw;
+}
+
+.noorWord {
+  font-family: var(--pv-display, sans-serif);
+  font-weight: 800;
+  font-size: 32cqw;
+  line-height: 0.8;
+  letter-spacing: -0.045em;
+  color: var(--pv-ink);
+}
+
+.noorRule {
+  margin-block-start: 3cqw;
+  block-size: 1px;
+  inline-size: 100%;
+  background: var(--pv-ink);
+}
+
+.noorSquare {
+  position: absolute;
+  inset-block-start: 10%;
+  inset-inline-end: 9%;
+  inline-size: 13cqw;
+  block-size: 13cqw;
+  background: var(--pv-accent);
+}
+
+.noorCaption {
+  margin-block-start: 2.6cqw;
+  font-family: var(--pv-mono, monospace);
+  font-size: 1.8cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pv-ink) 60%, transparent);
+}
+
+/* --------------------------------------------------------------------- kora */
+.kora {
+  display: grid;
+  place-items: center;
+}
+
+.vessel {
+  position: relative;
+  inline-size: 30cqw;
+  block-size: 40cqw;
+}
+
+.vesselRim {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 6cqw;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--pv-accent) 60%, var(--pv-surface));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pv-ink) 25%, transparent);
+}
+
+.vesselBody {
+  position: absolute;
+  inset-block-start: 2cqw;
+  inset-inline: 0;
+  block-size: 28cqw;
+  background: var(--pv-accent);
+  clip-path: polygon(14% 0, 86% 0, 64% 100%, 36% 100%);
+}
+
+.koraBase {
+  position: absolute;
+  inset-block-end: 15%;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: 36cqw;
+  block-size: 1.4cqw;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--pv-ink) 26%, transparent);
+}
+
+.koraDots {
+  position: absolute;
+  inset-block-end: 8%;
+  inset-inline-end: 8%;
+  display: flex;
+  gap: 1.6cqw;
+}
+
+.koraDots i {
+  display: block;
+  inline-size: 3.4cqw;
+  block-size: 3.4cqw;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--pv-ink) 30%, transparent);
+}
+
+.koraDots i:nth-child(1) {
+  background: var(--pv-accent);
+}
+.koraDots i:nth-child(2) {
+  background: var(--pv-ink);
+}
+.koraDots i:nth-child(3) {
+  background: color-mix(in srgb, var(--pv-ink) 30%, transparent);
+}
+
+.steam {
+  position: absolute;
+  inset-block-start: 12%;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  display: flex;
+  gap: 3cqw;
+}
+
+.steam i {
+  display: block;
+  inline-size: 1.2cqw;
+  block-size: 12cqw;
+  border-radius: 999px;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--pv-ink) 30%, transparent),
+    transparent
+  );
+}
+
+/* ----------------------------------------------------------------- rep-club */
+.rep {
+  display: grid;
+  place-items: center;
+}
+
+.repWord {
+  position: absolute;
+  inset-block-start: 7%;
+  inset-inline-start: 7%;
+  font-family: var(--pv-display, sans-serif);
+  font-weight: 900;
+  font-size: 24cqw;
+  line-height: 0.78;
+  letter-spacing: -0.05em;
+  color: var(--pv-ink);
+  transform: rotate(-5deg) skewX(-6deg);
+}
+
+.ring {
+  position: relative;
+  translate: 26% -12%;
+}
+
+.ring svg {
+  inline-size: 26cqw;
+  block-size: 26cqw;
+}
+
+.ringTrack {
+  fill: none;
+  stroke: color-mix(in srgb, var(--pv-ink) 16%, transparent);
+  stroke-width: 6;
+}
+
+.ringFill {
+  fill: none;
+  stroke: var(--pv-accent);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-dasharray: 163;
+  stroke-dashoffset: 56;
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+.ringLabel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-family: var(--pv-display, sans-serif);
+  font-weight: 800;
+  font-size: 6.4cqw;
+  color: var(--pv-ink);
+}
+
+.repChip {
+  position: absolute;
+  inset-block-end: 9%;
+  inset-inline-start: 7%;
+  padding: 1.4cqw 3cqw;
+  border-radius: 999px;
+  background: var(--pv-ink);
+  color: var(--pv-surface);
+  font-size: 2.1cqw;
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------------- motion */
+@media (prefers-reduced-motion: no-preference) {
+  .caret {
+    animation: caretBlink 1.1s steps(1, end) infinite;
+  }
+  .chartLine {
+    stroke-dasharray: 340;
+    stroke-dashoffset: 340;
+    animation: drawLine 2.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .steam i {
+    animation: steamRise 4.5s ease-in-out infinite;
+  }
+  .steam i:nth-child(2) {
+    animation-delay: 1.4s;
+  }
+  .ringFill {
+    animation: ringSweep 3.2s ease-in-out infinite alternate;
+  }
+  .koraDots i {
+    animation: dotPulse 3.4s ease-in-out infinite;
+  }
+  .koraDots i:nth-child(2) {
+    animation-delay: 0.5s;
+  }
+  .koraDots i:nth-child(3) {
+    animation-delay: 1s;
+  }
+}
+
+/* Same motion when the visitor forces it ON (html[data-motion='full'],
+   src/lib/motion.js) on an OS that asks for reduce — the no-preference
+   block above cannot see that override. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion='full'] .caret {
+    animation: caretBlink 1.1s steps(1, end) infinite;
+  }
+  html[data-motion='full'] .chartLine {
+    stroke-dasharray: 340;
+    stroke-dashoffset: 340;
+    animation: drawLine 2.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  html[data-motion='full'] .steam i {
+    animation: steamRise 4.5s ease-in-out infinite;
+  }
+  html[data-motion='full'] .steam i:nth-child(2) {
+    animation-delay: 1.4s;
+  }
+  html[data-motion='full'] .ringFill {
+    animation: ringSweep 3.2s ease-in-out infinite alternate;
+  }
+  html[data-motion='full'] .koraDots i {
+    animation: dotPulse 3.4s ease-in-out infinite;
+  }
+  html[data-motion='full'] .koraDots i:nth-child(2) {
+    animation-delay: 0.5s;
+  }
+  html[data-motion='full'] .koraDots i:nth-child(3) {
+    animation-delay: 1s;
+  }
+}
+
+@keyframes caretBlink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes steamRise {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translateY(0) scaleY(0.9);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-1.4cqw) scaleY(1.05);
+  }
+}
+
+@keyframes ringSweep {
+  from {
+    stroke-dashoffset: 74;
+  }
+  to {
+    stroke-dashoffset: 40;
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.8cqw);
+  }
+}

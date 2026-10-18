@@ -1,0 +1,32 @@
+{
+  "name": "ahsan-ghani-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Portfolio for Ahsan Ghani — web designer. Concept-project demos, case studies and design critique.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "shots": "node screenshots.mjs"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.18",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.15.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.15.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "globals": "^15.12.0",
+    "playwright": "^1.64.0",
+    "pngjs": "^7.0.0",
+    "vite": "^5.4.11"
+  }
+}

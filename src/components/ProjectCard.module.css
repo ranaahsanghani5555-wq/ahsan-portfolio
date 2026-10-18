@@ -1,0 +1,187 @@
+/* =========================================================================
+   ProjectCard.module.css
+   Hairline-ruled editorial card. The preview panel is a size container so the
+   ProjectPreview internals can scale with the card, not the viewport.
+   ========================================================================= */
+
+.card {
+  position: relative;
+}
+
+/* --- preview panel -------------------------------------------------------- */
+.art {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background-color: var(--pv-surface);
+  color: var(--pv-ink);
+  container-type: size;
+  isolation: isolate;
+}
+
+.badge {
+  position: absolute;
+  inset-block-start: var(--space-4);
+  inset-inline-start: var(--space-4);
+  z-index: 2;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid color-mix(in srgb, var(--pv-ink) 40%, transparent);
+  border-radius: var(--radius-pill);
+  font-family: var(--pv-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pv-ink) 78%, transparent);
+}
+
+.number {
+  position: absolute;
+  inset-block-start: var(--space-3);
+  inset-inline-end: var(--space-4);
+  z-index: 2;
+  font-family: var(--pv-mono);
+  font-size: var(--step-2);
+  letter-spacing: var(--tracking-tight);
+  /* Mixed toward the demo's own ink so the numeral clears AA on every
+     palette (light accents on light grounds failed contrast on their own). */
+  color: color-mix(in srgb, var(--pv-accent) 42%, var(--pv-ink));
+}
+
+/* Hover/focus cue that sits over the preview */
+.cue {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid color-mix(in srgb, var(--pv-ink) 28%, transparent);
+  border-radius: var(--radius-pill);
+  background: var(--pv-surface);
+  color: var(--pv-ink);
+  font-size: var(--step--1);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-snug);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(-50%, calc(-50% + 10px));
+  transition:
+    opacity var(--dur-med) var(--ease-out-expo),
+    transform var(--dur-med) var(--ease-out-expo);
+  pointer-events: none;
+}
+
+.card:hover .cue,
+.card:focus-within .cue {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+/* --- meta block, ruled rather than boxed ---------------------------------- */
+.meta {
+  padding-block-start: var(--space-5);
+  margin-block-start: var(--space-5);
+  border-block-start: 1px solid var(--line);
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.tag {
+  color: var(--text-strong);
+}
+
+.dot {
+  color: var(--text-muted);
+}
+
+.name {
+  margin-block-start: var(--space-2);
+  font-size: var(--type-h3);
+}
+
+/* The hover nudge sits on a leaf inside the button. It must never move the
+   <h3> (or anything between the button and .card): a transformed ancestor
+   becomes the containing block of .trigger::after (inset: 0), collapsing the
+   full-card click surface to the title row the moment the card is hovered. */
+.nameText {
+  display: inline-block;
+  transition: transform var(--dur-med) var(--ease-out-expo);
+}
+
+.card:hover .nameText,
+.card:focus-within .nameText {
+  transform: translateX(4px);
+}
+
+/* The stretched button: name is a heading, but the whole card is operable. */
+.trigger {
+  font: inherit;
+  color: inherit;
+  text-align: start;
+  padding: 0;
+  letter-spacing: inherit;
+  transition: color var(--dur-fast) var(--ease-out-soft);
+}
+
+.trigger::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+}
+
+.card:hover .trigger,
+.trigger:hover {
+  color: var(--accent-text);
+}
+
+.role {
+  margin-block-start: var(--space-2);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.brief {
+  margin-block-start: var(--space-3);
+  max-width: var(--measure);
+  color: var(--text);
+}
+
+.open {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-block-start: var(--space-5);
+  font-weight: var(--weight-semibold);
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.28em;
+  text-decoration-color: var(--border-strong);
+  transition: text-decoration-color var(--dur-fast) var(--ease-out-soft);
+}
+
+.card:hover .open,
+.card:focus-within .open {
+  text-decoration-color: var(--accent);
+}
+
+/* Respect reduced motion: no slide, no parallax-driven scale — unless the
+   visitor forces motion ON via the override (src/lib/motion.js). */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion='full']) .card:hover .nameText,
+  html:not([data-motion='full']) .card:focus-within .nameText {
+    transform: none;
+  }
+}

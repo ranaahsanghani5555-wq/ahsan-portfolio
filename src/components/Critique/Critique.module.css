@@ -1,0 +1,1575 @@
+/* =========================================================================
+   Critique.module.css — the pine (inverted) section.
+
+   One editorial composition: a title block, then four blocks separated by
+   hairline rules (teardown, revision, position, checklist). Every colour on
+   the pine surface is an AA-safe on-pine token; the invented mockups sit on
+   their own light surfaces so their palettes never fight the pine.
+
+   The mockups are scaled "artboards": sizes inside them use container query
+   units (cqw) so they keep their composition at any frame width.
+   ========================================================================= */
+
+/* -------------------------------------------------------------------------
+   Title block
+   ------------------------------------------------------------------------- */
+.head {
+  max-width: 54rem;
+}
+
+.heading {
+  margin-block-start: var(--space-4);
+  font-size: var(--type-h2);
+  letter-spacing: var(--tracking-snug);
+  color: var(--on-pine);
+  text-wrap: balance;
+}
+
+.intro {
+  margin-block-start: var(--space-5);
+  max-width: var(--measure);
+  font-size: var(--step-1);
+  line-height: 1.55;
+  color: var(--on-pine-soft);
+}
+
+/* -------------------------------------------------------------------------
+   Block rhythm
+   ------------------------------------------------------------------------- */
+.block {
+  margin-block-start: var(--space-10);
+  padding-block-start: var(--space-8);
+  border-block-start: 1px solid var(--on-pine-line);
+}
+
+.blockHead {
+  max-width: 48rem;
+}
+
+.blockTitle {
+  margin-block-start: var(--space-4);
+  font-size: var(--type-h3);
+  letter-spacing: var(--tracking-snug);
+  color: var(--on-pine);
+  text-wrap: balance;
+}
+
+.blockIntro {
+  margin-block-start: var(--space-4);
+  max-width: var(--measure);
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--on-pine-soft);
+}
+
+.inlineHonesty {
+  color: var(--on-pine-muted);
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------------------
+   Tabs
+   ------------------------------------------------------------------------- */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-start: var(--space-7);
+}
+
+.tab {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  border: 1px solid var(--on-pine-line);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--on-pine-soft);
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-out-soft),
+    border-color var(--dur-fast) var(--ease-out-soft),
+    color var(--dur-fast) var(--ease-out-soft);
+}
+
+.tab:hover {
+  border-color: var(--on-pine-muted);
+  color: var(--on-pine);
+}
+
+.tabActive {
+  background: var(--on-pine);
+  border-color: var(--on-pine);
+  color: var(--pine);
+}
+
+.tabName {
+  font-size: var(--step-0);
+  font-weight: var(--weight-semibold);
+}
+
+.tabNote {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+/* -------------------------------------------------------------------------
+   Panel + stage grid
+   ------------------------------------------------------------------------- */
+.panel {
+  margin-block-start: var(--space-6);
+}
+
+.panel:focus-visible {
+  outline-offset: 8px;
+}
+
+.stageGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+/* -------------------------------------------------------------------------
+   Browser frame + the mockup artboard + hotspots
+   ------------------------------------------------------------------------- */
+.stageCol {
+  min-width: 0;
+}
+
+.frame {
+  border: 1px solid var(--on-pine-line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: #f4f1ea;
+  box-shadow: var(--shadow-lg);
+}
+
+.chrome {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  background: #e9e4d8;
+  border-block-end: 1px solid #d8d2c4;
+}
+
+.dot {
+  width: 0.62rem;
+  height: 0.62rem;
+  border-radius: 50%;
+  background: #c3bcab;
+}
+
+.url {
+  margin-inline-start: var(--space-3);
+  padding: 0.15rem 0.8rem;
+  border: 1px solid #ddd7ca;
+  border-radius: var(--radius-pill);
+  background: #f4f1ea;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: #57534a;
+}
+
+.screen {
+  position: relative;
+  container-type: inline-size;
+}
+
+.hotspots {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hotspot {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  transform: translate(-50%, -50%);
+  border: 2px solid #f4f1ea;
+  border-radius: 50%;
+  background: #141210;
+  color: #f4f1ea;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 2px 12px rgba(20, 18, 16, 0.4);
+  transition:
+    transform var(--dur-fast) var(--ease-spring),
+    background-color var(--dur-fast) var(--ease-out-soft),
+    color var(--dur-fast) var(--ease-out-soft);
+}
+
+.hotspot::after {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border: 2px solid rgba(20, 18, 16, 0.28);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--dur-2) var(--ease-out-expo);
+}
+
+.hotspot:hover::after,
+.hotspot:focus-visible::after,
+.hotspotOpen::after {
+  opacity: 1;
+}
+
+.hotspot:hover {
+  transform: translate(-50%, -50%) scale(1.14);
+}
+
+.hotspotOpen {
+  background: var(--vermilion-bright);
+  color: #141210;
+}
+
+/* Hotspots sit on a LIGHT mockup, so their focus ring must be dark. */
+.hotspot:focus-visible {
+  outline-color: var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.stageMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+  margin-block-start: var(--space-4);
+}
+
+.stageBrand {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--on-pine);
+}
+
+.stageKind {
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--on-pine-muted);
+}
+
+.honesty {
+  font-size: var(--step--1);
+  font-style: italic;
+  color: var(--on-pine-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Annotation rail + notes
+   ------------------------------------------------------------------------- */
+.rail {
+  min-width: 0;
+}
+
+.railHint {
+  margin-block-end: var(--space-4);
+  font-size: var(--step--1);
+  color: var(--on-pine-muted);
+}
+
+.notes {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.note {
+  border-block-start: 1px solid var(--on-pine-line);
+}
+
+.noteHeader {
+  display: flex;
+  gap: var(--space-4);
+  align-items: flex-start;
+  width: 100%;
+  padding: var(--space-4) 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+}
+
+button.noteHeader {
+  cursor: pointer;
+}
+
+.noteNum {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 1.8rem;
+  height: 1.8rem;
+  border: 1px solid var(--on-pine-line);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: var(--weight-bold);
+  color: var(--on-pine);
+}
+
+.noteMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.noteTag {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--on-pine-muted);
+}
+
+.noteTitle {
+  font-size: var(--step-0);
+  line-height: 1.3;
+  color: var(--on-pine);
+}
+
+.noteBody {
+  padding-block-end: var(--space-4);
+}
+
+.noteBody:focus-visible {
+  outline-offset: 4px;
+  border-radius: var(--radius-xs);
+}
+
+.noteList {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+}
+
+.noteRow {
+  display: grid;
+  gap: 2px;
+}
+
+.noteRow dt {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--on-pine-muted);
+}
+
+.noteRow dd {
+  margin: 0;
+  font-size: var(--step-0);
+  line-height: 1.55;
+  color: var(--on-pine-soft);
+}
+
+.noteTagInline {
+  display: inline-block;
+  margin-inline-end: var(--space-2);
+  padding: 0.05rem 0.45rem;
+  border-radius: var(--radius-xs);
+  background: var(--on-pine);
+  color: var(--pine);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+}
+
+.noteClose {
+  margin-block-start: var(--space-3);
+  padding: var(--space-1) var(--space-4);
+  border: 1px solid var(--on-pine-line);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--on-pine);
+  font: inherit;
+  font-size: var(--step--1);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out-soft);
+}
+
+.noteClose:hover {
+  border-color: var(--on-pine);
+}
+
+/* -------------------------------------------------------------------------
+   Scorecard
+   ------------------------------------------------------------------------- */
+.scoreWrap {
+  margin-block-start: var(--space-8);
+  padding-block-start: var(--space-6);
+  border-block-start: 1px solid var(--on-pine-line);
+}
+
+.scorecard {
+  min-width: 0;
+}
+
+.scorecardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-4);
+}
+
+.scorecardTitle {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--on-pine-muted);
+}
+
+.scorecardCaption {
+  font-size: var(--step--1);
+  font-style: italic;
+  color: var(--on-pine-soft);
+}
+
+.scoreRows {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scoreRow {
+  display: grid;
+  grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.scoreLabel {
+  font-size: var(--step-0);
+  color: var(--on-pine);
+}
+
+.scoreTrack {
+  position: relative;
+  height: 0.4rem;
+  overflow: hidden;
+  border-radius: var(--radius-pill);
+  background: rgba(244, 241, 234, 0.16);
+}
+
+.scoreFill {
+  display: block;
+  height: 100%;
+  transform: scaleX(0);
+  transform-origin: left center;
+  border-radius: inherit;
+  background: var(--on-pine);
+}
+
+.scoreValue {
+  min-width: 2.5ch;
+  font-family: var(--font-mono);
+  font-size: var(--step-0);
+  font-variant-numeric: tabular-nums;
+  color: var(--on-pine);
+  text-align: end;
+}
+
+/* -------------------------------------------------------------------------
+   Revision — AI draft vs my refinement
+   ------------------------------------------------------------------------- */
+.revisionNotes {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-5);
+  margin: var(--space-7) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.revisionNote {
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--on-pine-line);
+}
+
+.revisionKey {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  color: var(--on-pine-muted);
+}
+
+.revisionBody {
+  margin-block-start: var(--space-2);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  color: var(--on-pine-soft);
+}
+
+/* -------------------------------------------------------------------------
+   Position — essay + convergence slider
+   ------------------------------------------------------------------------- */
+.essayGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-8);
+  margin-block-start: var(--space-7);
+}
+
+.essay p {
+  max-width: var(--measure-narrow);
+  margin-block-end: var(--space-4);
+  font-size: var(--step-1);
+  line-height: 1.6;
+  color: var(--on-pine-soft);
+}
+
+/* -------------------------------------------------------------------------
+   Checklist
+   ------------------------------------------------------------------------- */
+.checklist {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: var(--space-7) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.checkitem {
+  display: flex;
+  gap: var(--space-4);
+  align-items: baseline;
+  padding-block: var(--space-4);
+  border-block-start: 1px solid var(--on-pine-line);
+}
+
+.checkNum {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--on-pine-muted);
+}
+
+.checkText {
+  font-size: var(--step-0);
+  line-height: 1.45;
+  color: var(--on-pine);
+}
+
+/* =========================================================================
+   Wide layout
+   ========================================================================= */
+@media (min-width: 60rem) {
+  .stageGrid {
+    grid-template-columns: minmax(0, 1.35fr) minmax(19rem, 1fr);
+    gap: var(--space-8);
+  }
+
+  .rail {
+    position: sticky;
+    top: 6rem;
+  }
+
+  /* Disclosure behaviour: only the open note shows its body. */
+  .noteBody {
+    display: none;
+  }
+
+  .noteOpen .noteBody {
+    display: block;
+  }
+
+  .noteOpen {
+    padding-inline: var(--space-4);
+    border-block-start-color: transparent;
+    border-radius: var(--radius-md);
+    background: rgba(244, 241, 234, 0.06);
+    box-shadow: inset 0 0 0 1px var(--on-pine-line);
+  }
+
+  .noteOpen .noteHeader {
+    padding-block-end: var(--space-2);
+  }
+
+  .essayGrid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    align-items: start;
+  }
+
+  .revisionNotes,
+  .checklist {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .revisionNotes {
+    gap: var(--space-6) var(--space-8);
+  }
+}
+
+/* =========================================================================
+   MOCKUPS — invented artboards. Sizes in cqw; palettes are their own.
+   ========================================================================= */
+.mPage {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-body);
+  font-size: 2.6cqw;
+  line-height: 1.4;
+  color: #141210;
+}
+
+.mBtn,
+.mNavBtn,
+.mLink {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mBtn {
+  border: 1px solid transparent;
+}
+
+/* --- WEAK: generic generated SaaS ---------------------------------------- */
+.mWeak {
+  background: #ffffff;
+}
+
+.mWeak .mNav {
+  border-block-end: 1px solid #ececf0;
+}
+
+.mWeak .mNavLinks {
+  color: #6b6560;
+}
+
+.mWeak .mNavBtn {
+  background: #4c3fd0;
+  color: #ffffff;
+}
+
+.mWeak .mHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.6cqw;
+  padding: 7cqw 8cqw 5cqw;
+  background: #ffffff;
+  text-align: center;
+}
+
+.mWeak .mHeadline {
+  max-width: 18ch;
+  background: linear-gradient(120deg, #4c3fd0, #7b3fe4 50%, #a23fd0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 6.6cqw;
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.mWeak .mSub {
+  max-width: 48ch;
+  color: #9aa3b2; /* deliberately low contrast — 2.6:1 on white */
+  font-size: 3.2cqw;
+  line-height: 1.45;
+}
+
+.mWeak .mBtn {
+  padding: 1.8cqw 4.4cqw;
+  border-color: #4c3fd0;
+  border-radius: var(--radius-pill);
+  color: #4c3fd0;
+  font-size: 2.9cqw;
+}
+
+.mWeak .mBtnPrimary {
+  background: #4c3fd0;
+  border-color: #4c3fd0;
+  color: #ffffff;
+}
+
+.mWeak .mIllustration {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.4cqw;
+  width: 100%;
+  max-width: 62cqw;
+  aspect-ratio: 16 / 8;
+  margin-block-start: 3cqw;
+  padding: 4cqw;
+  border-radius: 3cqw;
+  background: linear-gradient(140deg, #4c3fd0, #7b3fe4 55%, #a23fd0);
+}
+
+.mBubble {
+  flex: 1;
+  height: 42%;
+  border-radius: 1.6cqw 1.6cqw 0 0;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.mBubble:nth-child(2) {
+  height: 66%;
+}
+
+.mBubble:nth-child(3) {
+  height: 88%;
+}
+
+.mCards {
+  display: flex;
+  gap: 3cqw;
+  padding: 5cqw;
+}
+
+.mCard {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.6cqw;
+  padding: 4cqw 3cqw;
+  border: 1px solid #ececf0;
+  border-radius: 2.4cqw;
+  background: #ffffff;
+  text-align: center;
+}
+
+.mCardIcon {
+  width: 7cqw;
+  height: 7cqw;
+  border-radius: 1.8cqw;
+  background: linear-gradient(135deg, #5b4fe0, #a23fd0);
+}
+
+.mCardTitle {
+  color: #1c1b2e;
+  font-size: 3cqw;
+  font-weight: 700;
+}
+
+.mWeak .mCardBody {
+  color: #9aa3b2;
+}
+
+.mCardBody {
+  font-size: 2.4cqw;
+  line-height: 1.4;
+}
+
+.mFooter {
+  padding: 3cqw 5cqw;
+  border-block-start: 1px solid #ececf0;
+  color: #9aa3b2;
+  font-size: 2.2cqw;
+}
+
+/* --- DECENT: clean but safe --------------------------------------------- */
+.mDecent {
+  background: #ffffff;
+}
+
+.mDecent .mNav {
+  border-block-end: 1px solid #e8ebef;
+  color: #1f2a37;
+}
+
+.mDecent .mNavLinks {
+  color: #667085;
+}
+
+.mDecent .mNavBtn {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.mDecent .mHero {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 5cqw;
+  align-items: center;
+  padding: 6cqw;
+  background: #f8fafc;
+}
+
+.mDecent .mHeroCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.4cqw;
+}
+
+.mDecent .mEyebrow {
+  color: #2563eb;
+}
+
+.mDecent .mHeadline {
+  max-width: 20ch;
+  color: #101828;
+  font-size: 5.4cqw;
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.mDecent .mSub {
+  max-width: 52ch; /* a long measure, on purpose */
+  color: #475467;
+  font-size: 3cqw;
+  line-height: 1.5;
+}
+
+.mDecent .mCtas {
+  display: flex;
+  align-items: center;
+  gap: 2.4cqw;
+}
+
+.mDecent .mBtn {
+  padding: 2cqw 4.6cqw;
+  border-color: #cbd5e1;
+  border-radius: 1.4cqw;
+  color: #334155;
+  font-size: 2.8cqw;
+}
+
+.mDecent .mBtnPrimary {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+}
+
+.mDecent .mShot {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4cqw;
+  aspect-ratio: 4 / 3;
+  padding: 3cqw;
+  border: 1px solid #e2e8f0;
+  border-radius: 2cqw;
+  background: #ffffff;
+  box-shadow: 0 14px 34px -20px rgba(16, 24, 40, 0.3);
+}
+
+.mDecent .mShotBar {
+  width: 60%;
+  height: 2.4cqw;
+  border-radius: var(--radius-pill);
+  background: #e2e8f0;
+}
+
+.mDecent .mShotRow {
+  height: 6.4cqw;
+  border: 1px solid #e2e8f0;
+  border-radius: 1.2cqw;
+  background: #f1f5f9;
+}
+
+.mDecent .mCards {
+  padding: 5cqw 6cqw;
+}
+
+.mDecent .mCard {
+  align-items: flex-start;
+  border-color: #e2e8f0;
+  text-align: start;
+}
+
+.mDecent .mCardIcon {
+  border-radius: 1.4cqw;
+  background: #2563eb;
+}
+
+.mDecent .mCardTitle {
+  color: #101828;
+}
+
+.mDecent .mCardBody {
+  color: #475467;
+}
+
+.mDecent .mFooter {
+  border-block-start-color: #e8ebef;
+  color: #98a2b3;
+}
+
+/* --- STRONG: a clear point of view -------------------------------------- */
+.mStrong {
+  background: #f4f1ea;
+}
+
+.mStrong .mNav {
+  color: #141210;
+}
+
+.mStrong .mNavLinks {
+  color: #6b6152;
+}
+
+.mStrong .mNavBtn {
+  background: #141210;
+  color: #f4f1ea;
+}
+
+.mStrong .mHero {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 5cqw;
+  align-items: center;
+  padding: 7cqw 6cqw 6cqw;
+}
+
+.mStrong .mHeroCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.6cqw;
+}
+
+.mStrong .mEyebrow {
+  color: #6b6152;
+}
+
+.mStrong .mHeadline {
+  max-width: 13ch;
+  color: #141210;
+  font-family: var(--font-display);
+  font-size: 9.4cqw;
+  font-weight: 600;
+  line-height: 0.97;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.mStrong .mSub {
+  max-width: 42ch;
+  color: #3a352f;
+  font-size: 3.1cqw;
+  line-height: 1.5;
+}
+
+.mStrong .mCtas {
+  display: flex;
+  align-items: center;
+  gap: 3cqw;
+}
+
+.mStrong .mBtn {
+  padding: 2.2cqw 4.8cqw;
+  border-radius: var(--radius-pill);
+  font-size: 2.9cqw;
+}
+
+.mStrong .mBtnPrimary {
+  background: #141210;
+  border-color: #141210;
+  color: #f4f1ea;
+}
+
+.mStrong .mLink {
+  color: #3a352f;
+  font-size: 2.7cqw;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mStrong .mImage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3.4;
+  border-radius: 3cqw;
+  background: radial-gradient(circle at 38% 32%, #f3c98b, #d98a4a 55%, #a5542b 100%);
+}
+
+.mStrong .mImageDisc {
+  width: 60%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 34%, #f7dcae, #b56a34 78%);
+  box-shadow: inset 0 0 0 1.4cqw #f4f1ea;
+}
+
+.mStrong .mImageLabel {
+  position: absolute;
+  inset-block-end: 4cqw;
+  color: #3a2a1c;
+  font-family: var(--font-mono);
+  font-size: 2.2cqw;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mStrong .mStrip {
+  display: flex;
+  justify-content: space-between;
+  gap: 3cqw;
+  padding: 3.4cqw 6cqw;
+  border-block-start: 1px solid rgba(20, 18, 16, 0.14);
+  color: #6b6152;
+  font-family: var(--font-mono);
+  font-size: 2.3cqw;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mStrong .mFooter {
+  border-block-start: 1px solid rgba(20, 18, 16, 0.14);
+  color: #6b6152;
+}
+
+/* Shared nav / eyebrow defaults used by all three screens */
+.mNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4cqw;
+  padding: 3cqw 5cqw;
+  font-size: 2.6cqw;
+}
+
+.mLogo {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.mNavLinks {
+  display: inline-flex;
+  gap: 3cqw;
+}
+
+.mNavBtn {
+  padding: 1.7cqw 3.8cqw;
+  border-radius: var(--radius-pill);
+  font-size: 2.4cqw;
+}
+
+.mEyebrow {
+  font-family: var(--font-mono);
+  font-size: 2.1cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6b6560;
+}
+
+/* =========================================================================
+   COMPARISON SLIDER — same brief, twice (transparent native range)
+   ========================================================================= */
+.cmp {
+  margin-block-start: var(--space-7);
+}
+
+.cmpStage {
+  --thumb-w: 2.75rem;
+  --t: 0.52;
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border: 1px solid var(--on-pine-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  background: #f4f1ea;
+}
+
+.cmpLayer {
+  position: absolute;
+  inset: 0;
+}
+
+/* The draft is clipped to the left of the handle; both are drawn from --t,
+   so they can never disagree. */
+.cmpLayerDraft {
+  clip-path: inset(
+    0 calc(100% - var(--thumb-w) / 2 - (100% - var(--thumb-w)) * var(--t)) 0 0
+  );
+}
+
+.cmpHandle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  /* Positioned with a transform (not `left`), so the only things that move
+     as the slider is dragged are the clip-path reveal and transforms. */
+  transform: translateX(calc(var(--thumb-w) / 2 + (100cqw - var(--thumb-w)) * var(--t) - 1px));
+  background: rgba(20, 18, 16, 0.5);
+  pointer-events: none;
+}
+
+.cmpGrip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: var(--thumb-w);
+  height: var(--thumb-w);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #f4f1ea;
+  color: #141210;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  letter-spacing: -0.15em;
+  box-shadow:
+    0 2px 12px rgba(20, 18, 16, 0.4),
+    inset 0 0 0 2px #141210;
+}
+
+.cmpRange {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.cmpRange::-webkit-slider-runnable-track {
+  height: 100%;
+  background: transparent;
+}
+
+.cmpRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: var(--thumb-w);
+  height: var(--thumb-w);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.cmpRange::-moz-range-track {
+  height: 100%;
+  background: transparent;
+}
+
+.cmpRange::-moz-range-thumb {
+  width: var(--thumb-w);
+  height: var(--thumb-w);
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.cmpRange:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: -6px;
+  border-radius: var(--radius-lg);
+}
+
+.cmpLegend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-4);
+  margin-block-start: var(--space-3);
+  font-size: var(--step--1);
+  color: var(--on-pine-muted);
+}
+
+.cmpLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cmpSwatch {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 3px;
+}
+
+.cmpSwatch[data-swatch='draft'] {
+  background: #6d5bd0;
+}
+
+.cmpSwatch[data-swatch='refined'] {
+  background: #e8552d;
+}
+
+/* --- the two hero treatments -------------------------------------------- */
+.cpHero {
+  width: 100%;
+  height: 100%;
+}
+
+.cpDraft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2.6cqw;
+  padding: 8cqw;
+  background: linear-gradient(140deg, #4c3fd0 0%, #7b3fe4 55%, #a23fd0 100%);
+  color: #ffffff;
+  text-align: center;
+}
+
+.cpPill {
+  padding: 1.1cqw 3cqw;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.18);
+  font-size: 2.4cqw;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cpHeadline {
+  max-width: 16ch;
+  font-size: 8cqw;
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.cpSub {
+  max-width: 42ch;
+  color: rgba(255, 255, 255, 0.7); /* flat, low-contrast — the draft flaw */
+  font-size: 3.2cqw;
+  line-height: 1.4;
+}
+
+.cpCtas {
+  display: flex;
+  gap: 2.6cqw;
+}
+
+.cpBtn {
+  padding: 1.9cqw 4.6cqw;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-pill);
+  font-size: 2.9cqw;
+}
+
+.cpBtnSolid {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #4c3fd0;
+}
+
+.cpTiles {
+  display: flex;
+  gap: 2.6cqw;
+  margin-block-start: 2cqw;
+}
+
+.cpTiles span {
+  width: 12cqw;
+  height: 9cqw;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 2cqw;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.cpRefined {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 4cqw;
+  align-items: center;
+  padding: 7cqw 8cqw;
+  background: #f4f1ea;
+  color: #141210;
+}
+
+.cpRefinedCopy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.6cqw;
+}
+
+.cpEyebrow {
+  color: #6b6152;
+  font-family: var(--font-mono);
+  font-size: 2.3cqw;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.cpRefinedHeadline {
+  max-width: 12ch;
+  color: #141210;
+  font-family: var(--font-display);
+  font-size: 9.6cqw;
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.cpRefinedSub {
+  max-width: 34ch;
+  color: #3a352f;
+  font-size: 3.1cqw;
+  line-height: 1.45;
+}
+
+.cpBtnInk {
+  background: #141210;
+  border-color: #141210;
+  color: #f4f1ea;
+}
+
+.cpNote {
+  color: #6b6152;
+  font-size: 2.6cqw;
+}
+
+.cpRefinedImage {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #f3c98b, #c86a3a 70%, #8a3f22 100%);
+}
+
+/* =========================================================================
+   CONVERGENCE / DIVERGENCE — one mockup, two directions
+   ========================================================================= */
+.conv {
+  min-width: 0;
+}
+
+.convStageWrap {
+  --t: 0;
+}
+
+.convStage {
+  position: relative;
+  container-type: inline-size;
+  aspect-ratio: 16 / 11;
+  overflow: hidden;
+  border: 1px solid var(--on-pine-line);
+  border-radius: var(--radius-md);
+  background: #f4f1ea;
+  box-shadow: var(--shadow-md);
+}
+
+.convLayer {
+  position: absolute;
+  inset: 0;
+  /* fade out across the first half of the travel … */
+  opacity: max(0, min(1, calc(1 - 2 * var(--t))));
+}
+
+.convLayerBold {
+  /* … and fade in across the second, so the two never ghost together. */
+  opacity: max(0, min(1, calc(2 * var(--t) - 1)));
+}
+
+.kmock {
+  display: flex;
+  flex-direction: column;
+  gap: 2.4cqw;
+  width: 100%;
+  height: 100%;
+  padding: 6cqw;
+}
+
+.kmNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3cqw;
+  margin-block-end: 2cqw;
+}
+
+.kmLogo {
+  font-size: 3cqw;
+  font-weight: 800;
+}
+
+.kmNavBtn {
+  font-size: 2.4cqw;
+}
+
+.kmHeadline {
+  font-size: 7cqw;
+  line-height: 1.02;
+}
+
+.kmBody {
+  max-width: 40ch;
+  font-size: 2.8cqw;
+  line-height: 1.45;
+}
+
+.kmBtn {
+  align-self: flex-start;
+  padding: 1.8cqw 4.4cqw;
+  border-radius: var(--radius-pill);
+  font-size: 2.6cqw;
+}
+
+.kmockSafe {
+  align-items: center;
+  background: #f6f5f2;
+  color: #2b2b2b;
+  text-align: center;
+}
+
+.kmockSafe .kmNav {
+  width: 100%;
+}
+
+.kmockSafe .kmHeadline {
+  max-width: 22ch;
+  color: #3a3a3a;
+  font-size: 5cqw;
+}
+
+.kmockSafe .kmBody {
+  max-width: 44ch;
+  color: #6b6b6b;
+}
+
+.kmockSafe .kmBtn {
+  align-self: center;
+  border: 1px solid #d0d0d6;
+  background: #e7e7ea;
+  color: #2b2b2b;
+}
+
+.kmockBold {
+  position: relative;
+  overflow: hidden;
+  background: #f4f1ea;
+  color: #141210;
+}
+
+.kmockBold .kmHeadline {
+  max-width: 12ch;
+  font-family: var(--font-display);
+  font-size: 9.4cqw;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.kmockBold .kmBody {
+  color: #3a352f;
+}
+
+.kmockBold .kmBtn {
+  background: #141210;
+  color: #f4f1ea;
+}
+
+.kmSticker {
+  position: absolute;
+  top: 5cqw;
+  right: 5cqw;
+  padding: 1.3cqw 3cqw;
+  border-radius: var(--radius-pill);
+  background: var(--vermilion-bright);
+  color: #141210;
+  font-family: var(--font-mono);
+  font-size: 2.3cqw;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-8deg);
+}
+
+.convControl {
+  margin-block-start: var(--space-5);
+}
+
+.convRange {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: ew-resize;
+}
+
+.convRange::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(244, 241, 234, 0.28);
+}
+
+.convRange::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  margin-top: -0.45rem;
+  border: 2px solid var(--pine);
+  border-radius: 50%;
+  background: var(--on-pine);
+}
+
+.convRange::-moz-range-track {
+  height: 4px;
+  border-radius: var(--radius-pill);
+  background: rgba(244, 241, 234, 0.28);
+}
+
+.convRange::-moz-range-thumb {
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 2px solid var(--pine);
+  border-radius: 50%;
+  background: var(--on-pine);
+}
+
+.convScale {
+  display: flex;
+  justify-content: space-between;
+  margin-block-start: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--on-pine-muted);
+}
+
+.convCaption {
+  margin-block-start: var(--space-4);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  color: var(--on-pine-soft);
+}
+
+.convCaptionLabel {
+  color: var(--on-pine);
+  font-weight: var(--weight-semibold);
+}
+
+/* =========================================================================
+   Narrow adjustments
+   ========================================================================= */
+@media (max-width: 40rem) {
+  .scoreRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .scoreLabel {
+    grid-column: 1 / -1;
+  }
+}

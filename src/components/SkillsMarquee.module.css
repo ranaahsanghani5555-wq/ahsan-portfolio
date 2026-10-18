@@ -1,0 +1,73 @@
+.marquee {
+  position: relative;
+  z-index: 1;
+  margin-block-start: clamp(3rem, 2rem + 5vw, 5.5rem);
+  padding-block: var(--space-4);
+  border-block: 1px solid var(--line);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.track {
+  display: flex;
+  inline-size: max-content;
+  will-change: transform;
+}
+
+.list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--space-7);
+  margin: 0;
+  padding: 0 var(--space-4) 0 0;
+  list-style: none;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.dot {
+  color: var(--accent-text);
+  font-size: 0.6em;
+}
+
+/* Scoped with html:not([data-motion='full']): the motion override in
+   src/lib/motion.js can force motion on or off independently of the OS.
+   (The marquee itself is a GSAP tween, gated through motionOK() in the
+   component — only the static fallback lives here.) */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion='full']) .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  /* One static, wrapping list; the seamless duplicate is hidden. */
+  html:not([data-motion='full']) .track {
+    inline-size: 100%;
+  }
+
+  html:not([data-motion='full']) .list[aria-hidden='true'] {
+    display: none;
+  }
+
+  html:not([data-motion='full']) .list {
+    flex-wrap: wrap;
+    row-gap: var(--space-2);
+  }
+}

@@ -1,0 +1,288 @@
+/* =========================================================================
+   Contact.module.css — the last screen before the footer.
+   One giant headline with a reveal, then a quiet two-column split: contact
+   facts + copy-email on the left, the form on the right.
+   ========================================================================= */
+
+/* --- giant headline ------------------------------------------------------- */
+.heading {
+  margin-block-start: var(--space-4);
+  max-width: 20ch;
+  font-family: var(--font-display);
+  font-size: var(--type-display);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text-strong);
+  outline-offset: 0.3em;
+}
+
+.headingEm {
+  font-style: italic;
+  font-weight: var(--weight-light);
+  /* --vermilion is large-text only (3.23:1): at this size it is allowed. */
+  color: var(--vermilion);
+}
+
+/* The masked second line: hidden by default, lifted in on hover / focus. */
+.revealMask {
+  display: block;
+  overflow: hidden;
+  margin-block-start: var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-weight: var(--weight-regular);
+  line-height: 1.2;
+  letter-spacing: var(--tracking-normal);
+}
+
+.revealLine {
+  display: inline-block;
+  color: var(--text-muted);
+  /* Hidden state is owned by GSAP so it composes with the transform system;
+     with JS unavailable the line simply reads as visible. */
+  will-change: transform;
+}
+
+/* --- two-column split ----------------------------------------------------- */
+.grid {
+  row-gap: var(--space-8);
+  margin-block-start: var(--space-9);
+}
+
+.intro {
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
+}
+
+.lead {
+  max-width: var(--measure);
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* --- copy email + toast --------------------------------------------------- */
+.contactRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.copy {
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  color: var(--text-strong);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-snug);
+}
+
+.copy:hover {
+  border-color: var(--ink);
+}
+
+.toast {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-snug);
+  color: var(--success);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity var(--dur-med) var(--ease-out-soft), transform var(--dur-med) var(--ease-out-soft);
+}
+
+.toast[data-show='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- links ---------------------------------------------------------------- */
+.links {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  color: var(--accent-text);
+  font-size: var(--step--1);
+  overflow-wrap: anywhere;
+}
+
+.link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.28em;
+}
+
+/* --- facts ---------------------------------------------------------------- */
+.facts {
+  display: grid;
+  gap: var(--space-4);
+  margin: var(--space-4) 0 0;
+  padding-block-start: var(--space-5);
+  border-block-start: 1px solid var(--line);
+}
+
+.fact {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.factKey {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.factValue {
+  margin: 0;
+  color: var(--text-strong);
+}
+
+/* --- form ---------------------------------------------------------------- */
+.form {
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+  padding: var(--space-7);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background-color: var(--paper-2);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.input {
+  inline-size: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background-color: var(--paper);
+  color: var(--text-strong);
+  font: inherit;
+  transition: border-color var(--dur-fast) var(--ease-out-soft);
+}
+
+.input:hover {
+  border-color: var(--ink-muted);
+}
+
+.textarea {
+  resize: vertical;
+  min-block-size: 8rem;
+}
+
+.error {
+  font-size: var(--step--1);
+  color: var(--danger);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.submit {
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-pill);
+  background-color: var(--vermilion);
+  color: var(--on-vermilion);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-snug);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--dur-med) var(--ease-out-soft);
+}
+
+.submit:hover {
+  box-shadow: var(--shadow-md);
+}
+
+/* --- status panels --------------------------------------------------------
+   Rendered only when there is something to say (see Contact.jsx), so no
+   empty bordered box is ever visible before a submit. */
+.success,
+.failure {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  padding: var(--space-5);
+  border-radius: var(--radius-sm);
+}
+
+.success {
+  border: 1px solid var(--success);
+  background-color: var(--success-bg);
+}
+
+.failure {
+  border: 1px solid var(--danger);
+  background-color: var(--danger-bg);
+}
+
+.successTitle {
+  font-weight: var(--weight-semibold);
+  color: var(--success);
+}
+
+.successBody {
+  font-size: var(--step--1);
+  color: var(--text);
+}
+
+.failureTitle {
+  font-weight: var(--weight-semibold);
+  color: var(--danger);
+}
+
+.failureBody {
+  font-size: var(--step--1);
+  color: var(--text);
+}
+
+/* Small honest note shown when no access key is configured yet. */
+.hint {
+  max-width: 36ch;
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+/* --- honeypot ------------------------------------------------------------- */
+.honeypot {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 59.99rem) {
+  .form {
+    padding: var(--space-5);
+  }
+}

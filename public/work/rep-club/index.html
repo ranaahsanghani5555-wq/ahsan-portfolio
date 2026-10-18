@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="noindex" />
+    <title>Rep Club — fitness habit app (concept)</title>
+    <meta
+      name="description"
+      content="Rep Club is a fitness habit app concept: pick a goal, build a week, keep a streak. Loud colour blocks, an animated phone mockup and a plan generator. A concept project by Ahsan Ghani."
+    />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/archivo.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/familjen-grotesk.woff2"
+    />
+    <link rel="stylesheet" href="fonts.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="../motion.js"></script>
+    <script>
+      /* Progressive enhancement for the scroll reveals.
+         The hidden start state only ever applies while <html> carries the "js"
+         gate class added here, before first paint (so there is no flash). The
+         motion code drops the class as soon as it has armed the animations, and
+         a 1.5s failsafe removes it after DOMContentLoaded if the motion code
+         never ran — so a missing or failed GSAP can never leave content
+         invisible. */
+      (function () {
+        var doc = document.documentElement;
+        if (!window.__motionOK()) return;
+        doc.classList.add('js');
+        window.addEventListener('DOMContentLoaded', function () {
+          window.setTimeout(function () {
+            if (!doc.classList.contains('reveal-armed')) doc.classList.remove('js');
+          }, 1500);
+        });
+      })();
+    </script>
+    <!--
+      ============================================================================
+      REP CLUB — design rationale (self-initiated concept, not client work)
+      ============================================================================
+      AUDIENCE
+        People who keep starting workout routines and dropping them by week two.
+        They don't need more workout plans — they need a reason to come back
+        tomorrow. The pitch is momentum ("streaks beat excuses"), not results or
+        transformation, because the product this concept advertises is a habit
+        scaffold, not a body project.
+
+      HIERARCHY
+        1. Energy first. Full-bleed yellow / black / pink blocks, huge Archivo
+           set condensed (wdth 62), thick borders and hard offset shadows. The
+           page itself feels like the app: loud, graphic, zero beige.
+        2. The phone is the proof. The hero's phone mockup animates a live rep
+           counter, a progress ring and a "set complete" card, so the value prop
+           is demonstrated by motion, not described in a paragraph.
+        3. The plan comes before the price. The interactive "Build my week"
+           quiz is the middle of the page — it gives something useful in
+           exchange for four answers — while pricing stays low and last.
+        4. Colour = meaning. Yellow holds are the confident, energising beats;
+           black holds are the product/content; pink is reserved for action and
+           celebration. Text is black on yellow and pink (white fails on pink);
+           on black it is white or yellow only.
+
+      CONVERSION STRATEGY
+        - App-store buttons appear early (hero, nav, final CTA) and always
+          answer honestly with "Concept page: app not available".
+        - The plan quiz is the hook: no signup, no account, one click builds a
+          week of generic, low-risk sessions. Answering four radio questions is
+          cheap, and the result is concrete and personal — the moment the app's
+          premise is proven.
+        - The monthly/yearly toggle lets a visitor try the decision on before
+          committing, with arithmetic prices clearly labelled "Concept pricing".
+        - A marquee of invented reviews (labelled "Sample content") provides
+          social proof without pretending to be real.
+
+      HONESTY GUARDRAILS
+        - Invented brand, invented app, invented reviews, invented streak
+          numbers — every number shown is marked "Sample content".
+        - No calorie targets, weight-loss goals, body-fat claims, injury
+          advice or medical guidance. The plan generator outputs only generic,
+          low-risk session types and says so.
+        - Real trademarks are never used: no app-store logos, no social proof
+          metrics, no character names from real fitness apps.
+
+      WHAT I'D TEST NEXT
+        - Phone mockup: does the live rep counter earn attention, and does it
+          distract from the headline on mobile?
+        - Quiz: which phrasing makes someone answer all four questions instead
+          of skipping the section?
+        - Marquee: paused-on-hover vs a static wall — which reads as "proof"?
+        - Pricing toggle: does showing the yearly math ("$6/month") lift
+          selection vs a flat "2 months free" sticker?
+      ============================================================================
+    -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="nav block--black" data-nav>
+      <div class="container nav__inner">
+        <a class="brand" href="#top">
+          <span class="brand__mark" aria-hidden="true">RC</span>
+          <span class="brand__word">Rep&nbsp;Club</span>
+        </a>
+
+        <p class="concept-tag concept-tag--nav">Concept project</p>
+
+        <nav class="nav__links" aria-label="Primary">
+          <a href="#how">How it works</a>
+          <a href="#features">Features</a>
+          <a href="#quiz">Build your week</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+
+        <div class="nav__actions">
+          <button class="btn btn--pink nav__cta" type="button" data-app>
+            Get the app
+          </button>
+          <button
+            class="nav__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            data-menu-toggle
+          >
+            <span class="visually-hidden">Menu</span>
+            <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-menu>
+        <nav class="mobile-menu__links" aria-label="Mobile">
+          <a href="#how"><span>01</span>How it works</a>
+          <a href="#features"><span>02</span>Features</a>
+          <a href="#quiz"><span>03</span>Build your week</a>
+          <a href="#pricing"><span>04</span>Pricing</a>
+          <a href="#faq"><span>05</span>FAQ</a>
+        </nav>
+        <button class="btn btn--pink mobile-menu__cta" type="button" data-app>
+          Get the app
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ================================================================ HERO -->
+      <section class="hero block--yellow" id="top" aria-labelledby="hero-title">
+        <div class="container hero__grid">
+          <div class="hero__copy">
+            <div class="hero__kicker">
+              <span class="concept-tag concept-tag--black">Concept project</span>
+              <span class="hero__kicker-text">Fitness habit app</span>
+            </div>
+
+            <h1 class="hero__title display" id="hero-title">
+              STREAKS BEAT&nbsp;EXCUSES.
+            </h1>
+
+            <p class="hero__lead">
+              Rep Club is a tiny fitness habit app for people who are done
+              restarting. Pick one goal, get a week you can actually fit in,
+              and let the streak do the arguing.
+            </p>
+
+            <div class="hero__cta">
+              <button class="btn btn--black btn--lg" type="button" data-app>
+                Get the app <span>(iOS)</span>
+              </button>
+              <button class="btn btn--pink btn--lg" type="button" data-app>
+                Get the app <span>(Android)</span>
+              </button>
+            </div>
+
+            <ul class="hero__ticks">
+              <li>No equipment needed</li>
+              <li>Plans in a second</li>
+              <li>Streaks that forgive slip-ups</li>
+            </ul>
+          </div>
+
+          <div class="hero__phone" data-phone>
+            <div class="phone" aria-hidden="true">
+              <div class="phone__frame">
+                <span class="phone__notch"></span>
+
+                <div class="ph__screen">
+                  <div class="ph__status">
+                    <span class="ph__time">7:42</span>
+                    <span class="ph__icons" aria-hidden="true">
+                      <i></i><i></i><i></i>
+                    </span>
+                  </div>
+
+                  <div class="ph__appbar">
+                    <strong>REP CLUB</strong>
+                    <span class="ph__flame" data-ph-streak>12</span>
+                  </div>
+
+                  <div class="ph__workout">
+                    <span class="ph__settag" data-ph-set>SET 3 OF 5</span>
+                    <p class="ph__movement">Squats</p>
+                  </div>
+
+                  <div class="ph__repwrap">
+                    <span class="ph__rep" data-ph-rep>08</span>
+                    <span class="ph__replabel">REPS</span>
+                  </div>
+
+                  <div class="ph__mid">
+                    <div class="ph__ringbox">
+                      <svg class="ph__ring" viewBox="0 0 120 120" aria-hidden="true">
+                        <circle class="ph__ringbg" cx="60" cy="60" r="52" pathLength="100" />
+                        <circle
+                          class="ph__ringprog"
+                          cx="60"
+                          cy="60"
+                          r="52"
+                          pathLength="100"
+                          data-ph-ring
+                        />
+                      </svg>
+                      <span class="ph__timer" data-ph-timer>0:17</span>
+                      <span class="ph__pulse" data-ph-pulse aria-hidden="true"></span>
+                    </div>
+                    <p class="ph__notes">
+                      Slow down.<br />
+                      Feel the movement.
+                    </p>
+                  </div>
+
+                  <div class="ph__card" data-ph-card>
+                    <span class="ph__card-title">SET COMPLETE!</span>
+                    <span class="ph__card-sub" data-ph-cardsub>Take a breath, then round 4.</span>
+                  </div>
+
+                  <div class="ph__dots" data-ph-dots>
+                    <i></i><i></i><i></i><i class="is-on"></i><i></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="hero__phone-note">Illustrative app screen &middot; Sample content</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= HOW IT WORKS -->
+      <section class="how block--black" id="how" aria-labelledby="how-title">
+        <div class="container">
+          <header class="section-head section-head--light" data-reveal>
+            <p class="eyebrow eyebrow--yellow">How it works — 01</p>
+            <h2 class="h2 display" id="how-title">
+              ONE, TWO, THREE,<br />DONE.
+            </h2>
+          </header>
+
+          <ol class="how__grid">
+            <li class="how__step" data-reveal style="--n: 1">
+              <span class="how__num display" aria-hidden="true">01</span>
+              <div class="how__body">
+                <h3>Pick one goal.</h3>
+                <p>
+                  Build a habit, get stronger, or just stop ghosting your own
+                  schedule. One goal keeps the next step small.
+                </p>
+              </div>
+            </li>
+            <li class="how__step" data-reveal style="--n: 2">
+              <span class="how__num display" aria-hidden="true">02</span>
+              <div class="how__body">
+                <h3>Get a plan in seconds.</h3>
+                <p>
+                  Four questions in, you have a week of sessions that fit around
+                  your day, not the other way around.
+                </p>
+              </div>
+            </li>
+            <li class="how__step" data-reveal style="--n: 3">
+              <span class="how__num display" aria-hidden="true">03</span>
+              <div class="how__body">
+                <h3>Do a little.</h3>
+                <p>
+                  Short, generic sessions — the goal is a check-in, not a
+                  punishment. Consistency is the exercise.
+                </p>
+              </div>
+            </li>
+            <li class="how__step" data-reveal style="--n: 4">
+              <span class="how__num display" aria-hidden="true">04</span>
+              <div class="how__body">
+                <h3>Keep the streak.</h3>
+                <p>
+                  Every check-in feeds it. Miss a day and it pauses instead of
+                  dying, because life happens in different places.
+                </p>
+              </div>
+            </li>
+          </ol>
+
+          <div class="how__banner" data-reveal>
+            <span class="sticker sticker--pink">DONE &gt; PERFECT</span>
+            <span class="sticker sticker--yellow">START TINY</span>
+            <span class="sticker sticker--black">5 MIN COUNTS</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ FEATURES -->
+      <section class="features block--pink" id="features" aria-labelledby="features-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow eyebrow--black">The good stuff — 02</p>
+            <h2 class="h2 display" id="features-title">LOUD ON PURPOSE.</h2>
+          </header>
+
+          <div class="features__grid">
+            <div class="feature feature--streak" data-reveal>
+              <span class="feature__tag">Streak chart</span>
+              <div class="streak" role="img" aria-label="A seven-day streak chart. Sample content.">
+                <svg class="streak__svg" viewBox="0 0 320 118" aria-hidden="true">
+                  <path class="streak__line" d="M 30 96 L 78 64 L 126 82 L 174 40 L 222 64 L 270 34 L 292 30" />
+                  <circle class="streak__dot is-done" cx="30" cy="96" r="9" />
+                  <circle class="streak__dot is-done" cx="78" cy="64" r="9" />
+                  <circle class="streak__dot is-done" cx="126" cy="82" r="9" />
+                  <circle class="streak__dot is-today" cx="174" cy="40" r="11" />
+                  <circle class="streak__dot is-off" cx="222" cy="64" r="9" />
+                  <circle class="streak__dot is-off" cx="270" cy="34" r="9" />
+                  <circle class="streak__dot is-off" cx="292" cy="30" r="9" />
+                </svg>
+              </div>
+              <p class="feature__stats">
+                <strong>12-day streak</strong>
+                <span class="microtag microtag--black">Sample content</span>
+              </p>
+              <p class="feature__text">
+                Seven days mapped out. Done days fill in pink; the streak pauses,
+                never resets.
+              </p>
+            </div>
+
+            <div class="feature" data-reveal>
+              <span class="feature__tag">Forgiveness</span>
+              <p class="feature__kicker">Slip-ups are handled.</p>
+              <p class="feature__text">
+                Miss a day and the streak holds its breath. Come back tomorrow
+                and it continues — perfection was never the point.
+              </p>
+            </div>
+
+            <div class="feature" data-reveal>
+              <span class="feature__tag">Generator, not a library</span>
+              <p class="feature__kicker">Your week, four answers.</p>
+              <p class="feature__text">
+                No 400-plan dropdown. Rep Club builds seven days from your goal,
+                your time and your floor.
+              </p>
+            </div>
+
+            <div class="feature feature--sticker" data-reveal>
+              <span class="sticker sticker--yellow">NO GEAR. NO GYMNASIUM EGO.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================== BUILD WEEK -->
+      <section class="quiz block--black" id="quiz" aria-labelledby="quiz-title">
+        <div class="container quiz__grid">
+          <header class="quiz__intro" data-reveal>
+            <p class="eyebrow eyebrow--yellow">Build my week — 03</p>
+            <h2 class="h2 display" id="quiz-title">YOUR WEEK,<br />IN FOUR ANSWERS.</h2>
+            <p class="quiz__note">
+              Answer, generate, done. Everything it makes is a sample plan for the
+              concept — generic, low risk, and not medical advice.
+            </p>
+          </header>
+
+          <div class="quiz__panel" data-reveal>
+            <form class="quiz__form" data-quiz>
+              <fieldset class="quiz__q">
+                <legend class="quiz__legend">Your main goal</legend>
+                <div class="quiz__opts">
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="goal" id="q-goal-habit" value="habit" />
+                    <label for="q-goal-habit">Build a habit</label>
+                  </span>
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="goal" id="q-goal-stronger" value="stronger" />
+                    <label for="q-goal-stronger">Get stronger</label>
+                  </span>
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="goal" id="q-goal-consistent" value="consistent" />
+                    <label for="q-goal-consistent">Stay consistent</label>
+                  </span>
+                </div>
+              </fieldset>
+
+              <fieldset class="quiz__q">
+                <legend class="quiz__legend">Days per week</legend>
+                <div class="quiz__opts">
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="days" id="q-days-2" value="2" />
+                    <label for="q-days-2">2</label>
+                  </span>
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="days" id="q-days-3" value="3" />
+                    <label for="q-days-3">3</label>
+                  </span>
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="days" id="q-days-4" value="4" />
+                    <label for="q-days-4">4</label>
+                  </span>
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="days" id="q-days-5" value="5" />
+                    <label for="q-days-5">5</label>
+                  </span>
+                </div>
+              </fieldset>
+
+              <fieldset class="quiz__q">
+                <legend class="quiz__legend">Session length</legend>
+                <div class="quiz__opts">
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="length" id="q-len-15" value="15" />
+                    <label for="q-len-15">15 min</label>
+                  </span>
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="length" id="q-len-30" value="30" />
+                    <label for="q-len-30">30 min</label>
+                  </span>
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="length" id="q-len-45" value="45" />
+                    <label for="q-len-45">45 min</label>
+                  </span>
+                </div>
+              </fieldset>
+
+              <fieldset class="quiz__q">
+                <legend class="quiz__legend">Where you&rsquo;ll train</legend>
+                <div class="quiz__opts">
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="where" id="q-where-home" value="home" />
+                    <label for="q-where-home">Home</label>
+                  </span>
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="where" id="q-where-gym" value="gym" />
+                    <label for="q-where-gym">Gym</label>
+                  </span>
+                  <span class="quiz__opt">
+                    <input class="quiz__radio" type="radio" name="where" id="q-where-out" value="outdoors" />
+                    <label for="q-where-out">Outdoors</label>
+                  </span>
+                </div>
+              </fieldset>
+
+              <div class="quiz__actions">
+                <button class="btn btn--pink btn--lg" type="submit" data-quiz-go>
+                  Build my week
+                </button>
+                <button class="btn btn--ghost btn--lg" type="button" data-quiz-reset>
+                  Reset
+                </button>
+              </div>
+            </form>
+
+            <div class="quiz__result" data-quiz-result>
+              <div class="quiz__empty" data-quiz-empty>
+                <span class="quiz__empty-sticker display" aria-hidden="true">?</span>
+                <p>Pick your answers and hit &ldquo;Build my week&rdquo;.</p>
+              </div>
+            </div>
+            <p class="quiz__err" data-quiz-err hidden></p>
+            <p class="visually-hidden" aria-live="polite" data-quiz-live></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ REVIEWS -->
+      <section class="reviews block--yellow" id="reviews" aria-labelledby="reviews-title">
+        <div class="container reviews__head" data-reveal>
+          <div>
+            <p class="eyebrow eyebrow--black">Word on the street — 04</p>
+            <h2 class="h2 display" id="reviews-title">THE CLUB CHATTERS.</h2>
+          </div>
+          <span class="microtag microtag--black microtag--lg">Sample content</span>
+        </div>
+
+        <div class="marquee" data-marquee>
+          <div class="marquee__track">
+            <ul class="marquee__group">
+              <li class="review">
+                <p>&ldquo;I restarted eight times. The streak made week two feel like a win instead of a chore.&rdquo;</p>
+                <footer><cite>Dana</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;Three sessions a week, zero gym required. My knees say thanks.&rdquo;</p>
+                <footer><cite>Marco</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;The plan generator is unreasonably good. Four clicks and my whole week is sorted.&rdquo;</p>
+                <footer><cite>Priya</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;Finally an app that talks about showing up instead of shredded arms.&rdquo;</p>
+                <footer><cite>Tom</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;Missed a day, streak paused, zero guilt trip. I did not expect an app to be this sensible.&rdquo;</p>
+                <footer><cite>Lea</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;15 minutes is honest. Nobody has time for a two-hour warm-up on a Tuesday.&rdquo;</p>
+                <footer><cite>Sam</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;Used it on holiday with just a hotel room. The &lsquo;where&rsquo; question gets it.&rdquo;</p>
+                <footer><cite>Rico</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;My whole household is training now. The plan cards are impossible to ignore.&rdquo;</p>
+                <footer><cite>Amara</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+            </ul>
+            <ul class="marquee__group marquee__group--clone" aria-hidden="true">
+              <li class="review">
+                <p>&ldquo;I restarted eight times. The streak made week two feel like a win instead of a chore.&rdquo;</p>
+                <footer><cite>Dana</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;Three sessions a week, zero gym required. My knees say thanks.&rdquo;</p>
+                <footer><cite>Marco</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;The plan generator is unreasonably good. Four clicks and my whole week is sorted.&rdquo;</p>
+                <footer><cite>Priya</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;Finally an app that talks about showing up instead of shredded arms.&rdquo;</p>
+                <footer><cite>Tom</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;Missed a day, streak paused, zero guilt trip. I did not expect an app to be this sensible.&rdquo;</p>
+                <footer><cite>Lea</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;15 minutes is honest. Nobody has time for a two-hour warm-up on a Tuesday.&rdquo;</p>
+                <footer><cite>Sam</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;Used it on holiday with just a hotel room. The &lsquo;where&rsquo; question gets it.&rdquo;</p>
+                <footer><cite>Rico</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+              <li class="review">
+                <p>&ldquo;My whole household is training now. The plan cards are impossible to ignore.&rdquo;</p>
+                <footer><cite>Amara</cite> &middot; <span class="microtag">Sample content</span></footer>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================= PRICING -->
+      <section class="pricing block--black" id="pricing" aria-labelledby="pricing-title">
+        <div class="container pricing__grid">
+          <header class="pricing__intro" data-reveal>
+            <p class="eyebrow eyebrow--yellow">Pricing — 05</p>
+            <h2 class="h2 display" id="pricing-title">START ANYTIME.</h2>
+            <p class="pricing__note">
+              Sample prices for the concept, marked clearly. There is no app to
+              buy — this is the price architecture, not a transaction.
+            </p>
+          </header>
+
+          <div class="pricing__card" data-reveal>
+            <fieldset class="pricing__toggle">
+              <legend class="visually-hidden">Billing period</legend>
+              <div class="pricing__switch">
+                <span class="pricing__opt">
+                  <input class="pricing__radio" type="radio" name="billing" id="bill-monthly" value="monthly" checked />
+                  <label for="bill-monthly">Monthly</label>
+                </span>
+                <span class="pricing__opt">
+                  <input class="pricing__radio" type="radio" name="billing" id="bill-yearly" value="yearly" />
+                  <label for="bill-yearly">Yearly</label>
+                </span>
+              </div>
+            </fieldset>
+
+            <p class="pricing__amount">
+              <span class="display" data-price-amount>$9</span>
+              <span class="pricing__period" data-price-period>/mo</span>
+            </p>
+
+            <p class="pricing__math" data-price-math>$9 a month, sample price.</p>
+
+            <ul class="pricing__list">
+              <li>Plan generator — unlimited weeks</li>
+              <li>Streaks, chat-free</li>
+              <li>Generic sessions only, very boring caveats</li>
+            </ul>
+
+            <button class="btn btn--yellow btn--lg pricing__btn" type="button" data-app>
+              Get the app
+            </button>
+            <p class="pricing__fine">Concept pricing &middot; no app, no download, no charge.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================================== FAQ -->
+      <section class="faq block--yellow" id="faq" aria-labelledby="faq-title">
+        <div class="container faq__grid">
+          <header data-reveal>
+            <p class="eyebrow eyebrow--black">Questions — 06</p>
+            <h2 class="h2 display" id="faq-title">GOOD QUESTIONS.</h2>
+            <p class="faq__intro">Everything people tend to ask first.</p>
+          </header>
+
+          <div class="faq__list" data-reveal>
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>Is Rep Club a real app?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>No. Rep Club is a self-initiated concept project: an invented brand, an invented product and sample pricing. The app is not available anywhere.</p>
+              </div>
+            </details>
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>Do I need equipment?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>No. Every generated week offers no-gear options — bodyweight, walking and mobility sessions. Equipment is a bonus, never a requirement.</p>
+              </div>
+            </details>
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>What happens when I miss a day?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>The streak pauses rather than resetting. One missed day doesn't undo a month of showing up.</p>
+              </div>
+            </details>
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>Are the plans safe for anyone?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>They're generic and low-risk, but they are sample plans, not medical advice. Talk to a professional before starting anything new.</p>
+              </div>
+            </details>
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>Can I change my mind later?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>Yes. Regenerate the week any time — new goal, more days, another floor. The plan is yours to edit, not a contract.</p>
+              </div>
+            </details>
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>Is there a free trial?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>In this concept, pricing is sample-only ($9 monthly or $72 yearly, both marked &ldquo;Concept pricing&rdquo;). There is nothing to sign up for.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================= FINAL CTA -->
+      <section class="cta block--pink" id="start" aria-labelledby="cta-title">
+        <div class="container cta__inner" data-reveal>
+          <span class="sticker sticker--yellow sticker--big">JUST START</span>
+          <h2 class="cta__title display" id="cta-title">START YOUR STREAK TODAY.</h2>
+          <p class="cta__sub">
+            One small session. One yellow square. Say it with us: tomorrow is not
+            a training day, today is.
+          </p>
+          <div class="cta__btns">
+            <button class="btn btn--black btn--lg" type="button" data-app>
+              Get the app <span>(iOS)</span>
+            </button>
+            <button class="btn btn--yellow btn--lg" type="button" data-app>
+              Get the app <span>(Android)</span>
+            </button>
+          </div>
+          <p class="cta__fine">Sample content &middot; no app, no download, no payment.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================================================================ FOOTER -->
+    <footer class="footer block--black">
+      <div class="container footer__grid">
+        <div class="footer__brand">
+          <a class="brand" href="#top">
+            <span class="brand__mark" aria-hidden="true">RC</span>
+            <span class="brand__word">Rep&nbsp;Club</span>
+          </a>
+          <p class="footer__blurb">
+            A loud little fitness habit app, invented and built as a self-initiated
+            concept project by Ahsan Ghani.
+          </p>
+          <p class="footer__tag">
+            <span class="concept-tag concept-tag--yellow">Concept project</span>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h3>App</h3>
+          <ul>
+            <li><a href="#top">Get the app</a></li>
+            <li><a href="#quiz">Build my week</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h3>Learn</h3>
+          <ul>
+            <li><a href="#how">How it works</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+            <li><a href="#top">Streak guide</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="#top">About</a></li>
+            <li><a href="#top">Journal</a></li>
+            <li><a href="#top">Press</a></li>
+            <li><a href="#top">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#top">Privacy</a></li>
+            <li><a href="#top">Terms</a></li>
+            <li><a href="#top">Imprint</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="container footer__base">
+        <p>&copy; 2026 Rep Club — invented brand for a concept project.</p>
+        <p>Sample content &middot; Concept pricing &middot; Not medical advice.</p>
+        <p class="footer__type">Set in Archivo &amp; Familjen Grotesk</p>
+      </div>
+    </footer>
+
+    <p class="toast" role="status" aria-live="polite" data-toast></p>
+
+    <nav class="ribbon-nav" aria-label="Portfolio">
+  <a class="ribbon" href="../../index.html" target="_top" rel="noopener">
+        <span class="ribbon__dot" aria-hidden="true"></span>
+        Concept project by Ahsan Ghani
+      </a>
+  </nav>
+
+    <script defer src="../vendor/gsap.min.js"></script>
+    <script defer src="../vendor/ScrollTrigger.min.js"></script>
+    <script defer src="script.js"></script>
+  </body>
+</html>

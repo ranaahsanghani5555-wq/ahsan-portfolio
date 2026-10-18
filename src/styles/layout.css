@@ -1,0 +1,171 @@
+/* =========================================================================
+   layout.css — container, section rhythm, compositional primitives
+   Deliberately small: enough to compose asymmetric layouts without a grid
+   framework or utility-class soup.
+   ========================================================================= */
+
+.container {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container--wide {
+  max-width: var(--container-wide);
+}
+
+.container--narrow {
+  max-width: var(--measure);
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+/* Section rhythm variants — deliberately uneven rather than uniform */
+.section--tight {
+  padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+}
+.section--loose {
+  padding-block: clamp(6rem, 4rem + 10vw, 14rem);
+}
+.section--top {
+  padding-block-end: 0;
+}
+.section--bottom {
+  padding-block-start: 0;
+}
+
+/* -------------------------------------------------------------------------
+   12-COLUMN GRID
+   A single compositional tool. Placed sparsely, on purpose: the layout is
+   asymmetric, not a uniform card grid. Spans collapse to full width on
+   small screens unless .grid-12--keep is set.
+   ------------------------------------------------------------------------- */
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols, 12), minmax(0, 1fr));
+  column-gap: var(--gutter);
+  row-gap: var(--space-7);
+  align-items: start;
+}
+.grid-12--tight {
+  row-gap: var(--space-5);
+}
+.grid-12--flush {
+  row-gap: 0;
+}
+
+.col-span-1 { grid-column: span 1; }
+.col-span-2 { grid-column: span 2; }
+.col-span-3 { grid-column: span 3; }
+.col-span-4 { grid-column: span 4; }
+.col-span-5 { grid-column: span 5; }
+.col-span-6 { grid-column: span 6; }
+.col-span-7 { grid-column: span 7; }
+.col-span-8 { grid-column: span 8; }
+.col-span-9 { grid-column: span 9; }
+.col-span-10 { grid-column: span 10; }
+.col-span-11 { grid-column: span 11; }
+.col-span-12 { grid-column: span 12; }
+
+@media (max-width: 59.99rem) {
+  .grid-12:not(.grid-12--keep) > [class*='col-span-'] {
+    grid-column: span 12;
+  }
+}
+
+/* Full-bleed band that escapes the container and can invert surface + text */
+.band {
+  position: relative;
+  width: 100%;
+}
+
+.band--pine {
+  background-color: var(--pine);
+  color: var(--on-pine);
+}
+.band--pine h1,
+.band--pine h2,
+.band--pine h3,
+.band--pine h4,
+.band--pine strong {
+  color: var(--on-pine);
+}
+
+/* Vertical rhythm helper */
+.stack > * + * {
+  margin-block-start: var(--flow, var(--space-5));
+}
+.stack--tight {
+  --flow: var(--space-3);
+}
+.stack--loose {
+  --flow: var(--space-7);
+}
+
+/* Asymmetric editorial split — intentionally uneven columns */
+.split {
+  display: grid;
+  gap: var(--space-7);
+  grid-template-columns: 1fr;
+}
+@media (min-width: 60rem) {
+  .split {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+  }
+  .split--flip {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  }
+  .split--flip > :first-child {
+    order: 2;
+  }
+}
+
+/* Offset column that breaks the baseline on purpose */
+.offset-block {
+  --offset: clamp(0rem, 8vw, 9rem);
+}
+@media (min-width: 60rem) {
+  .offset-block {
+    margin-block-start: var(--offset);
+  }
+}
+
+/* Hairline used as a structural device instead of card chrome */
+.rule {
+  border: 0;
+  height: 1px;
+  background-color: var(--line);
+}
+.on-pine .rule {
+  background-color: var(--on-pine-line);
+}
+
+/* Eyebrow / kicker label */
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: var(--weight-semibold);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.on-pine .eyebrow {
+  color: var(--on-pine-muted);
+}
+
+/* Lead paragraph */
+.lead {
+  font-size: var(--step-1);
+  line-height: 1.45;
+  color: var(--text);
+  max-width: var(--measure);
+}
+
+/* A block of supporting copy that hugs a comfortable measure */
+.prose {
+  max-width: var(--measure);
+}

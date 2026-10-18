@@ -1,0 +1,1073 @@
+<!doctype html>
+<html lang="en" data-glaze="clay">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="noindex" />
+    <title>Kora — stoneware pour-over set (concept)</title>
+    <meta
+      name="description"
+      content="Kora is a hand-built ceramic pour-over set — a cone-style dripper, a server and a cup. A single-product concept page about material and craft, by Ahsan Ghani."
+    />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/cormorant-garamond.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/cormorant-garamond-italic.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/albert-sans.woff2"
+    />
+    <link rel="stylesheet" href="fonts.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="../motion.js"></script>
+    <script>
+      /* Progressive enhancement for the scroll reveals.
+         The hidden start state only ever applies while <html> carries the "js"
+         gate class added here, before first paint (so there is no flash). The
+         motion code drops the class as soon as it has armed the animations, and
+         a 1.5s failsafe removes it after DOMContentLoaded if the motion code
+         never ran — so a missing or failed GSAP can never leave content
+         invisible. */
+      (function () {
+        var doc = document.documentElement;
+        if (!window.__motionOK()) return;
+        doc.classList.add('js');
+        window.addEventListener('DOMContentLoaded', function () {
+          window.setTimeout(function () {
+            if (!doc.classList.contains('reveal-armed')) doc.classList.remove('js');
+          }, 1500);
+        });
+      })();
+    </script>
+    <!--
+      ============================================================================
+      KORA — design rationale (self-initiated concept, not client work)
+      ============================================================================
+      AUDIENCE
+        Home coffee enthusiasts who have already been through the cheap gear and
+        are now willing to pay more for one object they keep on the counter for
+        years. They buy slowly, they read the material story, and they care how
+        the thing feels in the hand more than how it looks in a grid. They arrive
+        on a phone from a link, then a good number of them finish on a laptop.
+
+      HIERARCHY
+        1. One product, many angles. The whole page is a single object, so the
+           product SVG is the loudest thing on screen and everything else is
+           written around it — no catalogue, no related-items grid.
+        2. Material earns the price. The order block sits last, after shape,
+           drip, finish and care; leading with an "Add to cart" would turn a
+           considered object back into a commodity.
+        3. Charcoal, not cream. The main portfolio already owns a warm paper
+           look, so Kora is a matte, warm charcoal ground that reads as fired
+           clay under low light. Bone type, one clay accent, nothing neon.
+        4. Type does the shouting quietly. Cormorant Garamond at 500+ only ever
+           sets display lines above 20px; every small label, spec and control is
+           Albert Sans, so the italic serif stays a headline voice, not body copy.
+
+      CONVERSION STRATEGY
+        The page treats a considered purchase as a slow one. The sticky cart bar
+        appears only after the hero has left, so it never competes with the first
+        impression; the glaze switcher lets a buyer try the object on before they
+        commit, and it recolours the product and the whole page in place. Nothing
+        here takes payment — it is a front-end concept — so every add-to-cart
+        action says so plainly in a toast, and the price is labelled "Concept
+        pricing" rather than dressed up as a real number.
+
+      HONESTY GUARDRAILS
+        - Invented brand, invented glaze names, invented specifications. No real
+          coffee, ceramic or retail brand is named, compared or shown.
+        - No reviews, no ratings, no invented results or testimonials.
+        - Prices are sample USD figures, labelled "Concept pricing".
+        - No health or medical claims about coffee or brewing.
+
+      WHAT I'D TEST NEXT
+        - Hero: object-first (product leading) vs. the current copy-first split.
+        - Sticky bar: does it lift adds, or interrupt reading the material story?
+        - Glaze switcher: whether recolouring the whole page sells the glaze
+          better than recolouring the product alone.
+        - Story section: pinned callouts vs. the same five callouts as a plain,
+          scrolling list with a single product image.
+      ============================================================================
+    -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="nav" data-nav>
+      <div class="container nav__inner">
+        <a class="brand" href="#top">
+          <span class="brand__mark" aria-hidden="true">K</span>
+          <span class="brand__word">Kora</span>
+        </a>
+
+        <p class="concept-tag">Concept project</p>
+
+        <nav class="nav__links" aria-label="Primary">
+          <a href="#story">The object</a>
+          <a href="#craft">Making</a>
+          <a href="#specs">Specs</a>
+          <a href="#care">Care</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+
+        <div class="nav__actions">
+          <button class="btn btn--primary nav__cta" type="button" data-add>
+            Add to cart
+          </button>
+          <button
+            class="nav__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            data-menu-toggle
+          >
+            <span class="visually-hidden">Menu</span>
+            <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-menu>
+        <nav class="mobile-menu__links" aria-label="Mobile">
+          <a href="#story"><span>01</span>The object</a>
+          <a href="#craft"><span>02</span>Making</a>
+          <a href="#specs"><span>03</span>Specs</a>
+          <a href="#care"><span>04</span>Care</a>
+          <a href="#faq"><span>05</span>FAQ</a>
+        </nav>
+        <button class="btn btn--primary mobile-menu__cta" type="button" data-add>
+          Add to cart
+        </button>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ================================================================ HERO -->
+      <section class="hero" id="top" aria-labelledby="hero-title">
+        <div class="hero__light" aria-hidden="true"></div>
+        <div class="container hero__grid">
+          <div class="hero__copy">
+            <p class="eyebrow">
+              <span class="concept-tag concept-tag--quiet">Concept project</span>
+              Stoneware pour-over set
+            </p>
+            <h1 class="hero__title" id="hero-title">
+              <span class="hero__line">A slower cup,</span>
+              <span class="hero__line"><em>made by hand.</em></span>
+            </h1>
+            <p class="hero__lead">
+              Kora is a hand-built porcelain set — a cone-style dripper, a server
+              and a cup, thrown in stoneware and glazed one at a time. It is made
+              to be used every morning and kept for years.
+            </p>
+            <p class="hero__price">
+              <span data-price>$128</span>
+              <span class="hero__price-note">Concept pricing · USD</span>
+            </p>
+
+            <div class="hero__cta">
+              <button class="btn btn--primary btn--lg" type="button" data-add>
+                Add to cart
+              </button>
+              <a class="btn btn--ghost btn--lg" href="#craft">
+                See how it&rsquo;s made <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+
+            <fieldset class="glaze" data-glaze-fieldset>
+              <legend class="glaze__legend">Glaze</legend>
+              <div class="glaze__options">
+                <span class="glaze__opt">
+                  <input
+                    class="glaze__input"
+                    type="radio"
+                    name="glaze"
+                    id="glaze-clay"
+                    value="clay"
+                    checked
+                  />
+                  <label class="glaze__label" for="glaze-clay">
+                    <span class="glaze__dot" data-swatch="clay" aria-hidden="true"></span>
+                    Clay
+                  </label>
+                </span>
+                <span class="glaze__opt">
+                  <input
+                    class="glaze__input"
+                    type="radio"
+                    name="glaze"
+                    id="glaze-ash"
+                    value="ash"
+                  />
+                  <label class="glaze__label" for="glaze-ash">
+                    <span class="glaze__dot" data-swatch="ash" aria-hidden="true"></span>
+                    Ash
+                  </label>
+                </span>
+                <span class="glaze__opt">
+                  <input
+                    class="glaze__input"
+                    type="radio"
+                    name="glaze"
+                    id="glaze-moss"
+                    value="moss"
+                  />
+                  <label class="glaze__label" for="glaze-moss">
+                    <span class="glaze__dot" data-swatch="moss" aria-hidden="true"></span>
+                    Moss
+                  </label>
+                </span>
+                <span class="glaze__opt">
+                  <input
+                    class="glaze__input"
+                    type="radio"
+                    name="glaze"
+                    id="glaze-ink"
+                    value="ink"
+                  />
+                  <label class="glaze__label" for="glaze-ink">
+                    <span class="glaze__dot" data-swatch="ink" aria-hidden="true"></span>
+                    Ink
+                  </label>
+                </span>
+              </div>
+              <p class="glaze__hint" data-glaze-hint>Shown in Clay.</p>
+            </fieldset>
+          </div>
+
+          <div class="hero__product">
+            <button
+              class="product-btn"
+              type="button"
+              data-pour
+              aria-pressed="false"
+              aria-label="Pour preview — hover or press to watch water arc into the cup"
+            >
+              <div
+                class="product"
+                role="img"
+                aria-label="A cone-style ceramic dripper resting on a server, with a matching cup beside it. The set is shown in clay glaze."
+              >
+                <div class="layer layer--server">
+                  <svg viewBox="0 0 640 760" aria-hidden="true" focusable="false">
+                    <defs>
+                      <clipPath id="koraSrvH">
+                        <path
+                          d="M212 392 C204 440 200 500 200 548 C200 616 202 656 210 676 C218 694 246 700 300 700 C354 700 382 694 390 676 C398 656 400 616 400 548 C400 500 396 440 388 392 Z"
+                        />
+                      </clipPath>
+                    </defs>
+                    <ellipse class="ground" cx="300" cy="706" rx="196" ry="24" />
+                    <path
+                      class="ceramic"
+                      d="M212 392 C204 440 200 500 200 548 C200 616 202 656 210 676 C218 694 246 700 300 700 C354 700 382 694 390 676 C398 656 400 616 400 548 C400 500 396 440 388 392 Z"
+                    />
+                    <path
+                      class="ceramic-hi"
+                      opacity=".5"
+                      d="M232 402 C222 452 218 512 220 560 C222 620 226 656 234 678 C246 686 256 688 264 686 C250 620 244 500 250 400 Z"
+                    />
+                    <path
+                      class="ceramic-lo"
+                      opacity=".6"
+                      d="M368 402 C380 452 384 512 382 560 C380 620 376 656 368 678 C356 686 346 688 338 686 C352 620 358 500 352 400 Z"
+                    />
+                    <rect
+                      class="liquid"
+                      data-liquid
+                      clip-path="url(#koraSrvH)"
+                      x="200"
+                      y="446"
+                      width="200"
+                      height="254"
+                    />
+                    <ellipse class="ceramic-hi" cx="300" cy="392" rx="92" ry="18" />
+                    <ellipse class="ceramic-lo" cx="300" cy="392" rx="76" ry="12" />
+                    <path class="ceramic" d="M212 384 L186 360 L214 354 Z" />
+                    <path
+                      class="ceramic-stroke"
+                      stroke-width="18"
+                      stroke-linecap="round"
+                      d="M388 434 C446 434 446 528 388 528"
+                    />
+                  </svg>
+                </div>
+                <div class="layer layer--cup">
+                  <svg viewBox="0 0 640 760" aria-hidden="true" focusable="false">
+                    <ellipse class="ground" cx="546" cy="700" rx="72" ry="13" />
+                    <path
+                      class="ceramic"
+                      d="M486 574 C484 610 486 646 492 666 C496 682 506 690 520 690 L572 690 C586 690 596 682 600 666 C606 646 608 610 606 574 Z"
+                    />
+                    <path
+                      class="ceramic-hi"
+                      opacity=".5"
+                      d="M498 580 C496 612 498 644 503 664 C507 674 512 678 518 678 C510 632 506 590 508 578 Z"
+                    />
+                    <path
+                      class="ceramic-lo"
+                      opacity=".55"
+                      d="M592 580 C594 612 592 644 587 664 C583 674 578 678 572 678 C580 632 584 590 582 578 Z"
+                    />
+                    <ellipse class="ceramic-hi" cx="546" cy="574" rx="60" ry="13" />
+                    <ellipse class="ceramic-lo" cx="546" cy="574" rx="49" ry="9" />
+                    <path
+                      class="ceramic-stroke"
+                      stroke-width="14"
+                      stroke-linecap="round"
+                      d="M604 598 C640 598 640 654 604 654"
+                    />
+                  </svg>
+                </div>
+                <div class="layer layer--pour">
+                  <svg viewBox="0 0 640 760" aria-hidden="true" focusable="false">
+                    <path
+                      class="pour-path"
+                      data-pour-path
+                      pathLength="1"
+                      d="M300 396 C 380 400, 490 442, 538 546"
+                    />
+                    <path
+                      class="pour-glint"
+                      data-pour-glint
+                      pathLength="1"
+                      d="M300 396 C 380 400, 490 442, 538 546"
+                    />
+                    <g data-ripples>
+                      <ellipse class="ripple" cx="546" cy="566" rx="17" ry="6" />
+                      <ellipse class="ripple" cx="546" cy="566" rx="17" ry="6" />
+                      <ellipse class="ripple" cx="546" cy="566" rx="17" ry="6" />
+                    </g>
+                  </svg>
+                </div>
+                <div class="layer layer--dripper">
+                  <svg viewBox="0 0 640 760" aria-hidden="true" focusable="false">
+                    <path class="ceramic" d="M196 196 L262 384 L338 384 L404 196 Z" />
+                    <path
+                      class="ceramic-hi"
+                      opacity=".5"
+                      d="M214 206 L268 372 L292 372 L246 208 Z"
+                    />
+                    <path
+                      class="ceramic-lo"
+                      opacity=".55"
+                      d="M386 206 L332 372 L308 372 L354 208 Z"
+                    />
+                    <ellipse class="ceramic-hi" cx="300" cy="196" rx="106" ry="20" />
+                    <ellipse class="ceramic-lo" cx="300" cy="196" rx="90" ry="14" />
+                    <rect class="ceramic-lo" x="258" y="374" width="84" height="12" rx="6" />
+                    <ellipse class="ceramic-dark" cx="300" cy="386" rx="16" ry="6" />
+                    <rect class="ceramic-hi" x="392" y="242" width="26" height="64" rx="13" />
+                  </svg>
+                </div>
+                <div class="layer layer--steam">
+                  <svg viewBox="0 0 640 760" aria-hidden="true" focusable="false">
+                    <path
+                      class="steam"
+                      data-steam
+                      pathLength="1"
+                      d="M542 542 C 530 514, 558 498, 546 470 C 536 446, 560 432, 550 408"
+                    />
+                    <path
+                      class="steam steam--b"
+                      data-steam
+                      pathLength="1"
+                      d="M516 550 C 508 530, 524 520, 516 500 C 510 484, 524 476, 518 460"
+                    />
+                  </svg>
+                </div>
+                <div class="sweep" aria-hidden="true">
+                  <i class="sweep__band" data-sweep></i>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================== STORY
+           Desktop + motion only: the object is pinned while five callouts change
+           with the scroll. Everywhere else the callouts stack as plain reading. -->
+      <section class="story" id="story" data-story aria-labelledby="story-title">
+        <div class="container story__head" data-reveal>
+          <p class="eyebrow">The object — 01</p>
+          <h2 id="story-title" class="h2">Five things to know before you pour.</h2>
+        </div>
+
+        <div class="story__pinzone" data-story-pinzone>
+        <div class="story__inner" data-story-inner>
+          <div class="story__stage" data-story-stage>
+            <div class="stage__frame">
+              <div class="product product--static" aria-hidden="true">
+                <div class="layer layer--server">
+                  <svg viewBox="0 0 640 760" aria-hidden="true" focusable="false">
+                    <defs>
+                      <clipPath id="koraSrvS">
+                        <path
+                          d="M212 392 C204 440 200 500 200 548 C200 616 202 656 210 676 C218 694 246 700 300 700 C354 700 382 694 390 676 C398 656 400 616 400 548 C400 500 396 440 388 392 Z"
+                        />
+                      </clipPath>
+                    </defs>
+                    <ellipse class="ground" cx="300" cy="706" rx="196" ry="24" />
+                    <path
+                      class="ceramic"
+                      d="M212 392 C204 440 200 500 200 548 C200 616 202 656 210 676 C218 694 246 700 300 700 C354 700 382 694 390 676 C398 656 400 616 400 548 C400 500 396 440 388 392 Z"
+                    />
+                    <path
+                      class="ceramic-hi"
+                      opacity=".5"
+                      d="M232 402 C222 452 218 512 220 560 C222 620 226 656 234 678 C246 686 256 688 264 686 C250 620 244 500 250 400 Z"
+                    />
+                    <path
+                      class="ceramic-lo"
+                      opacity=".6"
+                      d="M368 402 C380 452 384 512 382 560 C380 620 376 656 368 678 C356 686 346 688 338 686 C352 620 358 500 352 400 Z"
+                    />
+                    <rect
+                      class="liquid"
+                      data-liquid
+                      clip-path="url(#koraSrvS)"
+                      x="200"
+                      y="446"
+                      width="200"
+                      height="254"
+                    />
+                    <ellipse class="ceramic-hi" cx="300" cy="392" rx="92" ry="18" />
+                    <ellipse class="ceramic-lo" cx="300" cy="392" rx="76" ry="12" />
+                    <path class="ceramic" d="M212 384 L186 360 L214 354 Z" />
+                    <path
+                      class="ceramic-stroke"
+                      stroke-width="18"
+                      stroke-linecap="round"
+                      d="M388 434 C446 434 446 528 388 528"
+                    />
+                  </svg>
+                </div>
+                <div class="layer layer--cup">
+                  <svg viewBox="0 0 640 760" aria-hidden="true" focusable="false">
+                    <ellipse class="ground" cx="546" cy="700" rx="72" ry="13" />
+                    <path
+                      class="ceramic"
+                      d="M486 574 C484 610 486 646 492 666 C496 682 506 690 520 690 L572 690 C586 690 596 682 600 666 C606 646 608 610 606 574 Z"
+                    />
+                    <path
+                      class="ceramic-hi"
+                      opacity=".5"
+                      d="M498 580 C496 612 498 644 503 664 C507 674 512 678 518 678 C510 632 506 590 508 578 Z"
+                    />
+                    <path
+                      class="ceramic-lo"
+                      opacity=".55"
+                      d="M592 580 C594 612 592 644 587 664 C583 674 578 678 572 678 C580 632 584 590 582 578 Z"
+                    />
+                    <ellipse class="ceramic-hi" cx="546" cy="574" rx="60" ry="13" />
+                    <ellipse class="ceramic-lo" cx="546" cy="574" rx="49" ry="9" />
+                    <path
+                      class="ceramic-stroke"
+                      stroke-width="14"
+                      stroke-linecap="round"
+                      d="M604 598 C640 598 640 654 604 654"
+                    />
+                  </svg>
+                </div>
+                <div class="layer layer--dripper">
+                  <svg viewBox="0 0 640 760" aria-hidden="true" focusable="false">
+                    <path class="ceramic" d="M196 196 L262 384 L338 384 L404 196 Z" />
+                    <path
+                      class="ceramic-hi"
+                      opacity=".5"
+                      d="M214 206 L268 372 L292 372 L246 208 Z"
+                    />
+                    <path
+                      class="ceramic-lo"
+                      opacity=".55"
+                      d="M386 206 L332 372 L308 372 L354 208 Z"
+                    />
+                    <ellipse class="ceramic-hi" cx="300" cy="196" rx="106" ry="20" />
+                    <ellipse class="ceramic-lo" cx="300" cy="196" rx="90" ry="14" />
+                    <rect class="ceramic-lo" x="258" y="374" width="84" height="12" rx="6" />
+                    <ellipse class="ceramic-dark" cx="300" cy="386" rx="16" ry="6" />
+                    <rect class="ceramic-hi" x="392" y="242" width="26" height="64" rx="13" />
+                  </svg>
+                </div>
+                <div class="sweep" aria-hidden="true">
+                  <i class="sweep__band" data-sweep></i>
+                </div>
+              </div>
+
+              <div class="markers" aria-hidden="true">
+                <span class="marker" data-marker="1">
+                  <i class="marker__dot"></i><b class="marker__line"></b
+                  ><em class="marker__label">Material</em>
+                </span>
+                <span class="marker" data-marker="2">
+                  <i class="marker__dot"></i><b class="marker__line"></b
+                  ><em class="marker__label">Shape</em>
+                </span>
+                <span class="marker" data-marker="3">
+                  <i class="marker__dot"></i><b class="marker__line"></b
+                  ><em class="marker__label">Drip rate</em>
+                </span>
+                <span class="marker marker--flip" data-marker="4">
+                  <i class="marker__dot"></i><b class="marker__line"></b
+                  ><em class="marker__label">Hand-finish</em>
+                </span>
+                <span class="marker" data-marker="5">
+                  <i class="marker__dot"></i><b class="marker__line"></b
+                  ><em class="marker__label">Care</em>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <ol class="callouts" data-callouts>
+            <li class="callout" data-callout>
+              <span class="callout__num" aria-hidden="true">01</span>
+              <h3 class="callout__name">Material</h3>
+              <p class="callout__body">
+                High-fired stoneware with a dense, vitrified body. It holds its
+                temperature through a slow pour and resists staining, so the clay
+                reads the same after a year of mornings.
+              </p>
+            </li>
+            <li class="callout" data-callout>
+              <span class="callout__num" aria-hidden="true">02</span>
+              <h3 class="callout__name">Shape</h3>
+              <p class="callout__body">
+                A low 60&deg; cone that sits close to the server. The wide mouth
+                keeps the bed even as you pour and the profile stays stable on the
+                rim rather than tipping.
+              </p>
+            </li>
+            <li class="callout" data-callout>
+              <span class="callout__num" aria-hidden="true">03</span>
+              <h3 class="callout__name">Drip rate</h3>
+              <p class="callout__body">
+                One generous central aperture. Flow is set by your pour rather
+                than by a narrow outlet, so you keep control of the pace from
+                first bloom to last drop.
+              </p>
+            </li>
+            <li class="callout" data-callout>
+              <span class="callout__num" aria-hidden="true">04</span>
+              <h3 class="callout__name">Hand-finish</h3>
+              <p class="callout__body">
+                Each piece is dipped, wiped at the rim and fired a second time, so
+                rims stay clean and no two sets match exactly. Small tonal
+                variation is the point, not a flaw.
+              </p>
+            </li>
+            <li class="callout" data-callout>
+              <span class="callout__num" aria-hidden="true">05</span>
+              <h3 class="callout__name">Care</h3>
+              <p class="callout__body">
+                Rinse in warm water, dry it fully, and store the dripper open so
+                air reaches the cone. Hand wash only — a dishwasher is hard on
+                the glaze over time.
+              </p>
+            </li>
+          </ol>
+        </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ MARQUEE
+           Decorative band of material words, duplicated once for a seamless
+           loop; hidden from assistive tech because it repeats what the spec
+           table already states. -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee__track" data-marquee>
+          <span class="marquee__set"
+            >High-fired stoneware &middot; Wood-ash glaze &middot; Hand dipped
+            &middot; Vitrified body &middot; Food-safe finish &middot; Warm to
+            hold &middot;&nbsp;</span
+          >
+          <span class="marquee__set"
+            >High-fired stoneware &middot; Wood-ash glaze &middot; Hand dipped
+            &middot; Vitrified body &middot; Food-safe finish &middot; Warm to
+            hold &middot;&nbsp;</span
+          >
+        </div>
+      </div>
+
+      <!-- ========================================================== MAKING (light) -->
+      <section class="craft section--light" id="craft" aria-labelledby="craft-title">
+        <div class="curve" aria-hidden="true" data-curve>
+          <svg viewBox="0 0 1440 150" preserveAspectRatio="none" focusable="false">
+            <path d="M0 0 H1440 C1060 132 380 132 0 0 Z" />
+          </svg>
+        </div>
+        <div class="container craft__grid">
+          <div class="craft__intro" data-reveal>
+            <p class="eyebrow eyebrow--deep">Making — 02</p>
+            <h2 id="craft-title" class="h2">Fired, not printed.</h2>
+            <p class="craft__note">
+              Every Kora set is one object made slowly, not a mould pressed a
+              thousand times. Four stages, all by hand, and a week between the
+              first throw and the last check.
+            </p>
+            <svg
+              class="vignette"
+              viewBox="0 0 320 180"
+              data-vignette
+              aria-hidden="true"
+              focusable="false"
+            >
+              <ellipse cx="160" cy="140" rx="120" ry="22" />
+              <ellipse cx="160" cy="136" rx="86" ry="16" />
+              <ellipse cx="160" cy="132" rx="52" ry="10" />
+              <path d="M126 132 C126 104 138 84 160 80 C182 84 194 104 194 132" />
+              <path d="M144 96 C152 90 168 90 176 96" />
+              <path d="M160 80 C150 72 154 60 164 56" />
+              <path
+                d="M40 150 C64 162 104 170 160 170 C216 170 256 162 280 150"
+              />
+              <path d="M56 60 C72 68 84 74 92 84" />
+              <path d="M264 60 C248 68 236 74 228 84" />
+            </svg>
+          </div>
+
+          <ol class="steps">
+            <li class="step" data-reveal>
+              <span class="step__k" aria-hidden="true">01</span>
+              <div>
+                <h3 class="step__name">Sourced</h3>
+                <p class="step__body">
+                  A fine stoneware body, blended for an even wall and a warm
+                  base tone, then rested before it is worked.
+                </p>
+              </div>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step__k" aria-hidden="true">02</span>
+              <div>
+                <h3 class="step__name">Thrown</h3>
+                <p class="step__body">
+                  The dripper, server and cup are thrown and trimmed by hand, then
+                  set aside to dry slowly so the walls stay true.
+                </p>
+              </div>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step__k" aria-hidden="true">03</span>
+              <div>
+                <h3 class="step__name">Fired</h3>
+                <p class="step__body">
+                  A bisque firing, then glaze, then a high firing that vitrifies
+                  the body and settles the surface into its final tone.
+                </p>
+              </div>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step__k" aria-hidden="true">04</span>
+              <div>
+                <h3 class="step__name">Finished</h3>
+                <p class="step__body">
+                  Rims are wiped, bases are sanded flat, and every piece is
+                  checked by eye before it is boxed with its filters.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ================================================================ SPECS -->
+      <section class="specs" id="specs" aria-labelledby="specs-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">Specs — 03</p>
+            <h2 id="specs-title" class="h2">The numbers, plainly.</h2>
+            <p class="note">
+              Plausible sample figures for a concept set. Tell us what you brew
+              and we would publish the rest.
+            </p>
+          </header>
+
+          <svg
+            class="vignette"
+            viewBox="0 0 320 180"
+            data-vignette
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M40 18 H280" />
+            <path d="M40 12 V24" />
+            <path d="M280 12 V24" />
+            <ellipse cx="160" cy="52" rx="72" ry="12" />
+            <path d="M88 52 L138 132 H182 L232 52" />
+            <path d="M138 132 H182" />
+            <path d="M160 140 V158" />
+            <path d="M154 150 L160 160 L166 150" />
+            <path d="M52 52 V132" />
+            <path d="M46 52 H58" />
+            <path d="M46 132 H58" />
+          </svg>
+
+          <table class="table">
+            <caption class="visually-hidden">
+              Kora pour-over set — sample specifications
+            </caption>
+            <tbody>
+              <tr>
+                <th scope="row">Capacity</th>
+                <td>600&nbsp;ml server &middot; 260&nbsp;ml cup</td>
+              </tr>
+              <tr>
+                <th scope="row">Dimensions</th>
+                <td>Dripper 145 &times; 105&nbsp;mm &middot; Server 130 &times; 150&nbsp;mm</td>
+              </tr>
+              <tr>
+                <th scope="row">Weight</th>
+                <td>1.05&nbsp;kg for the set</td>
+              </tr>
+              <tr>
+                <th scope="row">Filter fit</th>
+                <td>Standard cone-style paper filters, 1&ndash;4 cup</td>
+              </tr>
+              <tr>
+                <th scope="row">Material</th>
+                <td>High-fired stoneware with a food-safe glaze</td>
+              </tr>
+              <tr>
+                <th scope="row">In the box</th>
+                <td>Dripper, server, cup and 25 paper filters</td>
+              </tr>
+              <tr>
+                <th scope="row">Glazes</th>
+                <td>Ash &middot; Clay &middot; Moss &middot; Ink, applied by hand</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="table__note">
+            Sample specifications &middot; Concept pricing &middot; Not a live product.
+          </p>
+        </div>
+      </section>
+
+      <!-- ================================================================= CARE -->
+      <section class="care" id="care" aria-labelledby="care-title">
+        <div class="container care__grid">
+          <div data-reveal>
+            <p class="eyebrow">Care — 04</p>
+            <h2 id="care-title" class="h2">Keep it simple.</h2>
+            <p class="note">
+              Stoneware is forgiving. Treat it like a good pan rather than a
+              delicate thing and it will look better in five years than on day
+              one.
+            </p>
+            <svg
+              class="vignette vignette--care"
+              viewBox="0 0 320 180"
+              data-vignette
+              aria-hidden="true"
+              focusable="false"
+            >
+              <path
+                d="M160 34 C186 66 202 92 202 114 C202 138 184 156 160 156 C136 156 118 138 118 114 C118 92 134 66 160 34 Z"
+              />
+              <path d="M138 118 C140 132 148 140 160 142" />
+              <path d="M60 60 C74 72 82 84 84 98" />
+              <path d="M44 84 C56 96 62 108 64 120" />
+              <path d="M260 60 C246 72 238 84 236 98" />
+              <path d="M276 84 C264 96 258 108 256 120" />
+            </svg>
+          </div>
+
+          <ul class="care__list">
+            <li>Rinse in warm water after each brew, while the bed is still loose.</li>
+            <li>Use mild soap occasionally; skip abrasive pads and scouring powder.</li>
+            <li>Hand wash only — repeated dishwasher cycles dull the glaze.</li>
+            <li>Let every piece dry fully before it goes back on the shelf.</li>
+            <li>Store the dripper open so air can reach the inside of the cone.</li>
+            <li>Avoid sudden temperature changes, like hot water into a cold server.</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ================================================================== FAQ -->
+      <section class="faq" id="faq" aria-labelledby="faq-title">
+        <div class="container faq__grid">
+          <div data-reveal>
+            <p class="eyebrow">Questions — 05</p>
+            <h2 id="faq-title" class="h2">Good to know.</h2>
+            <p class="note">Everything a first-time buyer tends to ask.</p>
+          </div>
+
+          <div class="faq__list">
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>Which paper filters fit?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>
+                  Any standard cone-style paper filter sized for one to four
+                  cups. The aperture is generous, so a fine or a medium grind
+                  both work without the bed stalling.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>How much does it brew?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>
+                  The server holds 600&nbsp;ml and the cup holds 260&nbsp;ml, so a
+                  single pour makes two generous cups or one tall one. The dripper
+                  handles a full 600&nbsp;ml bed comfortably.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>Is it dishwasher safe?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>
+                  No — hand wash is strongly recommended. Harsh detergents and
+                  high drying heat gradually dull the surface, and stoneware
+                  prefers a slow, warm wash.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>Will my glaze look exactly like the pictures?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>
+                  Close to it, but not identical. Each piece is dipped and wiped
+                  by hand, so tone and pooling vary slightly from set to set.
+                  That variation is the signature of the process.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq__item">
+              <summary class="faq__summary">
+                <span>Is this a real shop?</span>
+                <span class="faq__mark" aria-hidden="true"></span>
+              </summary>
+              <div class="faq__body">
+                <p>
+                  No. Kora is a self-initiated concept project. The brand,
+                  glazes, specifications and prices are invented and marked
+                  &ldquo;Concept pricing&rdquo;; there is no checkout and no
+                  product to buy.
+                </p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- =============================================================== ORDER -->
+      <section class="order" id="order" aria-labelledby="order-title">
+        <div class="container order__grid">
+          <div data-reveal>
+            <p class="eyebrow">Order — 06</p>
+            <h2 id="order-title" class="h2 h2--big">
+              Add Kora to your counter.
+            </h2>
+            <p class="order__note">
+              Front-end concept only. Nothing here takes payment, stores a cart
+              or places an order.
+            </p>
+          </div>
+
+          <div class="order__panel" data-reveal>
+            <p class="order__price">
+              <span data-price>$128</span>
+              <span class="order__price-note">Concept pricing · USD</span>
+            </p>
+            <p class="order__meta">
+              Kora Pour-Over Set &middot;
+              <span data-cart-glaze>Clay</span> glaze
+            </p>
+            <fieldset class="glaze glaze--order" data-glaze-fieldset>
+              <legend class="glaze__legend">Glaze</legend>
+              <div class="glaze__options">
+                <span class="glaze__opt">
+                  <input
+                    class="glaze__input"
+                    type="radio"
+                    name="glaze-order"
+                    id="glaze-clay-b"
+                    value="clay"
+                  />
+                  <label class="glaze__label" for="glaze-clay-b">
+                    <span class="glaze__dot" data-swatch="clay" aria-hidden="true"></span>
+                    Clay
+                  </label>
+                </span>
+                <span class="glaze__opt">
+                  <input
+                    class="glaze__input"
+                    type="radio"
+                    name="glaze-order"
+                    id="glaze-ash-b"
+                    value="ash"
+                  />
+                  <label class="glaze__label" for="glaze-ash-b">
+                    <span class="glaze__dot" data-swatch="ash" aria-hidden="true"></span>
+                    Ash
+                  </label>
+                </span>
+                <span class="glaze__opt">
+                  <input
+                    class="glaze__input"
+                    type="radio"
+                    name="glaze-order"
+                    id="glaze-moss-b"
+                    value="moss"
+                  />
+                  <label class="glaze__label" for="glaze-moss-b">
+                    <span class="glaze__dot" data-swatch="moss" aria-hidden="true"></span>
+                    Moss
+                  </label>
+                </span>
+                <span class="glaze__opt">
+                  <input
+                    class="glaze__input"
+                    type="radio"
+                    name="glaze-order"
+                    id="glaze-ink-b"
+                    value="ink"
+                  />
+                  <label class="glaze__label" for="glaze-ink-b">
+                    <span class="glaze__dot" data-swatch="ink" aria-hidden="true"></span>
+                    Ink
+                  </label>
+                </span>
+              </div>
+              <p class="glaze__hint" data-glaze-hint>Shown in Clay.</p>
+            </fieldset>
+            <button class="btn btn--primary btn--lg order__btn" type="button" data-add>
+              Add to cart
+            </button>
+            <p class="order__fine">
+              Sample content &middot; no payment &middot; no order placed.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ================================================================ FOOTER -->
+    <footer class="footer">
+      <div class="container footer__grid">
+        <div class="footer__brand">
+          <a class="brand" href="#top">
+            <span class="brand__mark" aria-hidden="true">K</span>
+            <span class="brand__word">Kora</span>
+          </a>
+          <p class="footer__blurb">
+            A hand-built stoneware pour-over set, drawn and built as a
+            self-initiated concept by Ahsan Ghani.
+          </p>
+          <p class="footer__tag">
+            <span class="concept-tag concept-tag--quiet">Concept project</span>
+          </p>
+        </div>
+
+        <div class="footer__col">
+          <h3>The set</h3>
+          <ul>
+            <li><a href="#story">The object</a></li>
+            <li><a href="#specs">Specs</a></li>
+            <li><a href="#care">Care</a></li>
+            <li><a href="#order">Add to cart</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h3>Studio</h3>
+          <ul>
+            <li><a href="#craft">Making</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#top">Materials</a></li>
+            <li><a href="#top">Wholesale</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h3>Elsewhere</h3>
+          <ul>
+            <li><a href="#top">Studio letter</a></li>
+            <li><a href="#top">Journal</a></li>
+            <li><a href="#top">Press</a></li>
+            <li><a href="#top">RSS</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#top">Privacy</a></li>
+            <li><a href="#top">Terms</a></li>
+            <li><a href="#top">Imprint</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="container footer__base">
+        <p>&copy; 2026 Kora — invented brand for a concept project.</p>
+        <p>Sample content &middot; Concept pricing &middot; No checkout.</p>
+        <p class="footer__type">Set in Cormorant Garamond &amp; Albert Sans</p>
+      </div>
+    </footer>
+
+    <!-- ============================================================ CART BAR -->
+    <div class="cartbar" data-cartbar>
+      <div class="container cartbar__inner" data-cartbar-inner>
+        <p class="cartbar__info">
+          <span class="cartbar__name">Kora Pour-Over Set</span>
+          <span class="cartbar__glaze"><span data-cart-glaze>Clay</span> glaze</span>
+        </p>
+        <p class="cartbar__price">
+          <span data-price>$128</span
+          ><span class="cartbar__price-note">Concept pricing</span>
+        </p>
+        <button class="btn btn--primary cartbar__btn" type="button" data-add>
+          Add to cart
+        </button>
+      </div>
+    </div>
+
+    <p class="toast" role="status" aria-live="polite" data-toast></p>
+
+    <nav class="ribbon-nav" aria-label="Portfolio">
+  <a class="ribbon" href="../../index.html" target="_top" rel="noopener">
+        <span class="ribbon__dot" aria-hidden="true"></span>
+        Concept project by Ahsan Ghani
+      </a>
+  </nav>
+
+    <script defer src="../vendor/gsap.min.js"></script>
+    <script defer src="../vendor/ScrollTrigger.min.js"></script>
+    <script defer src="script.js"></script>
+  </body>
+</html>

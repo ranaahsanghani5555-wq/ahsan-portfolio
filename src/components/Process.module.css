@@ -1,0 +1,191 @@
+/* =========================================================================
+   Process.module.css — how the work is made.
+
+   Desktop >= 901px (motion allowed): the stage is pinned at 100svh and the
+   track is scrubbed horizontally by ScrollTrigger. The stage clips its own
+   overflow so the wide track can never cause page-level horizontal overflow.
+   Everywhere else the same markup is a plain vertical stack.
+   ========================================================================= */
+
+.head {
+  max-width: 46rem;
+}
+
+.heading {
+  margin-block-start: var(--space-4);
+  font-size: var(--type-h2);
+}
+
+.intro {
+  margin-block-start: var(--space-5);
+  max-width: var(--measure);
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--text);
+}
+
+/* --- stage (the pinned scroll region on desktop) ------------------------- */
+.stage {
+  position: relative;
+  margin-block-start: var(--space-10);
+  overflow: hidden; /* the wide track can never leak past the viewport */
+  /* The stage stays full-bleed (so the pinned track can scrub past the edge)
+     but the cards line up with the same centred container as every other
+     section: on small screens the container is full-width so this is just the
+     gutter; on wide screens it is the container's content edge. */
+  --process-inset: max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
+}
+
+.track {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-6);
+  margin: 0;
+  padding: 0;
+  /* The stage is full-bleed so the pinned track can scrub past the viewport
+     edge, but the cards themselves must still sit on the same container
+     gutter as every other section. Applies to the vertical stack too, where
+     there is no pin — without it the cards touch the screen edges. */
+  padding-inline: var(--process-inset);
+  list-style: none;
+  will-change: transform;
+}
+
+/* --- a step card ---------------------------------------------------------- */
+.card {
+  display: grid;
+  gap: var(--space-4);
+  padding-block: var(--space-6);
+  border-block-start: 1px solid var(--line);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.icon {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  color: var(--ink);
+}
+
+.number {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-wide);
+  color: var(--accent-text);
+}
+
+.title {
+  font-size: var(--type-h4);
+}
+
+.body {
+  max-width: 40ch;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+/* --- progress hairline on the pinned scroll ------------------------------ */
+.rail {
+  display: none;
+}
+
+.railFill {
+  display: block;
+  inline-size: 100%;
+  height: 1px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background-color: var(--ink);
+}
+
+/* --- desktop: pinned horizontal scroll -----------------------------------
+   Gated on no-preference too: under reduced motion the pin never exists, so
+   the track must NOT lay itself out horizontally (it would be clipped and
+   unreachable). Reduced-motion desktops get the vertical stack just like
+   small screens. */
+@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+  .stage {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-block-size: 100svh;
+  }
+
+  .track {
+    display: flex;
+    gap: var(--space-7);
+    inline-size: max-content;
+  }
+
+  .card {
+    flex: 0 0 auto;
+    inline-size: min(72vw, 30rem);
+  }
+
+  .rail {
+    position: absolute;
+    inset-inline: var(--process-inset);
+    inset-block-end: 2.5rem;
+    display: block;
+    height: 1px;
+    background-color: var(--line);
+  }
+}
+
+/* Same desktop layout when the visitor forces motion ON (html[data-motion=
+   'full', set by src/lib/motion.js) on an OS that asks for reduce — the
+   media query above cannot see that override. */
+@media (min-width: 901px) {
+  html[data-motion='full'] .stage {
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-block-size: 100svh;
+  }
+
+  html[data-motion='full'] .track {
+    display: flex;
+    gap: var(--space-7);
+    inline-size: max-content;
+  }
+
+  html[data-motion='full'] .card {
+    flex: 0 0 auto;
+    inline-size: min(72vw, 30rem);
+  }
+
+  html[data-motion='full'] .rail {
+    position: absolute;
+    inset-inline: var(--process-inset);
+    inset-block-end: 2.5rem;
+    display: block;
+    height: 1px;
+    background-color: var(--line);
+  }
+}
+
+/* Icons draw themselves as a step comes in. Each path is normalised with
+   pathLength="1", so a dash of 1 covers the whole path and the offset sweeps
+   it on. GSAP owns the offset; without JS the icons are simply drawn. */
+.card [data-draw] {
+  stroke-dasharray: 1;
+  /* Starts hidden; the IntersectionObserver animates the offset to 0 so the
+     icon appears to draw itself the moment its step comes into view. */
+  stroke-dashoffset: 1;
+}
+
+/* Under reduced motion the icons are always drawn in full (this !important
+   also beats any GSAP inline value) — except when the visitor has forced
+   motion ON via the override (html[data-motion='full'], src/lib/motion.js). */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion='full']) .card [data-draw] {
+    stroke-dashoffset: 0 !important;
+  }
+  html:not([data-motion='full']) .card {
+    opacity: 1;
+  }
+}

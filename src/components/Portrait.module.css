@@ -1,0 +1,81 @@
+/* =========================================================================
+   Portrait.module.css — editorial portrait frame.
+   Hairline border, offset pine corner accent, small caption. No duotone, no
+   colour overlay — at most a very light warm grade that never changes the face.
+   ========================================================================= */
+
+.figure {
+  max-inline-size: min(20rem, 100%);
+  margin-block-start: var(--space-4);
+}
+
+.frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background-color: var(--paper-2);
+  overflow: hidden;
+}
+
+/* Offset pine corner accent behind the top-right of the frame. */
+.accent {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 0;
+  inline-size: 3.25rem;
+  block-size: 3.25rem;
+  background-color: var(--pine);
+  clip-path: polygon(100% 0, 100% 100%, 0 0);
+  pointer-events: none;
+}
+
+.tilt {
+  inline-size: 100%;
+  block-size: 100%;
+  transform-origin: 50% 60%;
+  will-change: transform;
+}
+
+.img {
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  object-position: 50% 24%; /* keeps the face near the top-centre */
+  /* A whisper of warmth only — the face is never over-graded. */
+  filter: saturate(1.02) contrast(1.01);
+}
+
+/* --- fallback (shown if the image cannot load) ---------------------------- */
+.fallback {
+  display: grid;
+  place-items: center;
+  gap: var(--space-3);
+  inline-size: 100%;
+  block-size: 100%;
+  background:
+    linear-gradient(180deg, var(--paper-2), var(--paper-3));
+  color: var(--ink-muted);
+}
+
+.fallbackArt {
+  inline-size: 60%;
+  max-inline-size: 9rem;
+  color: var(--border-strong);
+}
+
+.fallbackMark {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--step-2);
+  color: var(--text-strong);
+}
+
+.caption {
+  margin-block-start: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}

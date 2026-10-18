@@ -1,0 +1,855 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="robots" content="noindex" />
+    <title>Hisaab — invoicing and payments for Pakistani freelancers</title>
+    <meta
+      name="description"
+      content="Hisaab is an invoicing and payout tool built for Pakistani freelancers working with international clients. A self-initiated concept project by Ahsan Ghani."
+    />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/young-serif.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/figtree.woff2"
+    />
+    <link rel="stylesheet" href="fonts.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="../motion.js"></script>
+    <script>
+      /* Progressive enhancement for the scroll reveals.
+         The hidden start state only ever applies while <html> carries the "js"
+         gate class added here, before first paint (so there is no flash). The
+         motion code drops the class as soon as it has armed the animations, and
+         a 1.5s failsafe removes it after DOMContentLoaded if the motion code
+         never ran — so a missing or failed GSAP can never leave content
+         invisible. */
+      (function () {
+        var doc = document.documentElement;
+        if (!window.__motionOK()) return;
+        doc.classList.add('js');
+        window.addEventListener('DOMContentLoaded', function () {
+          window.setTimeout(function () {
+            if (!doc.classList.contains('reveal-armed')) doc.classList.remove('js');
+          }, 1500);
+        });
+      })();
+    </script>
+    <!--
+      ============================================================================
+      HISAAB — design rationale (self-initiated concept, not client work)
+      ============================================================================
+      AUDIENCE
+        Pakistani freelancers who invoice clients abroad and get paid in PKR.
+        They are practical, bilingual, and a little wary of anything that sounds
+        like a bank. They don't need a "financial super-app"; they need one page
+        that turns finished work into a clear invoice, and one page that shows
+        exactly what landed in their account and why.
+
+      HIERARCHY
+        1. The arithmetic. The hero shows a real invoice total (Rs 125,000) and
+           the net payout (Rs 118,750) with the fee labelled, because finance
+           trust is built on visible numbers, not a headline.
+        2. One plain promise: get paid without the guesswork.
+        3. Features alternate rows, one idea each, so the page reads like a
+           walkthrough rather than a wall of cards.
+        4. The calculator sits mid-page, after the features have explained the
+           maths and before the objections in the FAQ.
+        5. Primary CTA ("Create a free invoice") repeats at hero, calculator and
+           the closing band; nothing competes with it.
+
+      CONVERSION STRATEGY
+        The product is free to try and the first invoice costs nothing, so the
+        CTA asks for a first invoice, not a purchase. The calculator is the
+        engagement hook: it uses the visitor's own number, states the assumption
+        beside the result, and never pretends to be tax advice. Pricing sits
+        after the calculator so the reader already owns a number to compare a
+        plan against. Social proof and testimonials are real layouts, explicitly
+        labelled "Sample content" — we never fake trust to lift a number.
+
+      HONESTY GUARDRAILS (specific to a finance concept)
+        - No real tax authority, bank or payment brand is named. Payment methods
+          are generic ("bank transfer", "card", "mobile wallet") and marked
+          "Sample content".
+        - The calculator uses an editable "illustrative rate" the visitor sets;
+          the assumption is printed next to the result and the whole block is
+          labelled "Estimate, not tax advice".
+        - No invented company results. Any figure is either arithmetic on an
+          example invoice or a clearly-labelled sample statistic.
+
+      WHAT I'D TEST NEXT
+        - Hero: invoice-first (show the maths) vs. payout-first (show the money
+          landing) — which reads as more trustworthy to a first-time visitor.
+        - Calculator default: a lower starting income vs. a higher one, and
+          whether printing the assumption raises completion or drop-off.
+        - CTA verb: "Create a free invoice" vs. "Send your first invoice" vs.
+          "Start getting paid".
+        - Feature order: does leading with payouts beat leading with invoices?
+
+      MOTION
+        Motion is calm and literal: cards tilt, one card flips between invoice
+        and payout, numbers count up, and the calculator moves with the slider.
+        All motion is transform/opacity only and is disabled under
+        prefers-reduced-motion, where the flip card becomes a static two-sided
+        panel and every number is shown at its final value.
+      ============================================================================
+    -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="nav" data-nav>
+      <div class="nav__inner container">
+        <a class="brand" href="#top" aria-label="Hisaab home">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <rect x="4" y="3" width="16" height="18" rx="3" stroke="currentColor" stroke-width="1.8" />
+              <path d="M8 8h8M8 12h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              <path d="M8 16.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="brand__word">hisaab</span>
+        </a>
+
+        <nav class="nav__links" aria-label="Primary">
+          <a href="#product">Product</a>
+          <a href="#features">Features</a>
+          <a href="#calculator">Calculator</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+
+        <div class="nav__actions">
+          <a class="btn btn--quiet nav__signin" href="#pricing">Sign in</a>
+          <a class="btn btn--primary" href="#pricing">Create a free invoice</a>
+          <button
+            class="nav__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            data-menu-toggle
+          >
+            <span class="visually-hidden">Menu</span>
+            <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-menu>
+        <nav class="mobile-menu__links" aria-label="Mobile">
+          <a href="#product"><span>01</span>Product</a>
+          <a href="#features"><span>02</span>Features</a>
+          <a href="#calculator"><span>03</span>Calculator</a>
+          <a href="#pricing"><span>04</span>Pricing</a>
+          <a href="#faq"><span>05</span>FAQ</a>
+        </nav>
+        <a class="btn btn--primary mobile-menu__cta" href="#pricing">Create a free invoice</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============================================================= HERO -->
+      <section class="hero" id="top">
+        <div class="container hero__grid">
+          <div class="hero__copy">
+            <p class="pill">
+              <span class="pill__dot" aria-hidden="true"></span>
+              Concept project · Invoicing &amp; payments
+            </p>
+            <h1 class="hero__title">
+              Get paid for the work.<br />
+              Skip the <em>guesswork.</em>
+            </h1>
+            <p class="hero__lead">
+              Hisaab turns a finished project into a clear PKR invoice, then shows you
+              exactly what landed in your account — fee included, nothing tucked away.
+            </p>
+
+            <div class="hero__cta">
+              <a class="btn btn--primary btn--lg" href="#pricing">Create a free invoice</a>
+              <a class="btn btn--quiet btn--lg" href="#product">
+                See how payout works
+                <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+
+            <p class="hero__proof" data-reveal>
+              <span class="sample-tag">Sample content</span>
+              Built for freelancers working with international clients — invented for this concept.
+            </p>
+
+            <ul class="hero__chips" aria-label="Payment methods accepted — sample content">
+              <li>Bank transfer</li>
+              <li>Card</li>
+              <li>Mobile wallet</li>
+              <li class="hero__chips-note">Generic sample methods</li>
+            </ul>
+          </div>
+
+          <!-- Product mockup, drawn entirely in HTML/CSS + one inline SVG (no screenshot). -->
+          <div class="hero__visual" data-reveal>
+            <div class="stack" data-tilt>
+              <article class="stack__card stack__card--invoice" aria-hidden="true">
+                <div class="inv">
+                  <div class="inv__head">
+                    <div>
+                      <p class="inv__label">Invoice</p>
+                      <p class="inv__no">#1042</p>
+                    </div>
+                    <span class="status status--paid">Paid</span>
+                  </div>
+                  <p class="inv__client">Client · Northwind Studio (sample)</p>
+                  <ul class="inv__items">
+                    <li><span>Brand identity</span><b>Rs 85,000</b></li>
+                    <li><span>Landing page</span><b>Rs 40,000</b></li>
+                  </ul>
+                  <div class="inv__total">
+                    <span>Total due</span>
+                    <b>Rs 125,000</b>
+                  </div>
+                </div>
+              </article>
+
+              <article class="stack__card stack__card--payout" aria-hidden="true">
+                <div class="pay__top">
+                  <p class="pay__label">Payout · arrives in PKR</p>
+                  <span class="status status--paid"><span class="status__dot"></span> Settled today</span>
+                </div>
+                <p class="pay__amount">Rs 118,750</p>
+                <ul class="pay__rows">
+                  <li><span>Invoice total</span><span>Rs 125,000</span></li>
+                  <li><span>Illustrative fee (5%)</span><span>− Rs 6,250</span></li>
+                </ul>
+                <p class="pay__note">Every line shown. Sample figures.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= LOGO BAR -->
+      <section class="logos" aria-label="Made for teams like these — sample content">
+        <div class="container">
+          <p class="logos__label">
+            <span class="sample-tag">Sample content</span>
+            Invented client marks — a look at the kind of work the page is written for.
+          </p>
+          <ul class="logos__row">
+            <li class="logotype logotype--wide">NORTHWIND</li>
+            <li class="logotype logotype--italic">Meridian</li>
+            <li class="logotype logotype--mono">kite&amp;co</li>
+            <li class="logotype">Bloomfield</li>
+            <li class="logotype logotype--serif">Otto Haus</li>
+            <li class="logotype logotype--mono">PALMKARAI</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ==================================================== PROBLEM / SOLVE -->
+      <section class="split" id="product" aria-labelledby="problem-title">
+        <div class="container split__grid">
+          <div class="split__col" data-reveal>
+            <p class="eyebrow">The problem</p>
+            <h2 id="problem-title" class="h2">Getting paid is the part nobody designed for.</h2>
+            <ul class="pain">
+              <li>An invoice built in a spreadsheet, exported to PDF, and re-sent in three formats.</li>
+              <li>A payout arrives short and the fee is explained in a bank statement, not upfront.</li>
+              <li>"How much will actually reach me?" becomes a different guess every month.</li>
+            </ul>
+          </div>
+
+          <div class="split__col split__col--solve" data-reveal>
+            <p class="eyebrow eyebrow--accent">The approach</p>
+            <h2 class="h2">One invoice. One payout. Everything labelled.</h2>
+            <p class="split__body">
+              Hisaab keeps the whole chain in one place: pick a client, add the line
+              items, send. When the money moves, the payout page shows the invoice
+              total, the fee and the amount that reached you — in the same numbers.
+            </p>
+
+            <div class="maths" aria-hidden="true">
+              <div class="maths__row">
+                <span>Invoice total</span>
+                <span>Rs 125,000</span>
+              </div>
+              <div class="maths__row maths__row--fee">
+                <span>Illustrative fee</span>
+                <span>− Rs 6,250</span>
+              </div>
+              <div class="maths__row maths__row--net">
+                <span>Reached you</span>
+                <span>Rs 118,750</span>
+              </div>
+              <p class="maths__note">Sample arithmetic from an example invoice.</p>
+            </div>
+
+            <ul class="ticks">
+              <li>Invoices in PKR from the first screen.</li>
+              <li>Fees shown before you send, not after.</li>
+              <li>One place for every client and every payout.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================= STATS BAND -->
+      <section class="stats" aria-labelledby="stats-title">
+        <div class="container">
+          <h2 id="stats-title" class="visually-hidden">Example figures</h2>
+          <p class="stats__label">
+            <span class="sample-tag">Sample content</span>
+            Illustrative figures from one example invoice — not a record of results.
+          </p>
+          <dl class="stats__grid" data-stats>
+            <div class="stats__item">
+              <dt>Example invoice</dt>
+              <dd><span data-count="125000" data-prefix="Rs " data-format="pkr">Rs 125,000</span></dd>
+            </div>
+            <div class="stats__item">
+              <dt>Reached the freelancer</dt>
+              <dd><span data-count="118750" data-prefix="Rs " data-format="pkr">Rs 118,750</span></dd>
+            </div>
+            <div class="stats__item">
+              <dt>Illustrative rate used</dt>
+              <dd><span data-count="5" data-suffix="%">5%</span></dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ============================================ FEATURES (alternating) -->
+      <section class="features" id="features" aria-labelledby="features-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">Features</p>
+            <h2 id="features-title" class="h2">Four steps, and each one shows its working.</h2>
+          </header>
+
+          <!-- Row 1 -->
+          <article class="feature" data-reveal>
+            <div class="feature__media">
+              <div class="mock mock--compose" aria-hidden="true">
+                <div class="mock__bar">
+                  <span class="mock__dots"><i></i><i></i><i></i></span>
+                  <span class="mock__title">New invoice · #1043</span>
+                </div>
+                <div class="mock__body">
+                  <div class="field"><span class="field__label">Client</span><span class="field__value">Northwind Studio</span></div>
+                  <div class="field"><span class="field__label">Item</span><span class="field__value">Brand identity</span><span class="field__amt">Rs 85,000</span></div>
+                  <div class="field"><span class="field__label">Item</span><span class="field__value">Landing page</span><span class="field__amt">Rs 40,000</span></div>
+                  <div class="field field--add"><span class="field__ghost">+ Add another line</span></div>
+                  <div class="mock__sum">
+                    <span>Total due</span>
+                    <b>Rs 125,000</b>
+                  </div>
+                  <span class="mock__cta">Send invoice</span>
+                </div>
+              </div>
+            </div>
+            <div class="feature__copy">
+              <p class="feature__index">01</p>
+              <h3 class="feature__title">Invoices that already know the maths</h3>
+              <p class="feature__body">
+                Add line items and Hisaab totals them in PKR as you type. The invoice
+                locks to a number you can see and re-check before it leaves your screen —
+                no spreadsheet, no export, no reformatting.
+              </p>
+            </div>
+          </article>
+
+          <!-- Row 2 (flipping card) -->
+          <article class="feature feature--reverse" data-reveal>
+            <div class="feature__media">
+              <div class="flip" data-flip tabindex="0" role="button" aria-pressed="false">
+                <span class="visually-hidden">Flip card to see the payout breakdown</span>
+                <div class="flip__inner">
+                  <div class="flip__face flip__face--front">
+                    <p class="flip__eyebrow">Invoice #1042</p>
+                    <p class="flip__big">Rs 125,000</p>
+                    <span class="status status--paid">Paid</span>
+                    <p class="flip__hint" aria-hidden="true">Hover, tap or focus to see the payout →</p>
+                  </div>
+                  <div class="flip__face flip__face--back">
+                    <p class="flip__eyebrow">Payout breakdown</p>
+                    <p class="flip__big flip__big--net">Rs 118,750</p>
+                    <ul class="flip__rows">
+                      <li><span>Invoice total</span><span>Rs 125,000</span></li>
+                      <li><span>Illustrative fee (5%)</span><span>− Rs 6,250</span></li>
+                    </ul>
+                    <p class="flip__hint">Sample figures.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="feature__copy">
+              <p class="feature__index">02</p>
+              <h3 class="feature__title">Payouts you can trace line by line</h3>
+              <p class="feature__body">
+                When a client pays, the payout page flips the invoice over and shows the
+                other side: the fee that applied and the amount that reached you. The two
+                numbers always add up, so you never reconcile a mystery deduction.
+              </p>
+            </div>
+          </article>
+
+          <!-- Row 3 -->
+          <article class="feature" data-reveal>
+            <div class="feature__media">
+              <div class="mock mock--reminders" aria-hidden="true">
+                <p class="mock__title mock__title--solo">Payment timeline</p>
+                <ol class="timeline">
+                  <li class="timeline__item timeline__item--done">
+                    <span class="timeline__dot"></span>
+                    <div><p class="timeline__strong">Invoice sent</p><p class="timeline__meta">Day 0 · Rs 125,000</p></div>
+                  </li>
+                  <li class="timeline__item timeline__item--done">
+                    <span class="timeline__dot"></span>
+                    <div><p class="timeline__strong">Friendly reminder</p><p class="timeline__meta">Day 7 · automatic, editable</p></div>
+                  </li>
+                  <li class="timeline__item timeline__item--now">
+                    <span class="timeline__dot"></span>
+                    <div><p class="timeline__strong">Paid</p><p class="timeline__meta">Day 11 · Rs 118,750 settled</p></div>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <div class="feature__copy">
+              <p class="feature__index">03</p>
+              <h3 class="feature__title">Reminders that stay polite</h3>
+              <p class="feature__body">
+                Late payments are the quiet tax on freelancing. Hisaab nudges on your
+                schedule, in plain language, and lets you edit every message before it
+                goes — so chasing an invoice never costs you the client.
+              </p>
+            </div>
+          </article>
+
+          <!-- Row 4 -->
+          <article class="feature feature--reverse" data-reveal>
+            <div class="feature__media">
+              <div class="mock mock--ledger" aria-hidden="true">
+                <div class="ledger">
+                  <p class="ledger__title">Clients · this quarter</p>
+                  <ul class="ledger__list">
+                    <li><span class="ledger__name">Northwind Studio</span><span class="status status--paid">Paid</span><span class="ledger__amt">Rs 118,750</span></li>
+                    <li><span class="ledger__name">Meridian</span><span class="status status--pending">Pending</span><span class="ledger__amt">Rs 240,000</span></li>
+                    <li><span class="ledger__name">kite&amp;co</span><span class="status status--paid">Paid</span><span class="ledger__amt">Rs 75,000</span></li>
+                  </ul>
+                  <p class="ledger__note">Sample ledger — invented clients.</p>
+                </div>
+              </div>
+            </div>
+            <div class="feature__copy">
+              <p class="feature__index">04</p>
+              <h3 class="feature__title">Made for PKR, not converted into it</h3>
+              <p class="feature__body">
+                Amounts are written the way you invoice them — <b>Rs 125,000</b>, not a
+                three-decimal conversion. Your clients abroad see their own currency; you
+                keep one ledger in rupees, with a status on every invoice.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- ====================================================== CALCULATOR -->
+      <section class="calc" id="calculator" aria-labelledby="calc-title">
+        <div class="container calc__grid">
+          <div class="calc__intro" data-reveal>
+            <p class="eyebrow">Illustrative calculator</p>
+            <h2 id="calc-title" class="h2">What would actually reach you?</h2>
+            <p class="calc__lead">
+              Drag the slider to a monthly figure and set the illustrative rate you want
+              to model. Hisaab shows the arithmetic beside the result so you can see
+              exactly where the number comes from.
+            </p>
+            <p class="calc__disclaimer">
+              <strong>Estimate, not tax advice.</strong> This is a simple arithmetic
+              model for a concept page. It is not a tax calculation and reflects no real
+              authority's rules.
+            </p>
+          </div>
+
+          <div class="calc__panel" data-reveal>
+            <div class="calc__field">
+              <label class="calc__label" for="calc-earnings">Monthly earnings you invoice</label>
+              <output class="calc__value" id="calc-earnings-out" for="calc-earnings">Rs 250,000</output>
+              <input
+                class="calc__range"
+                id="calc-earnings"
+                type="range"
+                min="25000"
+                max="1000000"
+                step="5000"
+                value="250000"
+                aria-describedby="calc-earnings-help"
+              />
+              <p class="calc__help" id="calc-earnings-help">Rs 25,000 – Rs 1,000,000 · illustrative range</p>
+            </div>
+
+            <div class="calc__field calc__field--rate">
+              <label class="calc__label" for="calc-rate">Illustrative rate you want to model</label>
+              <div class="calc__rate-input">
+                <input
+                  class="calc__number"
+                  id="calc-rate"
+                  type="number"
+                  min="0"
+                  max="30"
+                  step="0.5"
+                  value="5"
+                  inputmode="decimal"
+                  aria-describedby="calc-rate-help"
+                />
+                <span class="calc__pct" aria-hidden="true">%</span>
+              </div>
+              <p class="calc__help" id="calc-rate-help">
+                You choose this. It is not a real fee, tax rate or official charge.
+              </p>
+            </div>
+
+            <div class="calc__results" aria-live="polite">
+              <div class="calc__result">
+                <p class="calc__result-label">Illustrative deduction</p>
+                <p class="calc__result-value" id="calc-deduction">Rs 12,500</p>
+              </div>
+              <div class="calc__result calc__result--net">
+                <p class="calc__result-label">Estimated take-home</p>
+                <p class="calc__result-value" id="calc-takehome">Rs 237,500</p>
+              </div>
+            </div>
+
+            <p class="calc__assumption" id="calc-assumption">
+              Assumes a flat <b>5%</b> illustrative rate on <b>Rs 250,000</b>. Estimate, not tax advice.
+            </p>
+            <a class="btn btn--primary calc__cta" href="#pricing">Create a free invoice</a>
+            <span class="calc__token" data-calc-token aria-hidden="true"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================== TESTIMONIALS -->
+      <section class="quotes" aria-labelledby="quotes-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">What people say</p>
+            <h2 id="quotes-title" class="h2">Notes from the people it's built for.</h2>
+            <p class="section-head__lead">
+              <span class="sample-tag">Sample content</span>
+              Illustrative quotes for this concept — invented names, no real clients.
+            </p>
+          </header>
+
+          <ul class="quote-grid">
+            <li class="quote" data-reveal>
+              <p class="quote__text">
+                "I send the invoice from my phone between two meetings. The total is
+                right there, so I stop second-guessing my own maths."
+              </p>
+              <p class="quote__who"><span class="avatar" aria-hidden="true">SN</span> Sana N., brand designer</p>
+            </li>
+            <li class="quote" data-reveal>
+              <p class="quote__text">
+                "The payout page is the first time a fee was explained next to the money.
+                I could actually see what reached my account."
+              </p>
+              <p class="quote__who"><span class="avatar" aria-hidden="true">HU</span> Hamza U., front-end developer</p>
+            </li>
+            <li class="quote" data-reveal>
+              <p class="quote__text">
+                "Chasing international clients used to feel awkward. The reminders do it
+                for me and I still get to edit them before they go."
+              </p>
+              <p class="quote__who"><span class="avatar" aria-hidden="true">AZ</span> Ayesha Z., illustrator</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ======================================================== PRICING -->
+      <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+        <div class="container">
+          <header class="section-head section-head--center" data-reveal>
+            <p class="eyebrow">Pricing</p>
+            <h2 id="pricing-title" class="h2">Start with one invoice. Pay when it's a habit.</h2>
+            <p class="section-head__lead">
+              <span class="sample-tag">Sample pricing</span>
+              Illustrative plans in PKR for this concept.
+            </p>
+
+            <div class="billing" role="group" aria-label="Billing period" data-billing>
+              <button type="button" class="billing__option" data-period="monthly" aria-pressed="true">
+                Monthly
+              </button>
+              <button type="button" class="billing__option" data-period="yearly" aria-pressed="false">
+                Yearly
+                <span class="billing__save">save 2 months</span>
+              </button>
+            </div>
+          </header>
+
+          <div class="plans">
+            <article class="plan" data-reveal>
+              <h3 class="plan__name">Shuru</h3>
+              <p class="plan__tag">For the first few invoices.</p>
+              <p class="plan__price">
+                <span class="plan__amount" data-price data-monthly="0" data-yearly="0">Rs 0</span>
+                <span class="plan__per">forever</span>
+              </p>
+              <ul class="plan__list">
+                <li>Up to 3 invoices a month</li>
+                <li>PKR totals and PDF export</li>
+                <li>One client ledger</li>
+              </ul>
+              <a class="btn btn--quiet plan__cta" href="#top">Create a free invoice</a>
+            </article>
+
+            <article class="plan plan--featured" data-reveal>
+              <p class="plan__flag">Most popular</p>
+              <h3 class="plan__name">Kaam</h3>
+              <p class="plan__tag">For freelancers invoicing every month.</p>
+              <p class="plan__price">
+                <span class="plan__amount" data-price data-monthly="1500" data-yearly="1250">Rs 1,500</span>
+                <span class="plan__per" data-per>/ month</span>
+              </p>
+              <ul class="plan__list">
+                <li>Unlimited invoices</li>
+                <li>Payout breakdown on every invoice</li>
+                <li>Polite, editable reminders</li>
+                <li>Full client ledger</li>
+              </ul>
+              <a class="btn btn--primary plan__cta" href="#top">Create a free invoice</a>
+            </article>
+
+            <article class="plan" data-reveal>
+              <h3 class="plan__name">Kaarobar</h3>
+              <p class="plan__tag">For small studios with a team.</p>
+              <p class="plan__price">
+                <span class="plan__amount" data-price data-monthly="4800" data-yearly="4000">Rs 4,800</span>
+                <span class="plan__per" data-per>/ month</span>
+              </p>
+              <ul class="plan__list">
+                <li>Everything in Kaam, for up to 5 seats</li>
+                <li>Shared client ledger and roles</li>
+                <li>Branded invoices</li>
+                <li>Priority support</li>
+              </ul>
+              <a class="btn btn--quiet plan__cta" href="#top">Create a free invoice</a>
+            </article>
+          </div>
+          <p class="pricing__fine">
+            Sample pricing in PKR. No payment is taken and no plan is real — this is a concept page.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ FAQ -->
+      <section class="faq" id="faq" aria-labelledby="faq-title">
+        <div class="container faq__grid">
+          <div class="faq__intro" data-reveal>
+            <p class="eyebrow">FAQ</p>
+            <h2 id="faq-title" class="h2">Fair questions.</h2>
+            <p class="faq__intro-body">
+              The free plan exists so the first question is "did it make invoicing
+              easier?", not "is it worth the money?".
+            </p>
+          </div>
+
+          <div class="faq__list" data-accordion>
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-1" id="faq-btn-1">
+                  <span>Is this an official tax calculator?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-1" role="region" aria-labelledby="faq-btn-1">
+                <div class="faq__panel-inner">
+                  <p>
+                    No. The calculator on this page is a simple arithmetic model: it
+                    multiplies the number you choose by the rate you set. It applies no
+                    real tax rules and is labelled an estimate throughout. It is not tax
+                    advice.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-2" id="faq-btn-2">
+                  <span>Which payment methods does it work with?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-2" role="region" aria-labelledby="faq-btn-2">
+                <div class="faq__panel-inner">
+                  <p>
+                    On this concept page the methods are generic placeholders — bank
+                    transfer, card and mobile wallet — and every one is marked "Sample
+                    content". No real bank or payment provider is named or implied.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-3" id="faq-btn-3">
+                  <span>Do my clients abroad need an account?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-3" role="region" aria-labelledby="faq-btn-3">
+                <div class="faq__panel-inner">
+                  <p>
+                    No. They receive an invoice and a payment link like any other bill.
+                    You keep the ledger in PKR; they see the amount in a form they can pay
+                    from wherever they are.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-4" id="faq-btn-4">
+                  <span>Can I edit a reminder before it's sent?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-4" role="region" aria-labelledby="faq-btn-4">
+                <div class="faq__panel-inner">
+                  <p>
+                    Always. Reminders are drafts first. Rewrite the wording, change the
+                    date or cancel it entirely — the tone is yours, even when the timing
+                    is automatic.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-5" id="faq-btn-5">
+                  <span>Is any of this a real product?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-5" role="region" aria-labelledby="faq-btn-5">
+                <div class="faq__panel-inner">
+                  <p>
+                    No. Hisaab is a self-initiated concept project by Ahsan Ghani. The
+                    brand, the plans, the clients and the figures are invented to show how
+                    the product could feel.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== FINAL CTA -->
+      <section class="cta-band" aria-labelledby="cta-title">
+        <div class="container cta-band__inner" data-reveal>
+          <h2 id="cta-title" class="cta-band__title">Send the invoice. Know what reaches you.</h2>
+          <p class="cta-band__text">
+            Build one invoice, watch the total add up, and see the payout in PKR before
+            you ever send it. Free to start.
+          </p>
+          <div class="cta-band__actions">
+            <a class="btn btn--primary btn--lg" href="#pricing">Create a free invoice</a>
+            <a class="btn btn--quiet btn--lg" href="#calculator">Try the calculator</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================================================ FOOTER -->
+    <footer class="footer">
+      <div class="container footer__grid">
+        <div class="footer__brand">
+          <a class="brand" href="#top" aria-label="Hisaab home">
+            <span class="brand__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <rect x="4" y="3" width="16" height="18" rx="3" stroke="currentColor" stroke-width="1.8" />
+                <path d="M8 8h8M8 12h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                <path d="M8 16.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </span>
+            <span class="brand__word">hisaab</span>
+          </a>
+          <p class="footer__blurb">
+            Invoicing and payouts for Pakistani freelancers working with international
+            clients. A self-initiated concept project by Ahsan Ghani — invented brand,
+            no real clients or results.
+          </p>
+        </div>
+
+        <nav class="footer__col" aria-label="Product">
+          <h3>Product</h3>
+          <ul>
+            <li><a href="#product">Overview</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#calculator">Calculator</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Company">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="#top">About</a></li>
+            <li><a href="#top">Careers</a></li>
+            <li><a href="#top">Changelog</a></li>
+            <li><a href="#top">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Resources">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#top">Invoicing guide</a></li>
+            <li><a href="#top">Payout help</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#top">Status</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="container footer__base">
+        <p>© 2026 Hisaab — invented brand for a concept project.</p>
+        <ul class="footer__legal">
+          <li><a href="#top">Privacy</a></li>
+          <li><a href="#top">Terms</a></li>
+          <li><a href="#top">Cookies</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Small ribbon: uses target="_top" so it leaves the portfolio's preview iframe. -->
+    <nav class="ribbon-nav" aria-label="Portfolio">
+  <a class="ribbon" href="../../index.html" target="_top" rel="noopener">
+        <span class="ribbon__dot" aria-hidden="true"></span>
+        Concept project by Ahsan Ghani
+      </a>
+  </nav>
+
+    <script defer src="../vendor/gsap.min.js"></script>
+    <script defer src="../vendor/ScrollTrigger.min.js"></script>
+    <script defer src="script.js"></script>
+  </body>
+</html>

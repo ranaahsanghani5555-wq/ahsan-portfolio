@@ -1,0 +1,32 @@
+.grid {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.cell {
+  min-inline-size: 0;
+}
+
+.wide {
+  grid-column: span 7;
+}
+
+.narrow {
+  grid-column: span 5;
+}
+
+.push {
+  margin-block-start: clamp(2rem, 6vw, 7rem);
+}
+
+@media (max-width: 59.99rem) {
+  .wide,
+  .narrow {
+    grid-column: 1 / -1;
+  }
+
+  .push {
+    margin-block-start: 0;
+  }
+}

@@ -1,0 +1,214 @@
+/* =========================================================================
+   tokens.css — Ahsan Ghani portfolio design system
+   Single source of truth for colour, type, space, radius, shadow and motion.
+   Every colour token below carries its measured WCAG contrast ratio.
+   Ratios computed with the WCAG 2.1 relative-luminance formula (sRGB).
+   ========================================================================= */
+
+:root {
+  /* ---------------------------------------------------------------------
+     COLOUR — surfaces
+     --------------------------------------------------------------------- */
+  --paper: #f4f1ea; /* base background */
+  --paper-2: #ede8dd; /* raised / alternating panel */
+  --paper-3: #e4ddcd; /* deepest paper layer, wells */
+
+  /* ---------------------------------------------------------------------
+     COLOUR — ink / text on paper (all >= 4.5:1 = AA small text)
+     --------------------------------------------------------------------- */
+  --ink: #141210; /* 16.57:1 on --paper  (AAA) — display + strongest text */
+  --ink-soft: #3a352f; /* 10.76:1 on --paper  (AAA) — default body copy   */
+  --ink-muted: #5f594c; /*  6.16:1 on --paper  (AA)  — meta / labels       */
+  --ink-faint: #8a8272; /*  3.37:1 on --paper        — large text only     */
+
+  /* ---------------------------------------------------------------------
+     COLOUR — pine (the inverted, full-bleed signature surface)
+     --------------------------------------------------------------------- */
+  --pine: #1b4d3e; /* --paper on pine = 8.55:1, --ink on pine = 1.94:1 */
+  --pine-deep: #123a2e; /* --paper on pine-deep = 11.15:1 */
+  --on-pine: #f4f1ea; /* 8.55:1 on --pine (AAA) — body on pine */
+  --on-pine-soft: #c9d6cf; /* 6.43:1 on --pine (AAA) — secondary on pine */
+  --on-pine-muted: #9fb8ad; /* 4.56:1 on --pine (AA)  — meta on pine */
+  --on-pine-line: rgba(244, 241, 234, 0.28); /* decorative hairline on pine */
+
+  /* ---------------------------------------------------------------------
+     COLOUR — vermilion (the rare accent). Kept deliberately scarce.
+       --vermilion        3.23:1 on paper -> LARGE text (>=24px, or >=19px
+                          bold), icons and non-text decoration ONLY.
+       --vermilion-ink    5.02:1 on paper -> AA-safe for small accent text,
+                          links and inline emphasis.
+       Buttons filled with --vermilion always use --ink text (5.13:1 on the
+       fill), never white.
+     --------------------------------------------------------------------- */
+  --vermilion: #e8552d;
+  --vermilion-ink: #b93b1c; /* AA small-text / link accent on paper */
+  --vermilion-bright: #ff8a66; /* 4.17:1 on pine -> large text / decoration on pine only */
+  --on-vermilion: #141210; /* ink on vermilion fill = 5.13:1 (AA) */
+
+  /* ---------------------------------------------------------------------
+     COLOUR — lines, borders, focus
+       --hairline is DECORATIVE ONLY (1.34:1). Interactive borders and
+       focus rings must clear 3:1; use --border-strong / --focus-ring.
+     --------------------------------------------------------------------- */
+  --hairline: #d8d2c4; /* decorative divider only */
+  --border-strong: #8a8272; /* 3.37:1 on paper — inputs, toggles, controls */
+  --focus-ring: #1b4d3e; /* 8.55:1 vs paper — focus ring on light surfaces */
+  --focus-ring-inverse: #f4f1ea; /* 8.55:1 vs pine — focus ring on pine */
+  --ring-width: 3px;
+  --ring-offset: 2px;
+
+  /* Semantic aliases (used by components so themes can swap cleanly) */
+  --bg: var(--paper);
+  --text: var(--ink-soft);
+  --text-strong: var(--ink);
+  --text-muted: var(--ink-muted);
+  --line: var(--hairline);
+  --accent: var(--vermilion);
+  --accent-text: var(--vermilion-ink);
+
+  /* ---------------------------------------------------------------------
+     COLOUR — semantic status (text tones are AA on --paper; *-bg are fills)
+     --------------------------------------------------------------------- */
+  --success: #1b6b4a; /* 5.73:1 on --paper (AA) */
+  --warning: #8a5a12; /* 5.24:1 on --paper (AA) */
+  --danger: #a62a1a; /* 6.27:1 on --paper (AA) */
+  --info: var(--pine); /* 8.55:1 on --paper (AAA) */
+  --success-bg: #e3efe8;
+  --warning-bg: #f3ebd9;
+  --danger-bg: #f5e4e1;
+  --info-bg: #e3eae7;
+  --on-status: var(--paper); /* text on a filled status tone */
+
+  /* ---------------------------------------------------------------------
+     TYPE — two families.
+       Display  : Fraunces  (expressive optical-size serif)
+       Body / UI: Hanken Grotesk (quiet technical grotesque)
+     --------------------------------------------------------------------- */
+  --font-display: 'Fraunces', 'Fraunces Fallback', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --font-body: 'Hanken Grotesk', 'Hanken Grotesk Fallback', system-ui, 'Segoe UI', Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Cascadia Mono', Menlo, monospace;
+
+  --weight-light: 300;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* Fluid type scale — clamp(min, preferred, max). 1rem = 16px.
+     Display step is ~13rem vs 1rem body = >3x scale contrast. */
+  --step--2: clamp(0.72rem, 0.7rem + 0.1vw, 0.78rem); /* 11.5 -> 12.5px  caption */
+  --step--1: clamp(0.82rem, 0.8rem + 0.12vw, 0.9rem); /* 13   -> 14.4px  small   */
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem); /* 16   -> 18px    body    */
+  --step-1: clamp(1.2rem, 1.12rem + 0.4vw, 1.45rem); /* lead / intro   */
+  --step-2: clamp(1.45rem, 1.3rem + 0.75vw, 1.9rem); /* h4             */
+  --step-3: clamp(1.8rem, 1.5rem + 1.4vw, 2.6rem); /* h3             */
+  --step-4: clamp(2.3rem, 1.7rem + 2.6vw, 3.6rem); /* h2             */
+  --step-5: clamp(3rem, 1.9rem + 4.9vw, 5.4rem); /* h1             */
+  --step-6: clamp(3.6rem, 1.6rem + 9vw, 8rem); /* display        */
+  --step-7: clamp(4.5rem, 1rem + 16vw, 13rem); /* signature mega */
+
+  /* Semantic type roles — map roles onto the scale so components stay
+     declarative and the whole site re-scales from one place. */
+  --type-display: var(--step-6); /* hero display            */
+  --type-h1: var(--step-5);
+  --type-h2: var(--step-4);
+  --type-h3: var(--step-3);
+  --type-h4: var(--step-2);
+  --type-body: var(--step-0);
+  --type-small: var(--step--1);
+  --type-label: var(--step--2); /* mono eyebrow / meta label */
+
+  --leading-tight: 0.95;
+  --leading-snug: 1.08;
+  --leading-normal: 1.25;
+  --leading-copy: 1.6;
+
+  --tracking-tight: -0.02em;
+  --tracking-snug: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+  --tracking-caps: 0.14em;
+
+  --measure: 66ch; /* comfortable reading width  */
+  --measure-narrow: 46ch;
+
+  /* Fraunces variable axes used at this site (kept explicit, not magic) */
+  --fraunces-opsz-display: 144;
+  --fraunces-opsz-text: 24;
+  --fraunces-wonk-on: 1;
+  --fraunces-wonk-off: 0;
+
+  /* ---------------------------------------------------------------------
+     SPACE — 4 / 8 rhythm
+     --------------------------------------------------------------------- */
+  --space-1: 0.25rem; /*  4px */
+  --space-2: 0.5rem; /*  8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.5rem; /* 24px */
+  --space-6: 2rem; /* 32px */
+  --space-7: 3rem; /* 48px */
+  --space-8: 4rem; /* 64px */
+  --space-9: 6rem; /* 96px */
+  --space-10: 8rem; /* 128px */
+  --space-11: 12rem; /* 192px */
+
+  /* Section rhythm scales with viewport but never crowds */
+  --section-y: clamp(4.5rem, 3rem + 7vw, 10rem);
+  --gutter: clamp(1.5rem, 4vw, 4rem);
+  --container: 76rem; /* 1216px content column */
+  --container-wide: 90rem; /* 1440px */
+  --grid-cols: 12; /* the 12-column grid used by layout.css */
+
+  /* ---------------------------------------------------------------------
+     RADIUS
+     --------------------------------------------------------------------- */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 24px;
+  --radius-xl: 36px;
+  --radius-pill: 999px;
+
+  /* ---------------------------------------------------------------------
+     SHADOW — warm-tinted, never neutral black
+     --------------------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(20, 18, 16, 0.06), 0 1px 1px rgba(20, 18, 16, 0.04);
+  --shadow-md: 0 6px 18px -6px rgba(20, 18, 16, 0.18), 0 2px 6px -2px rgba(20, 18, 16, 0.1);
+  --shadow-lg: 0 24px 60px -20px rgba(20, 18, 16, 0.28), 0 8px 24px -12px rgba(20, 18, 16, 0.16);
+
+  /* ---------------------------------------------------------------------
+     MOTION — custom cubic-beziers + purpose-built durations
+     --------------------------------------------------------------------- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1); /* entrances, settles */
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1); /* scrubbed / symmetrical */
+  --ease-out-soft: cubic-bezier(0.33, 0.05, 0.15, 1); /* hover feedback */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* magnetic micro-interactions */
+
+  --dur-1: 120ms; /* state change: hover, focus */
+  --dur-2: 220ms; /* small element reveal */
+  --dur-3: 420ms; /* panel / card reveal */
+  --dur-4: 680ms; /* section reveal */
+  --dur-5: 1000ms; /* hero choreography */
+
+  /* Plain-language aliases (the tiers most components should reach for) */
+  --dur-fast: var(--dur-1);
+  --dur-med: var(--dur-3);
+  --dur-slow: var(--dur-4);
+
+  /* ---------------------------------------------------------------------
+     Z-INDEX ladder
+     --------------------------------------------------------------------- */
+  --z-base: 1;
+  --z-sticky: 100;
+  --z-nav: 200;
+  --z-modal: 300;
+  --z-preloader: 400;
+  --z-cursor: 500;
+}
+
+/* Grayscale grain (SVG turbulence, inlined) sits behind content edges.
+   Kept as a token so it can be reused on dark surfaces at lower opacity. */
+:root {
+  --grain-url: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}

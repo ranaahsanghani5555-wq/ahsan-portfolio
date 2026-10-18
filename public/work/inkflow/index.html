@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="noindex" />
+    <title>Inkflow — an AI writing assistant that sounds like you</title>
+    <meta
+      name="description"
+      content="Inkflow suggests, tightens and rewrites in your voice. A self-initiated concept project by Ahsan Ghani."
+    />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/bricolage-grotesque.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/jetbrains-mono.woff2"
+    />
+    <link rel="stylesheet" href="fonts.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="../motion.js"></script>
+    <script>
+      /* Progressive enhancement for the scroll reveals.
+         The hidden start state only ever applies while <html> carries the "js"
+         gate class added here, before first paint (so there is no flash). The
+         motion code drops the class as soon as it has armed the animations, and
+         a 1.5s failsafe removes it after DOMContentLoaded if the motion code
+         never ran — so a missing or failed GSAP can never leave content
+         invisible. */
+      /* "motion-ok" is the durable marker (never removed): it says only that
+         the motion contract allows animation this visit. The rules that
+         replace a static design state with an animated one (the draft
+         strike-through, the FAQ fade) hang off it or off "reveal-armed" —
+         never off "js", which is dropped the moment GSAP owns the states. */
+      (function () {
+        var doc = document.documentElement;
+        if (!window.__motionOK()) return;
+        doc.classList.add('js');
+        doc.classList.add('motion-ok');
+        window.addEventListener('DOMContentLoaded', function () {
+          window.setTimeout(function () {
+            if (!doc.classList.contains('reveal-armed')) doc.classList.remove('js');
+          }, 1500);
+        });
+      })();
+    </script>
+    <!--
+      ============================================================================
+      INKFLOW — design rationale (self-initiated concept, not client work)
+      ============================================================================
+      AUDIENCE
+        Solo founders and content teams who already write well and are sceptical
+        of AI hype. They don't want a tool that writes for them; they want one
+        that reads the whole draft and makes their own voice sharper. They judge
+        a writing tool by how it writes, so every screen has to earn trust with
+        real sentences, not feature adjectives.
+
+      HIERARCHY
+        1. The act of writing. The hero leads with a live editor that is literally
+           being written, because the product's proof is the prose itself.
+        2. One promise, in three words on the H1; the demo carries the detail.
+        3. The bento grid ranks features by how often a real draft needs them,
+           not by how impressive they sound.
+        4. A single primary CTA ("Start writing free") repeats at hero, mid-page
+           and the closing band. Nothing competes with it.
+        5. Pricing sits after proof, just before the objections in the FAQ.
+
+      CONVERSION STRATEGY
+        Free tier removes the decision cost, so the CTA asks for a try, not a
+        purchase. The yearly toggle surfaces savings on the same screen as the
+        monthly price so the comparison is honest and instant. Social proof and
+        testimonials are real layouts but explicitly labelled "Sample content" —
+        we never fake trust to lift a number. Every CTA resolves to the pricing
+        section so the reader is never dropped into a dead anchor.
+
+      WHAT I'D TEST NEXT
+        - Hero copy: "Draft faster. Sound like yourself." vs. a demo-first hero
+          with no headline at all.
+        - CTA verb: "Start writing free" vs. "Try Inkflow" vs. "Open the editor".
+        - Toggle default: monthly-first (lower commitment) vs. yearly-first
+          (higher LTV) — measure which produces more paid conversions, not
+          more clicks.
+        - Bento size: does promoting "Works where you write" above "Tone dial"
+          move integration sign-ups?
+
+      MOTION
+        Motion personality is a quiet machine: a live typewriter, a suggestion
+        that rewrites itself, a strike-and-rewrite moment on scroll, and a slow
+        low-contrast atmosphere drifting behind everything. All motion is
+        transform/opacity/clip-path only and is fully disabled under
+        prefers-reduced-motion, where the final, readable state of every
+        element is shown immediately.
+      ============================================================================
+    -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <!-- Atmosphere: three low-contrast radial fields (many eased stops each),
+         a faint hairline grid and a dithering grain. Nothing here is a blob:
+         every field fades to fully transparent inside its own box, so no edge
+         can form where two fields meet. Drift is transform-only and pauses
+         when off-screen or when the tab is hidden (see script.js). -->
+    <div class="atmos" aria-hidden="true">
+      <span class="atmos__field atmos__field--lime"></span>
+      <span class="atmos__field atmos__field--blue"></span>
+      <span class="atmos__field atmos__field--violet"></span>
+      <span class="atmos__grid"></span>
+      <span class="atmos__grain"></span>
+    </div>
+
+    <header class="nav" data-nav data-hero="nav">
+      <div class="nav__inner container">
+        <a class="brand" href="#top" aria-label="Inkflow home">
+          <span class="brand__mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 20c6-1 10-5 11-12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+              <path d="M14 4l6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+              <circle cx="18.5" cy="5.5" r="2.4" fill="currentColor" />
+            </svg>
+          </span>
+          <span class="brand__word">Inkflow</span>
+        </a>
+
+        <nav class="nav__links" aria-label="Primary">
+          <a href="#demo">Product</a>
+          <a href="#features">Features</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+
+        <div class="nav__actions">
+          <a class="btn btn--ghost nav__signin" href="#pricing">Sign in</a>
+          <a class="btn btn--primary" href="#pricing">Start writing free</a>
+          <button
+            class="nav__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            data-menu-toggle
+          >
+            <span class="visually-hidden">Menu</span>
+            <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-menu>
+        <nav class="mobile-menu__links" aria-label="Mobile">
+          <a href="#demo"><span>01</span>Product</a>
+          <a href="#features"><span>02</span>Features</a>
+          <a href="#pricing"><span>03</span>Pricing</a>
+          <a href="#faq"><span>04</span>FAQ</a>
+        </nav>
+        <a class="btn btn--primary mobile-menu__cta" href="#pricing">Start writing free</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============================================================= HERO -->
+      <section class="hero" id="top">
+        <div class="container hero__grid">
+          <div class="hero__copy">
+            <p class="pill" data-hero="pill">
+              <span class="pill__dot" aria-hidden="true"></span>
+              Concept project · AI writing assistant
+            </p>
+            <!-- Two masked lines rather than one <h1> with a <br>: the mask is
+                 the reveal mechanism, and a line wrapper is the only thing a
+                 clip-path can be scoped to. The text order in the DOM is
+                 unchanged for screen readers. -->
+            <h1 class="hero__title">
+              <span class="hero__line"><span class="hero__line-inner" data-hero="line">Draft faster.</span></span>
+              <span class="hero__line"
+                ><span class="hero__line-inner" data-hero="line"
+                  >Sound like <em><span class="hero__sweep" aria-hidden="true"></span>yourself.</em></span
+                ></span
+              >
+            </h1>
+            <p class="hero__lead" data-hero="lead">
+              Inkflow reads the whole draft, not just the sentence you're on. It suggests,
+              tightens and rewrites in your voice — so the help disappears into the writing.
+            </p>
+
+            <div class="hero__cta" data-hero="cta">
+              <a class="btn btn--primary btn--lg" href="#pricing" data-magnetic>Start writing free</a>
+              <a class="btn btn--ghost btn--lg" href="#demo">
+                See it work
+                <span class="btn__arr" aria-hidden="true">↓</span>
+              </a>
+            </div>
+
+            <p class="hero__proof" data-reveal>
+              <span class="sample-tag">Sample content</span>
+              Joined by 12,400 writers and small teams — invented names for this concept.
+            </p>
+          </div>
+
+          <!-- Product mockup, drawn entirely in HTML/CSS (no screenshot). -->
+          <div class="hero__demo" data-hero="demo">
+            <!-- Floating UI chips around the card drift at different speeds
+                 (data-float = period in seconds). Decorative product chrome. -->
+            <span class="float-chip float-chip--tone" data-float="5.2" aria-hidden="true">
+              <span class="float-chip__dot"></span>Tone · warm
+            </span>
+            <span class="float-chip float-chip--pass" data-float="6.4" aria-hidden="true">⌘↵ clarity pass</span>
+
+            <div class="app" data-tilt>
+              <div class="app__bar">
+                <span class="app__dots" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span class="app__file">launch-post.md</span>
+                <span class="app__status"><span class="pulse" aria-hidden="true"></span>Inkflow · suggesting</span>
+              </div>
+
+              <div class="app__body">
+                <p class="editor" aria-hidden="true">
+                  <!-- The caret carries its own glow layer rather than a
+                       box-shadow animation: the glow scales and breathes on
+                       transform/opacity, and the bar itself only blinks on
+                       opacity, so nothing here is repaint-bound. -->
+                  <span data-typed></span
+                  ><span class="caret"
+                    ><span class="caret__bar"></span><span class="caret__glow" aria-hidden="true"></span
+                  ></span>
+                </p>
+                <p class="editor__sr">
+                  Sample draft: The launch post is still a draft. Here's the honest
+                  version, in your voice — tighter, warmer and ready to send.
+                </p>
+                <div class="editor__ghost" aria-hidden="true">
+                  <span style="--w: 92%"></span>
+                  <span style="--w: 74%"></span>
+                  <span style="--w: 58%"></span>
+                </div>
+              </div>
+
+              <div class="app__suggest" aria-hidden="true">
+                <p class="app__suggest-label">Rewrite for clarity</p>
+                <p class="app__suggest-text" data-suggest></p>
+                <div class="app__suggest-actions">
+                  <!-- data-float drives the per-chip drift speed in script.js -->
+                  <span class="chip chip--lime" data-float="4.2" data-accept>Accept</span>
+                  <span class="chip" data-float="5.6">Try again</span>
+                </div>
+              </div>
+
+              <div class="app__foot">
+                <span class="app__count">128 words</span>
+                <span class="app__hint">⌘↵ accept · ⌘⇧↵ another pass</span>
+              </div>
+            </div>
+
+            <!-- Decorative pointer that glides to Accept once the suggestion
+                 has finished typing (transform-only, script.js). -->
+            <svg class="hero__cursor" viewBox="0 0 16 20" fill="none" aria-hidden="true" data-cursor>
+              <path d="M1.5 1.5 14 10.6l-5.4 1.1L6 18 1.5 1.5Z" fill="#f5f5f7" stroke="#0b0b10" stroke-width="1.2" stroke-linejoin="round" />
+            </svg>
+
+            <!-- Parallax layer: drifts on scroll behind the card (scrub). -->
+            <span class="hero__glow" aria-hidden="true"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= LOGO BAR -->
+      <section class="logos" aria-label="Used by — sample content">
+        <div class="container">
+          <p class="logos__label">
+            <span class="sample-tag">Sample content</span>
+            Invented marks — a look at the kind of teams the page is written for.
+          </p>
+          <ul class="logos__row">
+            <li class="logotype logotype--serif">Kestrel</li>
+            <li class="logotype">FOUNDRY</li>
+            <li class="logotype logotype--mono">longhand</li>
+            <li class="logotype logotype--wide">TIDEWATER</li>
+            <li class="logotype logotype--serif">Marrow</li>
+            <li class="logotype logotype--italic">Plainview</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ==================================================== PROBLEM / SOLVE -->
+      <section class="split-section" aria-labelledby="problem-title">
+        <div class="container split-section__grid">
+          <div class="split-section__col" data-reveal>
+            <p class="eyebrow">The problem</p>
+            <h2 id="problem-title" class="h2">
+              Most tools finish your sentence. That's the easy part.
+            </h2>
+            <ul class="pain">
+              <li>Autocomplete predicts the next word, not the argument.</li>
+              <li>Rewrites arrive in a house voice that isn't yours.</li>
+              <li>By the time you paste it back, you've lost the thread.</li>
+            </ul>
+          </div>
+
+          <div class="split-section__col split-section__col--solve" data-reveal>
+            <p class="eyebrow eyebrow--lime">The approach</p>
+            <h2 class="h2">Inkflow reads the whole draft, then makes it yours.</h2>
+            <p class="split-section__body">
+              It keeps a working memory of your tone across a document, so a suggestion at
+              the end knows what you set up at the start. Nothing is sent from your voice.
+              You accept, edit or ignore — one line at a time.
+            </p>
+            <ul class="ticks">
+              <li>Understands document-level intent, not just the cursor line.</li>
+              <li>Learns your phrasing from what you accept.</li>
+              <li>Every change is reviewable before it lands.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================== DEMO / PRODUCT -->
+      <section class="demo" id="demo" aria-labelledby="demo-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">Product</p>
+            <h2 id="demo-title" class="h2">Watch a rough paragraph become a sendable one.</h2>
+            <p class="section-head__lead">
+              A writing tool should be judged on writing. This is a working mock of the
+              clarity pass — the same interaction pattern the real product would use.
+            </p>
+          </header>
+
+          <div class="demo__grid">
+            <div class="demo__panel" data-reveal>
+              <div class="demo__panel-top">
+                <span class="chip chip--lime">Clarity pass</span>
+                <span class="demo__meta">draft 3 · 128 words</span>
+              </div>
+              <p class="demo__prompt-label">Your draft</p>
+              <!-- The strike is drawn by JS (one line per visual text line,
+                   measured after fonts settle). Without JS / under reduced
+                   motion the static line-through in styles.css is the design. -->
+              <p class="demo__draft">
+                <span class="demo__draft-text">we basically wanted to let people know that the new release is kind of
+                a big deal and that they should maybe check it out if they have time
+                because we think it could be useful for a lot of different teams.</span>
+              </p>
+              <p class="demo__prompt-label demo__prompt-label--out">Inkflow suggests</p>
+              <p class="demo__out" data-generate>
+                <span data-generate-line>The new release changes how small teams ship — worth five minutes.</span>
+              </p>
+              <div class="demo__actions">
+                <span class="chip chip--lime">Keep</span>
+                <span class="chip">Shorter</span>
+                <span class="chip">Warmer</span>
+              </div>
+            </div>
+
+            <div class="demo__aside" data-reveal>
+              <div class="demo__card lift">
+                <p class="demo__card-label">Tone dial</p>
+                <div class="dial" aria-hidden="true">
+                  <span class="dial__track"></span>
+                  <span class="dial__knob"></span>
+                </div>
+                <p class="demo__card-note">Direct · Warm · Formal — set once, applied everywhere.</p>
+              </div>
+              <div class="demo__card lift">
+                <p class="demo__card-label">Voice memory</p>
+                <p class="demo__card-note">
+                  Accepted edits teach Inkflow your phrasing. After one document it stops
+                  suggesting things you'd never write.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== SAMPLE STATS -->
+      <section class="stats" aria-labelledby="stats-title">
+        <div class="container">
+          <h2 id="stats-title" class="visually-hidden">Sample figures</h2>
+          <p class="stats__label">
+            <span class="sample-tag">Sample content</span>
+            Invented figures for this concept — the plans they echo are sample pricing too.
+          </p>
+          <ul class="stats__row">
+            <li class="stat">
+              <span class="stat__num" data-count="12400">12,400</span>
+              <span class="stat__label">writers and small teams (sample)</span>
+            </li>
+            <li class="stat">
+              <span class="stat__num" data-count="3">3</span>
+              <span class="stat__label">free clarity passes a month</span>
+            </li>
+            <li class="stat">
+              <span class="stat__num" data-count="50">50</span>
+              <span class="stat__label">words in your dictionary</span>
+            </li>
+            <li class="stat">
+              <span class="stat__num" data-count="8">8</span>
+              <span class="stat__label">seats in the Studio plan</span>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ============================================= FEATURES (bento grid) -->
+      <section class="features" id="features" aria-labelledby="features-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">Features</p>
+            <h2 id="features-title" class="h2">A working set, ranked by how often a draft needs it.</h2>
+          </header>
+
+          <div class="bento">
+            <!-- Decorative connector drawn between two cards on scroll
+                 (stroke-dashoffset). Desktop only — see styles.css. -->
+            <svg class="bento__wire" viewBox="0 0 120 160" fill="none" aria-hidden="true" preserveAspectRatio="none">
+              <path
+                data-wire
+                d="M6 2 C 6 46, 114 60, 114 104 C 114 132, 60 138, 30 158"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+              />
+            </svg>
+            <article class="bento__cell bento__cell--wide lift">
+              <p class="bento__index">01</p>
+              <h3 class="bento__title">Rewrite in your own voice</h3>
+              <p class="bento__body">
+                Inkflow keeps a live model of how you write across a document and offers
+                alternatives that could plausibly be yours — not a generic assistant voice.
+              </p>
+              <div class="bento__vis" aria-hidden="true">
+                <div class="vis-rewrite">
+                  <p class="vis-rewrite__before">It is important to note that we have made the decision to…</p>
+                  <p class="vis-rewrite__after">We decided to…</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="bento__cell lift">
+              <p class="bento__index">02</p>
+              <h3 class="bento__title">Clarity pass</h3>
+              <p class="bento__body">
+                One command strips hedging, filler and passive constructions without
+                flattening the meaning.
+              </p>
+            </article>
+
+            <article class="bento__cell lift">
+              <p class="bento__index">03</p>
+              <h3 class="bento__title">Tone dial</h3>
+              <p class="bento__body">
+                Move between direct, warm and formal. The knob is one control, applied
+                consistently, never per-sentence guesswork.
+              </p>
+            </article>
+
+            <article class="bento__cell bento__cell--tall lift">
+              <p class="bento__index">04</p>
+              <h3 class="bento__title">Team style guide</h3>
+              <p class="bento__body">
+                Agree on terms once — product names, capitalisation, banned phrases — and
+                Inkflow flags drift before it ships.
+              </p>
+              <div class="bento__vis bento__vis--guide" aria-hidden="true">
+                <ul class="guide">
+                  <li><span class="guide__ok">✓</span> "sign in" not "log in"</li>
+                  <li><span class="guide__ok">✓</span> Sentence case for headings</li>
+                  <li><span class="guide__warn">!</span> Avoid "leverage"</li>
+                </ul>
+              </div>
+            </article>
+
+            <article class="bento__cell lift">
+              <p class="bento__index">05</p>
+              <h3 class="bento__title">Works where you write</h3>
+              <p class="bento__body">
+                A browser editor plus a document overlay for the tools you already use.
+                Nothing new to migrate.
+              </p>
+            </article>
+
+            <article class="bento__cell lift">
+              <p class="bento__index">06</p>
+              <h3 class="bento__title">Private by default</h3>
+              <p class="bento__body">
+                Drafts are never used to train shared models. Delete a document and it is
+                gone from suggestions too.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================== TESTIMONIALS -->
+      <section class="quotes" aria-labelledby="quotes-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">What people say</p>
+            <h2 id="quotes-title" class="h2">Written by the people it's made for.</h2>
+            <p class="section-head__lead">
+              <span class="sample-tag">Sample content</span>
+              Illustrative quotes for this concept — invented names, no real companies.
+            </p>
+          </header>
+
+          <ul class="quote-grid">
+            <li class="quote" data-reveal>
+              <p class="quote__text">
+                "It's the first writing tool that doesn't make me sound like a different
+                person. It just makes the same person clearer."
+              </p>
+              <p class="quote__who"><span class="avatar" aria-hidden="true">AR</span> Amara R., newsletter writer</p>
+            </li>
+            <li class="quote" data-reveal>
+              <p class="quote__text">
+                "The clarity pass is the whole product for me. I paste a messy draft, it
+                hands back the version I meant to write."
+              </p>
+              <p class="quote__who"><span class="avatar" aria-hidden="true">JD</span> Jonas D., solo founder</p>
+            </li>
+            <li class="quote" data-reveal>
+              <p class="quote__text">
+                "Our style guide finally lives somewhere it gets used. The flags catch
+                drift before a doc goes out, not after."
+              </p>
+              <p class="quote__who"><span class="avatar" aria-hidden="true">PS</span> Priya S., content lead</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ======================================================== PRICING -->
+      <section class="pricing" id="pricing" aria-labelledby="pricing-title">
+        <div class="container">
+          <header class="section-head section-head--center" data-reveal>
+            <p class="eyebrow">Pricing</p>
+            <h2 id="pricing-title" class="h2">Start free. Pay only when it stops feeling like a tool.</h2>
+            <p class="section-head__lead">
+              <span class="sample-tag">Sample pricing</span>
+              Illustrative plans for the concept.
+            </p>
+
+            <div class="billing" role="group" aria-label="Billing period" data-billing>
+              <button type="button" class="billing__option" data-period="monthly" aria-pressed="true">
+                Monthly
+              </button>
+              <button type="button" class="billing__option" data-period="yearly" aria-pressed="false">
+                Yearly
+                <span class="billing__save">save 25%</span>
+              </button>
+            </div>
+          </header>
+
+          <div class="plans">
+            <article class="plan lift">
+              <h3 class="plan__name">Free</h3>
+              <p class="plan__tag">For trying the clarity pass.</p>
+              <p class="plan__price">
+                <span class="plan__amount" data-price data-monthly="0" data-yearly="0">$0</span>
+                <span class="plan__per">forever</span>
+              </p>
+              <ul class="plan__list">
+                <li>Clarity pass on 3 documents a month</li>
+                <li>Browser editor</li>
+                <li>Personal dictionary of 50 words</li>
+              </ul>
+              <a class="btn btn--ghost plan__cta" href="#top">Start writing free</a>
+            </article>
+
+            <article class="plan plan--featured lift">
+              <p class="plan__flag">Most popular</p>
+              <h3 class="plan__name">Pro</h3>
+              <p class="plan__tag">For one writer who publishes often.</p>
+              <p class="plan__price">
+                <span class="plan__amount" data-price data-monthly="12" data-yearly="9">$12</span>
+                <span class="plan__per" data-per>/ month</span>
+              </p>
+              <ul class="plan__list">
+                <li>Unlimited clarity pass and rewrites</li>
+                <li>Voice memory across documents</li>
+                <li>Tone dial and style guide</li>
+                <li>Document overlay</li>
+              </ul>
+              <a class="btn btn--primary plan__cta" href="#top">Start writing free</a>
+            </article>
+
+            <article class="plan lift">
+              <h3 class="plan__name">Studio</h3>
+              <p class="plan__tag">For a small content team.</p>
+              <p class="plan__price">
+                <span class="plan__amount" data-price data-monthly="29" data-yearly="22">$29</span>
+                <span class="plan__per" data-per>/ month</span>
+              </p>
+              <ul class="plan__list">
+                <li>Everything in Pro, for up to 8 seats</li>
+                <li>Shared team style guide</li>
+                <li>Review notes and role permissions</li>
+                <li>Priority support</li>
+              </ul>
+              <a class="btn btn--ghost plan__cta" href="#top">Start writing free</a>
+            </article>
+          </div>
+          <p class="pricing__fine">
+            Sample pricing. No payment is taken and no plan is real — this is a concept page.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============================================================ FAQ -->
+      <section class="faq" id="faq" aria-labelledby="faq-title">
+        <div class="container faq__grid">
+          <div class="faq__intro" data-reveal>
+            <p class="eyebrow">FAQ</p>
+            <h2 id="faq-title" class="h2">Reasonable questions.</h2>
+            <p class="faq__intro-body">
+              Still unsure? The free tier exists so the first question is "does this
+              help me write?", not "is it worth the money?".
+            </p>
+          </div>
+
+          <div class="faq__list" data-accordion>
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-1" id="faq-btn-1">
+                  <span>Will it write in my voice, or a generic one?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-1" role="region" aria-labelledby="faq-btn-1">
+                <div class="faq__panel-inner">
+                  <p>
+                    It starts neutral and learns from what you accept. After one document
+                    of real edits it stops offering phrasing you'd never use. You can also
+                    set a tone dial before you begin.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-2" id="faq-btn-2">
+                  <span>Is my writing used to train models?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-2" role="region" aria-labelledby="faq-btn-2">
+                <div class="faq__panel-inner">
+                  <p>
+                    No. Drafts stay yours. Voice memory is per-document and per-account, and
+                    deleting a document removes it from future suggestions as well.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-3" id="faq-btn-3">
+                  <span>Does it replace my editor?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-3" role="region" aria-labelledby="faq-btn-3">
+                <div class="faq__panel-inner">
+                  <p>
+                    It shouldn't have to. There's a browser editor if you want one, and a
+                    document overlay so Inkflow can work inside the tools you already use.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-4" id="faq-btn-4">
+                  <span>What happens after I accept a suggestion?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-4" role="region" aria-labelledby="faq-btn-4">
+                <div class="faq__panel-inner">
+                  <p>
+                    It's just text. You can keep editing it normally, undo it like any change,
+                    or ask for another pass. You always commit the words, not the model.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <h3 class="faq__q">
+                <button type="button" class="faq__button" aria-expanded="false" aria-controls="faq-panel-5" id="faq-btn-5">
+                  <span>Can I try it before paying?</span>
+                  <span class="faq__icon" aria-hidden="true"></span>
+                </button>
+              </h3>
+              <div class="faq__panel" id="faq-panel-5" role="region" aria-labelledby="faq-btn-5">
+                <div class="faq__panel-inner">
+                  <p>
+                    Yes — the Free plan is the trial, and it doesn't expire. Move up to Pro
+                    only when the limits get in your way.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====================================================== FINAL CTA -->
+      <section class="cta-band" aria-labelledby="cta-title">
+        <div class="container cta-band__inner" data-reveal>
+          <h2 id="cta-title" class="cta-band__title">Write the draft. Inkflow handles the polish.</h2>
+          <p class="cta-band__text">
+            Open the editor, paste something rough, and see the version you meant. Free to start.
+          </p>
+          <div class="cta-band__actions">
+            <a class="btn btn--primary btn--lg" href="#pricing" data-magnetic>Start writing free</a>
+            <a class="btn btn--ghost btn--lg" href="#demo">
+              See it work
+              <span class="btn__arr" aria-hidden="true">↓</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ============================================================ FOOTER -->
+    <footer class="footer">
+      <div class="container footer__grid">
+        <div class="footer__brand">
+          <a class="brand" href="#top" aria-label="Inkflow home">
+            <span class="brand__mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 20c6-1 10-5 11-12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+                <path d="M14 4l6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
+                <circle cx="18.5" cy="5.5" r="2.4" fill="currentColor" />
+              </svg>
+            </span>
+            <span class="brand__word">Inkflow</span>
+          </a>
+          <p class="footer__blurb">
+            An AI writing assistant that suggests in your voice. A self-initiated concept
+            project by Ahsan Ghani — no clients, no testimonials, no invented results.
+          </p>
+        </div>
+
+        <nav class="footer__col" aria-label="Product">
+          <h3>Product</h3>
+          <ul>
+            <li><a href="#demo">Product tour</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+            <li><a href="#faq">FAQ</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Company">
+          <h3>Company</h3>
+          <ul>
+            <li><a href="#top">About</a></li>
+            <li><a href="#top">Careers</a></li>
+            <li><a href="#top">Changelog</a></li>
+            <li><a href="#top">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Resources">
+          <h3>Resources</h3>
+          <ul>
+            <li><a href="#top">Writing guide</a></li>
+            <li><a href="#top">Style guide</a></li>
+            <li><a href="#top">Help centre</a></li>
+            <li><a href="#top">Status</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="container footer__base">
+        <p>© 2026 Inkflow — invented brand for a concept project.</p>
+        <ul class="footer__legal">
+          <li><a href="#top">Privacy</a></li>
+          <li><a href="#top">Terms</a></li>
+          <li><a href="#top">Cookies</a></li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Small ribbon: uses target="_top" so it leaves the portfolio's preview iframe. -->
+    <nav class="ribbon-nav" aria-label="Portfolio">
+  <a class="ribbon" href="../../index.html" target="_top" rel="noopener">
+        <span class="ribbon__dot" aria-hidden="true"></span>
+        Concept project by Ahsan Ghani
+      </a>
+  </nav>
+
+    <script defer src="../vendor/gsap.min.js"></script>
+    <script defer src="../vendor/ScrollTrigger.min.js"></script>
+    <script defer src="script.js"></script>
+  </body>
+</html>

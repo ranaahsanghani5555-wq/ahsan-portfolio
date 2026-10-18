@@ -1,0 +1,225 @@
+/* =========================================================================
+   PreviewModal.module.css — fullscreen live preview with a device toggle.
+   ========================================================================= */
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal) + 10);
+  background: color-mix(in srgb, var(--ink) 58%, transparent);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-modal) + 11);
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: var(--paper);
+  will-change: transform, opacity;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding: var(--space-3) var(--gutter);
+  border-block-end: 1px solid var(--hairline);
+  background: var(--paper);
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin-inline-end: auto;
+  min-inline-size: 0;
+}
+
+.titleName {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: var(--weight-medium);
+  line-height: 1.1;
+  color: var(--text-strong);
+}
+
+.titleMeta {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.devices {
+  display: flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-pill);
+  background: var(--paper-2);
+}
+
+.device {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  font-size: var(--step--1);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-snug);
+  white-space: nowrap;
+}
+
+.device:hover {
+  color: var(--text-strong);
+}
+
+.device[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.newTab {
+  font-size: var(--step--1);
+  font-weight: var(--weight-semibold);
+  color: var(--text-strong);
+  white-space: nowrap;
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  color: var(--ink);
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.close:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* --- stage + frame -------------------------------------------------------- */
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: var(--space-5) var(--gutter);
+  background: var(--paper-3);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.frame {
+  position: relative;
+  inline-size: min(100%, var(--frame-w, 100%));
+  block-size: 100%;
+  max-inline-size: 100%;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #fff;
+  box-shadow: var(--shadow-lg);
+  transition: inline-size var(--dur-med) var(--ease-out-expo);
+}
+
+.stage[data-device='desktop'] .frame {
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+.iframe {
+  inline-size: 100%;
+  block-size: 100%;
+  border: 0;
+  background: #fff;
+}
+
+.loading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  background: var(--paper);
+  color: var(--text-muted);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-snug);
+}
+
+.spinner {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+  border: 2px solid var(--hairline);
+  border-block-start-color: var(--accent);
+  border-radius: 50%;
+}
+
+.widthNote {
+  position: absolute;
+  inset-block-end: var(--space-3);
+  inset-inline-end: var(--gutter);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .spinner {
+    animation: spin 0.8s linear infinite;
+  }
+  .frame {
+    transition: inline-size var(--dur-med) var(--ease-out-expo);
+  }
+}
+
+/* Same motion when the visitor forces it ON (html[data-motion='full'],
+   src/lib/motion.js) on an OS that asks for reduce. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion='full'] .spinner {
+    animation: spin 0.8s linear infinite;
+  }
+  html[data-motion='full'] .frame {
+    transition: inline-size var(--dur-med) var(--ease-out-expo);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .bar {
+    gap: var(--space-3);
+  }
+
+  .titleMeta {
+    display: none;
+  }
+
+  .newTab {
+    display: none;
+  }
+
+  .device {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .stage {
+    padding: var(--space-3);
+  }
+}

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#F4F1EA" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="canonical" href="https://ahsanghani.dev/" />
+    <!-- TODO(deploy): replace the canonical URL above and the og:image
+         absolute URL below once the real domain is live. -->
+
+    <title>Ahsan Ghani — Web Designer</title>
+    <meta
+      name="description"
+      content="Ahsan Ghani is a web designer in Arifwala, Pakistan. Concept landing pages, marketing sites and a written critique practice on hierarchy, layout, type and UX."
+    />
+
+    <!-- Open Graph / Twitter card (og-image built as a designed static card,
+        1200x630, from the hero typography — not a photo). -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ahsan Ghani — Web Designer" />
+    <meta property="og:title" content="Ahsan Ghani — Web Designer" />
+    <meta
+      property="og:description"
+      content="Concept landing pages, marketing sites and a written critique practice on hierarchy, layout, type and UX. Based in Arifwala, Pakistan."
+    />
+    <meta property="og:url" content="https://ahsanghani.dev/" />
+    <meta property="og:image" content="https://ahsanghani.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ahsan Ghani — Web Designer" />
+    <meta
+      name="twitter:description"
+      content="Concept landing pages, marketing sites and a written critique practice on hierarchy, layout, type and UX."
+    />
+    <meta name="twitter:image" content="https://ahsanghani.dev/og-image.png" />
+
+    <!--
+      Runtime font preload. The @font-face rules ship in the bundled CSS; this
+      tiny hint asks the browser to fetch the three faces the hero needs as early
+      as possible. It resolves the URL against the page's own path so the site
+      works both at the root and from a sub-path (base: './').
+    -->
+    <script>
+      (function () {
+        var dir = (location.pathname.match(/^(.*\/)[^/]*$/) || ['', '/'])[1];
+        ['fraunces-normal-latin.woff2', 'fraunces-italic-latin.woff2', 'hanken-normal-latin.woff2'].forEach(function (f) {
+          var l = document.createElement('link');
+          l.rel = 'preload';
+          l.as = 'font';
+          l.type = 'font/woff2';
+          l.crossOrigin = '';
+          l.href = dir + 'fonts/' + f;
+          document.head.appendChild(l);
+        });
+      })();
+    </script>
+    <!--
+      Progressive-enhancement failsafe. GSAP may only hide content from JS, and
+      only immediately before animating it; nothing is hidden by plain CSS. If
+      the intro has still not started 1.5s after DOMContentLoaded (a stalled
+      bundle, a GSAP error, a blocked deferred script), this forces every hidden
+      reveal back to its visible state. Exposed as a function so the behaviour
+      can be asserted by the review suite.
+    -->
+    <script>
+      (function () {
+        function unHide(el) {
+          el.style.setProperty('opacity', '1', 'important');
+          el.style.setProperty('visibility', 'visible', 'important');
+          el.style.setProperty('transform', 'none', 'important');
+        }
+
+        function forceVisible() {
+          if (window.__agIntroStarted) return 0;
+          var hidden = 0;
+          var marked = document.querySelectorAll('[data-hero-reveal], [data-reveal]');
+          for (var i = 0; i < marked.length; i++) {
+            unHide(marked[i]);
+            hidden += 1;
+          }
+          /* SplitText wraps the headline in JS-generated line boxes; any other
+             element GSAP left at opacity 0 is caught here too. */
+          var styled = document.querySelectorAll('[style]');
+          for (var j = 0; j < styled.length; j++) {
+            var el = styled[j];
+            if (el.style.opacity === '0' || el.style.visibility === 'hidden') {
+              unHide(el);
+              hidden += 1;
+            }
+          }
+          return hidden;
+        }
+
+        window.__agIntroFailsafe = forceVisible;
+
+        function arm() {
+          window.setTimeout(forceVisible, 1500);
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', arm);
+        } else {
+          arm();
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

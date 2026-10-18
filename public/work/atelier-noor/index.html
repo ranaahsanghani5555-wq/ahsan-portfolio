@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="robots" content="noindex" />
+    <title>Atelier Noor — independent creative studio (concept)</title>
+    <meta
+      name="description"
+      content="Atelier Noor is a creative studio concept for brand identity, art direction and type. Oversized typography, one electric blue, scroll-driven work. A self-initiated concept project by Ahsan Ghani."
+    />
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg" />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/newsreader-roman-latin.woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      href="fonts/newsreader-ital-latin.woff2"
+    />
+    <link rel="stylesheet" href="fonts.css" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="../motion.js"></script>
+    <script>
+      /* Progressive enhancement for the scroll reveals.
+         The hidden start state only ever applies while <html> carries the "js"
+         gate class added here, before first paint (so there is no flash). The
+         motion code drops the class as soon as it has armed the animations, and
+         a 1.5s failsafe removes it after DOMContentLoaded if the motion code
+         never ran — so a missing or failed GSAP can never leave content
+         invisible.
+
+         "hscroll-pending" does the same job for the desktop horizontal work
+         track: script.js normally gives the showcase zone its scroll length
+         (100vh of sticky stage plus one track-width of travel), which would
+         re-flow the page if the stacked form had been laid out first. Carrying
+         the class from the first paint means the browser never lays out the
+         stacked form on desktop at all. It follows the same media query the
+         motion code uses and is dropped by the same failsafe, so a missing
+         GSAP still falls back to the safe vertical stack. */
+      (function () {
+        var doc = document.documentElement;
+        if (!window.__motionOK()) return;
+        doc.classList.add('js');
+        var wide = window.matchMedia && window.matchMedia('(min-width: 901px)');
+        var syncTrack = function () {
+          if (wide && wide.matches) doc.classList.add('hscroll-pending');
+          else doc.classList.remove('hscroll-pending');
+        };
+        syncTrack();
+        if (wide) {
+          if (wide.addEventListener) wide.addEventListener('change', syncTrack);
+          else if (wide.addListener) wide.addListener(syncTrack);
+        }
+        window.addEventListener('DOMContentLoaded', function () {
+          window.setTimeout(function () {
+            if (!doc.classList.contains('reveal-armed')) {
+              doc.classList.remove('js');
+              doc.classList.remove('hscroll-pending');
+              if (wide) {
+                if (wide.removeEventListener) wide.removeEventListener('change', syncTrack);
+                else if (wide.removeListener) wide.removeListener(syncTrack);
+              }
+            }
+          }, 1500);
+        });
+      })();
+    </script>
+    <!--
+      ============================================================================
+      ATELIER NOOR — design rationale (self-initiated concept, not client work)
+      ============================================================================
+      AUDIENCE
+        Brand and marketing leads at mid-size companies commissioning a studio for
+        a flagship campaign. They have shortlisted three studios and are judging
+        on taste: does this studio's own site look like the work it claims to
+        make? They scroll on a large screen and notice type, spacing and nerve.
+
+      HIERARCHY
+        1. Kinetic type is the portfolio. The hero letters rise in, answer the
+           cursor and the accent word rotates — taste is judged before a single
+           project is read.
+        2. One action: start a project. It repeats in the nav, the hero, the end
+           of the showcase and an oversized footer CTA; the short contact form is
+           the only other thing asking for input.
+        3. Work is shown one panel at a time inside a scroll-driven horizontal
+           track — a thumbnail gallery would flatten five different projects into
+           five interchangeable squares.
+        4. Extreme scale contrast (10rem display against 0.6rem labels) and a
+           deliberately asymmetric grid carry the "editorial studio" reading
+           without a single photograph.
+
+      CONVERSION STRATEGY
+        The page sells taste, so it refuses to look like a template. The contact
+        form is short and says plainly that it does not send (it is a concept),
+        which keeps trust intact while still showing the intended interaction.
+        The single blue is spent on purpose — the sphere, the panel floods, the
+        wipe, the accent word — so the studio reads as confident, not decorated.
+
+      HONESTY GUARDRAILS
+        - Invented studio, invented clients, invented people. No real brand or
+          agency is named, compared, or shown as a client or partner.
+        - Every project panel, client mark and quote is labelled "Sample content".
+        - No invented results or metrics; the only figures are project indices and
+          section numbering.
+
+      WHAT I'D TEST NEXT
+        - Hero: the cursor-reactive letter field vs. a static headline — which
+          makes a commissioning lead keep scrolling.
+        - Showcase: the sticky horizontal track vs. a vertical sequence of full
+          panels on desktop.
+        - The blue: whether the full-viewport wipe carries the process idea
+          better than a plain rule.
+        - Contact density: does a plain form undercut an "editorial" studio, or
+          reassure a lead who wants a straight route in?
+      ============================================================================
+    -->
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="nav" data-nav>
+      <div class="container nav__inner">
+        <a class="brand" href="#top">
+          <span class="brand__mark" aria-hidden="true">AN</span>
+          <span class="brand__word">Atelier&nbsp;Noor</span>
+        </a>
+
+        <p class="concept-tag">Concept project</p>
+
+        <nav class="nav__links" aria-label="Primary">
+          <a href="#work"><span aria-hidden="true">01</span>Work</a>
+          <a href="#services"><span aria-hidden="true">02</span>Studio</a>
+          <a href="#process"><span aria-hidden="true">03</span>Process</a>
+          <a href="#contact"><span aria-hidden="true">04</span>Contact</a>
+        </nav>
+
+        <div class="nav__actions">
+          <a class="btn btn--primary nav__cta" href="#contact">Start a project</a>
+          <button
+            class="nav__toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            data-menu-toggle
+          >
+            <span class="visually-hidden">Menu</span>
+            <span class="nav__bars" aria-hidden="true"><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" aria-hidden="true" data-menu>
+        <nav class="mobile-menu__links" aria-label="Mobile">
+          <a href="#work"><span>01</span>Work</a>
+          <a href="#services"><span>02</span>Studio</a>
+          <a href="#process"><span>03</span>Process</a>
+          <a href="#contact"><span>04</span>Contact</a>
+        </nav>
+        <a class="btn btn--primary mobile-menu__cta" href="#contact">Start a project</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ================================================================ HERO -->
+      <section class="hero" id="top" data-hero aria-labelledby="hero-title">
+        <div class="sphere" data-sphere aria-hidden="true"></div>
+        <div class="trail" data-trail aria-hidden="true"></div>
+        <div class="container hero__inner">
+          <div class="hero__top">
+            <p class="label">Independent creative studio</p>
+            <p class="concept-tag hero__concept">Concept project</p>
+            <p class="label label--quiet">Brand · Art direction · Type</p>
+          </div>
+
+          <h1 class="hero__title" id="hero-title">
+            <span class="hero__line"
+              ><span class="hc">B</span><span class="hc">i</span><span class="hc">g</span>
+              <span class="hc">i</span><span class="hc">d</span><span class="hc">e</span><span class="hc">a</span><span class="hc">s</span><span class="hc">,</span></span
+            >
+            <span class="hero__line hero__line--indent"
+              ><span class="hc">s</span><span class="hc">e</span><span class="hc">t</span>
+              <span class="accent-slot" data-accent aria-hidden="true"
+                ><span class="accent-word">loud.</span><span class="accent-word">sharp.</span
+                ><span class="accent-word">true.</span></span
+              ><span class="visually-hidden">loud.</span></span
+            >
+          </h1>
+
+          <div class="hero__foot">
+            <p class="hero__lead">
+              Atelier Noor is a small studio for brand identity, art direction
+              and type — built for teams who would rather be remembered than
+              merely noticed.
+            </p>
+            <div class="hero__cta">
+              <a class="btn btn--primary btn--lg" href="#contact">Start a project</a>
+              <a class="btn btn--ghost btn--lg" href="#work">
+                See the work <span aria-hidden="true">↓</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================================================== DISCIPLINE MARQUEE
+           Decorative band under the hero, duplicated once for a seamless loop;
+           hidden from assistive tech because it repeats the nav labels. -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee__track" data-marquee>
+          <span class="marquee__set"
+            >Brand identity · Art direction · Type systems · Editorial ·
+            Digital experience · Motion · Campaign · Naming ·&nbsp;</span
+          >
+          <span class="marquee__set"
+            >Brand identity · Art direction · Type systems · Editorial ·
+            Digital experience · Motion · Campaign · Naming ·&nbsp;</span
+          >
+        </div>
+      </div>
+
+      <!-- ============================================================ SERVICES -->
+      <section class="services" id="services" aria-labelledby="services-title">
+        <div class="container">
+          <header class="section-head" data-reveal>
+            <p class="eyebrow">Studio — 01</p>
+            <h2 id="services-title" class="h2">A small studio, on purpose.</h2>
+          </header>
+
+          <ol class="services__list">
+            <li class="service" tabindex="0" data-reveal>
+              <span class="service__num" aria-hidden="true">01</span>
+              <div class="service__row">
+                <h3 class="service__name">Brand identity</h3>
+                <p class="service__body">
+                  Naming, marks, colour and the rules that hold them together — a
+                  system a team can run without calling us back.
+                </p>
+              </div>
+              <span class="service__mark" aria-hidden="true">→</span>
+            </li>
+            <li class="service" tabindex="0" data-reveal>
+              <span class="service__num" aria-hidden="true">02</span>
+              <div class="service__row">
+                <h3 class="service__name">Art direction</h3>
+                <p class="service__body">
+                  The look and the argument behind it: how a brand behaves in a
+                  room, on a page and at 3am on a phone.
+                </p>
+              </div>
+              <span class="service__mark" aria-hidden="true">→</span>
+            </li>
+            <li class="service" tabindex="0" data-reveal>
+              <span class="service__num" aria-hidden="true">03</span>
+              <div class="service__row">
+                <h3 class="service__name">Type &amp; editorial</h3>
+                <p class="service__body">
+                  Custom letterforms, type systems and long-form layout for brands
+                  that have something to say and the nerve to say it at scale.
+                </p>
+              </div>
+              <span class="service__mark" aria-hidden="true">→</span>
+            </li>
+            <li class="service" tabindex="0" data-reveal>
+              <span class="service__num" aria-hidden="true">04</span>
+              <div class="service__row">
+                <h3 class="service__name">Digital experience</h3>
+                <p class="service__body">
+                  Design and front-end for sites that move the way the brand does —
+                  no template, no stock photography, no filler.
+                </p>
+              </div>
+              <span class="service__mark" aria-hidden="true">→</span>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ==================================================== PROCESS MARQUEE -->
+      <div class="marquee marquee--alt" aria-hidden="true">
+        <div class="marquee__track" data-marquee>
+          <span class="marquee__set"
+            >Interrogate · Argue · Build · Refine · Set · Ship · Repeat ·&nbsp;</span
+          >
+          <span class="marquee__set"
+            >Interrogate · Argue · Build · Refine · Set · Ship · Repeat ·&nbsp;</span
+          >
+        </div>
+      </div>
+
+      <!-- ==================================================== SELECTED WORK -->
+      <section class="showcase" id="work" data-showcase aria-labelledby="work-title">
+        <div class="container showcase__intro" data-reveal>
+          <p class="eyebrow">Selected work — 02</p>
+          <h2 id="work-title" class="h2">Five rooms, five arguments.</h2>
+          <p class="showcase__lead">
+            <span class="sample-tag">Sample content</span>
+            Invented projects for an invented studio — a look at how the work
+            would be framed, not a record of results.
+          </p>
+        </div>
+
+        <!-- Desktop + motion: the zone gets JS-set scroll length, the pin is
+             plain CSS sticky (no ScrollTrigger pin, no reparenting, no CLS).
+             Mobile / reduced motion: nothing applies and the track is a stack. -->
+        <div class="showcase__zone" data-showcase-zone>
+          <div class="showcase__pin" data-showcase-pin>
+            <div class="showcase__track" data-track>
+              <article class="panel" data-panel tabindex="0">
+                <div class="panel__art panel__art--rings" aria-hidden="true">
+                  <span class="ring ring--1 art-spin art-spin--a"></span>
+                  <span class="ring ring--2 art-spin art-spin--b"></span>
+                  <span class="ring ring--3 art-spin art-spin--c"></span>
+                  <span class="ring-orbit art-spin art-spin--d">
+                    <span class="ring-dot"></span>
+                  </span>
+                </div>
+                <span class="panel__idx" aria-hidden="true">01</span>
+                <span class="panel__flood" aria-hidden="true"></span>
+                <div class="panel__meta">
+                  <span class="panel__num" aria-hidden="true">01</span>
+                  <h3 class="panel__name">Ardent Athletic</h3>
+                  <p class="panel__tags">Brand identity · Art direction</p>
+                </div>
+              </article>
+
+              <article class="panel" data-panel tabindex="0">
+                <div class="panel__art panel__art--lines" aria-hidden="true">
+                  <svg class="art-lines" viewBox="0 0 400 300">
+                    <path class="ln ln--a" pathLength="1" d="M24 262 C 120 90 260 60 376 236" />
+                    <path class="ln ln--b" pathLength="1" d="M24 226 C 140 120 250 120 376 200" />
+                    <path class="ln ln--c" pathLength="1" d="M24 188 C 150 160 250 180 376 164" />
+                  </svg>
+                </div>
+                <span class="panel__idx" aria-hidden="true">02</span>
+                <span class="panel__flood" aria-hidden="true"></span>
+                <div class="panel__meta">
+                  <span class="panel__num" aria-hidden="true">02</span>
+                  <h3 class="panel__name">Tideline Journal</h3>
+                  <p class="panel__tags">Editorial · Type system</p>
+                </div>
+              </article>
+
+              <article class="panel" data-panel tabindex="0">
+                <div class="panel__art panel__art--grid" aria-hidden="true">
+                  <span class="art-grid__layer art-grid__layer--a"></span>
+                  <span class="art-grid__layer art-grid__layer--b"></span>
+                </div>
+                <span class="panel__idx" aria-hidden="true">03</span>
+                <span class="panel__flood" aria-hidden="true"></span>
+                <div class="panel__meta">
+                  <span class="panel__num" aria-hidden="true">03</span>
+                  <h3 class="panel__name">Cobalt &amp; Ash</h3>
+                  <p class="panel__tags">Identity · Hospitality</p>
+                </div>
+              </article>
+
+              <article class="panel" data-panel tabindex="0">
+                <div class="panel__art panel__art--stripes" aria-hidden="true">
+                  <span class="art-stripes__band"></span>
+                </div>
+                <span class="panel__idx" aria-hidden="true">04</span>
+                <span class="panel__flood" aria-hidden="true"></span>
+                <div class="panel__meta">
+                  <span class="panel__num" aria-hidden="true">04</span>
+                  <h3 class="panel__name">Nocturne Society</h3>
+                  <p class="panel__tags">Campaign · Motion</p>
+                </div>
+              </article>
+
+              <article class="panel" data-panel tabindex="0">
+                <div class="panel__art panel__art--morph" aria-hidden="true">
+                  <span class="art-morph"></span>
+                  <span class="art-morph-ring art-spin art-spin--b"></span>
+                </div>
+                <span class="panel__idx" aria-hidden="true">05</span>
+                <span class="panel__flood" aria-hidden="true"></span>
+                <div class="panel__meta">
+                  <span class="panel__num" aria-hidden="true">05</span>
+                  <h3 class="panel__name">Marram &amp; Co.</h3>
+                  <p class="panel__tags">Brand system · Digital</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="showcase__progress" aria-hidden="true"><span data-progress></span></div>
+          </div>
+        </div>
+
+        <p class="showcase__note container">
+          Every project, name and mark here is invented and marked sample content.
+        </p>
+      </section>
+
+      <!-- ===================================================== BLUE WIPE
+           Full-viewport blue panel that wipes in and out on scroll between the
+           work and the process (scrubbed clip-path, CSS sticky — no pin). With
+           motion off it is a plain static blue band, fully readable. -->
+      <section class="wipe" data-wipe aria-label="Transition to process">
+        <div class="wipe__panel" data-wipe-panel>
+          <div class="container wipe__inner">
+            <p class="label label--onblue">How we think</p>
+            <p class="wipe__text">Ask better questions.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ======================================================== MANIFESTO -->
+      <section class="process" id="process" aria-labelledby="process-title">
+        <div class="container process__grid">
+          <div class="process__manifesto" data-reveal>
+            <p class="eyebrow">Process — 03</p>
+            <p class="manifesto" id="process-title">
+              A studio is only as interesting as the questions it asks
+              <em>before</em> it makes anything. So we ask a lot of them.
+            </p>
+          </div>
+
+          <ol class="steps">
+            <li class="step" data-reveal>
+              <span class="step__k" aria-hidden="true">01</span>
+              <div>
+                <h3 class="step__name">Interrogate</h3>
+                <p class="step__body">
+                  We start with the business, the audience and the competitors —
+                  not with moodboards.
+                </p>
+              </div>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step__k" aria-hidden="true">02</span>
+              <div>
+                <h3 class="step__name">Argue</h3>
+                <p class="step__body">
+                  Two or three directions, each with a case for why it earns the
+                  brand's next five years.
+                </p>
+              </div>
+            </li>
+            <li class="step" data-reveal>
+              <span class="step__k" aria-hidden="true">03</span>
+              <div>
+                <h3 class="step__name">Build</h3>
+                <p class="step__body">
+                  A system, a type scale and a front-end, delivered with the
+                  rules written down so it survives without us.
+                </p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ========================================================== CLIENTS -->
+      <section class="clients" aria-labelledby="clients-title">
+        <div class="container">
+          <p class="eyebrow" id="clients-title">
+            <span class="sample-tag">Sample content</span>
+            Selected clients — invented marks
+          </p>
+          <ul class="clients__row">
+            <li>Ardent</li>
+            <li>Tideline</li>
+            <li>Cobalt&nbsp;&amp;&nbsp;Ash</li>
+            <li>Nocturne</li>
+            <li>Marram</li>
+            <li>Quarry&nbsp;&amp;&nbsp;Nine</li>
+            <li>Barrow&nbsp;Hill</li>
+            <li>Vantage&nbsp;East</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ======================================================= TESTIMONIAL -->
+      <section class="quote" aria-labelledby="quote-title">
+        <div class="container">
+          <h2 class="visually-hidden" id="quote-title">A note from a client</h2>
+          <blockquote class="pull" data-reveal>
+            <p class="pull__text">
+              “They turned a boring category into something people quote back to
+              us. The type alone did half the work.”
+            </p>
+            <footer class="pull__footer">
+              <cite class="pull__cite">Nadia Rehman, brand director</cite>
+              <span class="sample-tag">Sample content</span>
+            </footer>
+          </blockquote>
+        </div>
+      </section>
+
+      <!-- ========================================================== CONTACT -->
+      <section class="contact" id="contact" aria-labelledby="contact-title">
+        <div class="container contact__grid">
+          <div class="contact__intro" data-reveal>
+            <p class="eyebrow">Contact — 04</p>
+            <h2 id="contact-title" class="h2">Tell us what you want to be known for.</h2>
+            <p class="contact__body">
+              Bring the brief, the doubt or just the ambition. A short note is
+              enough to start; we reply within two working days.
+            </p>
+            <ul class="contact__meta">
+              <li><span>Email</span><a href="#contact">studio@atelier-noor.example</a></li>
+              <li><span>Studio</span>Independent — working worldwide</li>
+              <li><span>Availability</span>Two projects per quarter</li>
+            </ul>
+          </div>
+
+          <form class="form" data-form novalidate>
+            <div class="field">
+              <label for="cf-name">Name</label>
+              <input id="cf-name" name="name" type="text" autocomplete="name" placeholder="Your name" />
+            </div>
+            <div class="field">
+              <label for="cf-email">Email</label>
+              <input id="cf-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" />
+            </div>
+            <div class="field">
+              <label for="cf-type">What do you need?</label>
+              <select id="cf-type" name="type">
+                <option>Brand identity</option>
+                <option>Art direction</option>
+                <option>Type &amp; editorial</option>
+                <option>Digital experience</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="cf-notes">Project notes</label>
+              <textarea id="cf-notes" name="notes" rows="4" placeholder="A sentence or two is fine."></textarea>
+            </div>
+            <button class="btn btn--primary btn--lg form__submit" type="submit">Send enquiry</button>
+            <p class="form__note" data-form-note role="status" aria-live="polite">
+              This is a concept page — the form runs in your browser only and
+              does not send anywhere.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <!-- =================================================== OVERSIZED CTA -->
+      <section class="bigcta-band" aria-label="Start a project">
+        <a class="bigcta" href="#contact">
+          <span class="bigcta__inner">
+            <span class="bigcta__text" data-splitletters>Start a project</span>
+            <span class="bigcta__arrow" aria-hidden="true">→</span>
+          </span>
+        </a>
+      </section>
+    </main>
+
+    <!-- ============================================================ FOOTER -->
+    <footer class="footer">
+      <div class="container footer__grid">
+        <div class="footer__brand">
+          <a class="brand" href="#top">
+            <span class="brand__mark" aria-hidden="true">AN</span>
+            <span class="brand__word">Atelier&nbsp;Noor</span>
+          </a>
+          <p class="footer__blurb">
+            An independent creative studio for brand identity, art direction and
+            type. A self-initiated concept project by Ahsan Ghani — invented
+            studio, no real clients or results.
+          </p>
+        </div>
+
+        <nav class="footer__col" aria-label="Studio">
+          <h3>Studio</h3>
+          <ul>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#process">Process</a></li>
+            <li><a href="#work">Work</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Elsewhere">
+          <h3>Elsewhere</h3>
+          <ul>
+            <li><a href="#top">Newsletter</a></li>
+            <li><a href="#top">Journal</a></li>
+            <li><a href="#top">Type specimens</a></li>
+            <li><a href="#top">RSS</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Legal">
+          <h3>Legal</h3>
+          <ul>
+            <li><a href="#top">Privacy</a></li>
+            <li><a href="#top">Terms</a></li>
+            <li><a href="#top">Colophon</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="container footer__base">
+        <p>© 2026 Atelier Noor — invented studio for a concept project.</p>
+        <p class="footer__type">Set in Syne &amp; Newsreader</p>
+      </div>
+    </footer>
+
+    <!-- Small ribbon: uses target="_top" so it leaves the portfolio's preview iframe. -->
+    <nav class="ribbon-nav" aria-label="Portfolio">
+  <a class="ribbon" href="../../index.html" target="_top" rel="noopener">
+        <span class="ribbon__dot" aria-hidden="true"></span>
+        Concept project by Ahsan Ghani
+      </a>
+  </nav>
+
+    <script defer src="../vendor/gsap.min.js"></script>
+    <script defer src="../vendor/ScrollTrigger.min.js"></script>
+    <script defer src="script.js"></script>
+  </body>
+</html>

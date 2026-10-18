@@ -1,0 +1,10 @@
+.shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-block-size: 100svh;
+}
+
+.main {
+  flex: 1 0 auto;
+}

@@ -1,0 +1,138 @@
+/* =========================================================================
+   Footer.module.css — brand, sitemap, live local time, honest note.
+   ========================================================================= */
+
+.footer {
+  margin-block-start: var(--section-y);
+  border-block-start: 1px solid var(--line);
+  background-color: var(--paper-2);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr);
+  gap: var(--space-7);
+  padding-block: var(--space-9);
+}
+
+.brand {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  border-radius: var(--radius-xs);
+  background-color: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-wide);
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--text-strong);
+}
+
+.place {
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.list {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  color: var(--text);
+  font-size: var(--step--1);
+  text-decoration: none;
+}
+
+.link:hover {
+  color: var(--text-strong);
+  text-decoration: underline;
+  text-underline-offset: 0.28em;
+}
+
+.note {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+/* --- live local time ------------------------------------------------------ */
+.clock {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2) var(--space-3);
+  padding-block-end: var(--space-3);
+  border-block-end: 1px solid var(--line);
+}
+
+.clockLabel {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.clockTime {
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--tracking-snug);
+  color: var(--text-strong);
+}
+
+.clockZone {
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}
+
+.social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.top {
+  justify-self: start;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-strong);
+  font: inherit;
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+
+.top:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.28em;
+}
+
+@media (max-width: 59.99rem) {
+  .inner {
+    grid-template-columns: 1fr;
+  }
+}

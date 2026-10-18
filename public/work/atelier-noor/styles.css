@@ -1,0 +1,1984 @@
+/* ==========================================================================
+   Atelier Noor — styles.css
+   Pure white, black and one electric blue. Syne at extreme display scale
+   against small Newsreader text. Editorial asymmetry, sharp corners, hairline
+   rules. All transitions are transform/opacity only; reduced motion is
+   honoured at the bottom of the file.
+
+   The horizontal showcase track only becomes a row when <html> carries
+   .has-hscroll (desktop + motion + GSAP confirmed, added by script.js) or
+   .hscroll-pending (the same desktop + motion condition, applied by the head
+   gate before first paint so the switch costs no layout shift). Everywhere else
+   — mobile, reduced motion, no JS, blocked CDN — the panels fall back to a
+   plain vertical stack, so the page can never scroll sideways.
+   ========================================================================== */
+
+/* ---------------------------------------------- metric-matched fallbacks
+   Syne is much wider than Arial and Newsreader sits almost exactly on
+   Georgia, so a naive fallback reflows (and grows) the page the moment the
+   webfont swaps in. These local faces are size-adjusted to the webfont's
+   advances so the swap changes almost no layout. */
+@font-face {
+  font-family: "Syne Fallback";
+  src: local("Arial Bold"), local("Arial"), local("Helvetica");
+  font-weight: 700;
+  /* size-adjust is the measured advance ratio of the real face to Arial:
+     summing the actual strings the page renders in the first viewport gave
+     real/fallback = 0.9271, so 125% -> 115.89%. Advance errors are what the
+     eye catches when the webfont arrives (the nav jumps 31px). */
+  size-adjust: 115.89%;
+  /* Effective metric box ((ascent + descent) x size-adjust) stays exactly the
+     real Syne 700's: 1.2195em / 1.1589 = 1.0523em, split 0.75/0.25. */
+  ascent-override: 78.92%;
+  descent-override: 26.31%;
+  line-gap-override: 0%;
+}
+
+/* Syne's width jumps sharply with weight; the heavy display sizes need a
+   separate, wider face. local("Arial Bold") resolves the bold face.
+
+   The vertical metrics matter only on mixed-font lines (the H1's second line
+   mixes Syne with the italic Newsreader <em>). A line box made of two inline
+   boxes is (line-height) + (ascent-descent span difference), so matching the
+   span is what keeps the swap invisible. Measured in the browser against the
+   real face (800 176px): Syne's ascent-descent span is 0.650em, Arial Bold's
+   is 0.8038em after size-adjust, hence 65.1% / 23.9% - which reproduces the
+   webfont's 174px line box and its baseline exactly. */
+@font-face {
+  font-family: "Syne Fallback";
+  src: local("Arial Bold"), local("Arial"), local("Helvetica");
+  font-weight: 800;
+  /* The hero H1 is the wrap-critical string and the one the group average got
+     wrong: "Big ideas," measures 708.6px real vs 728.9px fallback against a
+     728px box, so the old 161.96% made the fallback wrap a line the real font
+     fits (a 89.9px jump at 768/1440). Syne has no optical-size axis, so its
+     advance ratio is size-independent: measured 0.9714 at 390, 768 and 1440.
+     161.96% x 0.9714 = 157.33%. */
+  size-adjust: 157.33%;
+  /* matched metric box 1.1990em / 1.5733 = 0.7621em, split 0.7725/0.2275. */
+  ascent-override: 58.87%;
+  descent-override: 17.34%;
+  line-gap-override: 0%;
+}
+
+/* ---------------------------------------------- metric-matched fallbacks
+   Syne is much wider than Arial and Newsreader sits almost exactly on
+   Georgia, so a naive fallback reflows (and grows) the page the moment the
+   webfont swaps in. These local faces are size-adjusted to the webfont's
+   advances so the swap changes almost no layout.
+
+   The numbers come from measuring both faces in the browser: size-adjust is
+   real-advance / local-advance, and the ascent/descent overrides are the web
+   font's own vertical metrics (Canvas fontBoundingBox*) divided by that scale,
+   so the fallback's line boxes are identical to the web font's. Without that,
+   a 176px headline reflows ~12px when Newsreader resolves. */
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Georgia"), local("Times New Roman");
+  /* Newsreader is NOT close to Georgia in width (Georgia is ~17% wider): the
+     original 111.2% only matched the ascent/descent span. Advance matching is
+     what keeps the body copy and the hero lead from re-wrapping on swap:
+     111.2% x 0.8523 = 94.78%, and the metric box stays 1.0em
+     ((ascent + descent) x size-adjust = 1.0). */
+  size-adjust: 94.78%;
+  ascent-override: 77.55%;
+  descent-override: 27.92%;
+  line-gap-override: 0%;
+}
+
+/* The hero H1 has an italic <em> that switches to Newsreader. Italic glyphs
+   measure differently, so give italic its own face via the italic local. */
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Georgia Italic"), local("Georgia"), local("Times New Roman");
+  font-style: italic;
+  /* measured on the italic strings (the hero's "loud.", the plate names):
+     102.6% x 0.8735 = 89.62% */
+  size-adjust: 89.62%;
+  ascent-override: 81.97%;
+  descent-override: 29.54%;
+  line-gap-override: 0%;
+}
+
+/* ------------------------------------------------------------------ tokens */
+:root {
+  --white: #ffffff;
+  --ink: #000000;
+  --blue: #1f3bff;
+  --gray: #e8e8e8;
+  --muted: #4a4a4a;
+  --line: rgba(0, 0, 0, 0.18);
+  --line-soft: rgba(0, 0, 0, 0.09);
+
+  --display: "Syne", "Syne Fallback", "Helvetica Neue", Helvetica, Arial,
+    system-ui, sans-serif;
+  --body: "Newsreader", "Newsreader Fallback", Georgia, "Iowan Old Style",
+    "Times New Roman", serif;
+
+  --gutter: max(1.25rem, calc((100vw - 1320px) / 2));
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* -------------------------------------------------------------------- base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  overflow-x: clip;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+.container {
+  width: min(1320px, 100% - 2.5rem);
+  margin-inline: auto;
+}
+
+.h2 {
+  font-size: clamp(1.9rem, 5.2vw, 3.4rem);
+  line-height: 0.98;
+  max-width: 18ch;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 100;
+  padding: 0.6rem 1rem;
+  background: var(--ink);
+  color: var(--white);
+  text-decoration: none;
+  transition: transform 0.18s var(--ease);
+}
+
+.skip-link:focus {
+  transform: translateY(4rem);
+}
+
+:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ pieces */
+.eyebrow {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0 0 0.9rem;
+}
+
+.label {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 0;
+}
+
+.label--quiet {
+  color: var(--muted);
+}
+
+.sample-tag {
+  display: inline-block;
+  padding: 0.16rem 0.5rem;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  vertical-align: 0.1em;
+}
+
+.concept-tag {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--blue);
+  color: var(--blue);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.35rem;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.18s var(--ease), background-color 0.18s var(--ease),
+    color 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+
+.btn--primary {
+  background: var(--ink);
+  color: var(--white);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn--lg {
+  padding: 1.05rem 1.7rem;
+  font-size: 0.86rem;
+}
+
+@media (hover: hover) {
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+  .btn--primary:hover {
+    background: var(--blue);
+    border-color: var(--blue);
+  }
+  .btn--ghost:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+}
+
+/* -------------------------------------------------------------------- nav */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: color-mix(in srgb, var(--white) 96%, transparent);
+  border-bottom: 1px solid transparent;
+}
+
+.nav.is-scrolled {
+  border-bottom-color: var(--ink);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 72px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  text-decoration: none;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.brand__mark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  background: var(--blue);
+  color: var(--white);
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+}
+
+.brand__word {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.nav__inner > .concept-tag {
+  margin-left: 0.5rem;
+}
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: auto;
+}
+
+.nav__links a {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: baseline;
+  text-decoration: none;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.nav__links a span {
+  font-size: 0.62rem;
+  color: var(--blue);
+  letter-spacing: 0.1em;
+}
+
+.nav__links a:hover {
+  color: var(--blue);
+}
+
+.nav__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.nav__cta {
+  padding: 0.7rem 1.1rem;
+}
+
+.nav__toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--white);
+  cursor: pointer;
+}
+
+.nav__bars {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 12px;
+}
+
+.nav__bars i {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--ink);
+  transition: transform 0.22s var(--ease), opacity 0.22s var(--ease);
+}
+
+.nav__bars i:first-child {
+  top: 0;
+}
+
+.nav__bars i:last-child {
+  top: 10px;
+}
+
+.nav__toggle[aria-expanded="true"] .nav__bars i:first-child {
+  transform: translateY(5px) rotate(45deg);
+}
+
+.nav__toggle[aria-expanded="true"] .nav__bars i:last-child {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+.mobile-menu {
+  display: grid;
+  gap: 1rem;
+  max-height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  border-top: 1px solid transparent;
+  transition: opacity 0.2s var(--ease);
+}
+
+.mobile-menu.is-open {
+  max-height: none;
+  visibility: visible;
+  opacity: 1;
+  border-top-color: var(--ink);
+  padding-block: 1rem 1.4rem;
+  background: var(--white);
+}
+
+.mobile-menu__links {
+  display: grid;
+}
+
+.mobile-menu__links a {
+  display: flex;
+  gap: 0.9rem;
+  align-items: baseline;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--line-soft);
+  text-decoration: none;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.mobile-menu__links span {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.7rem;
+  color: var(--blue);
+}
+
+.mobile-menu__cta {
+  justify-self: start;
+}
+
+/* ------------------------------------------------------------------- hero */
+.hero {
+  position: relative;
+  padding: clamp(2rem, 4vw, 3.5rem) 0 clamp(5.5rem, 10vw, 8rem);
+  overflow: hidden;
+}
+
+/* Graphic anchor: one blue sphere sitting behind the type. JS pops it in
+   (opacity + yPercent) and scrubs scale/x/y across the hero — transform
+   only, never size. It only ever sits behind large display letters, whose
+   3.13:1 black-on-blue clears the 3:1 large-text floor; small copy never
+   overlaps it. */
+.sphere {
+  position: absolute;
+  top: clamp(5rem, 12vh, 9rem);
+  right: clamp(-20vw, -10vw, -4rem);
+  width: clamp(160px, 22vw, 360px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--blue);
+  z-index: 0;
+}
+
+@media (max-width: 390px) {
+  .sphere {
+    width: 140px;
+    right: -30px;
+    top: 7rem;
+    opacity: 0.55;
+  }
+}
+
+.hero__inner {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+.hero__concept {
+  align-self: center;
+}
+
+.hero__title {
+  margin: clamp(1.5rem, 5vw, 3rem) 0 0;
+  font-size: clamp(2.6rem, 12vw, 10.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  overflow-wrap: break-word;
+}
+
+.hero__line {
+  display: block;
+}
+
+.hero__line--indent {
+  padding-left: clamp(1.5rem, 12vw, 12rem);
+}
+
+/* Per-letter spans, pre-split in the markup: plain inline-blocks sitting on
+   the text baseline — no overflow, no metric change, so the swap from plain
+   text cannot shift the line and transforms stay crisp. */
+.hc {
+  display: inline-block;
+}
+
+/* Accent word slot: the three alternatives are stacked in ONE inline-grid
+   cell from the very first paint — hidden duplicates use visibility, not
+   display, so static and --live states have identical geometry and script.js
+   enabling the swap cannot move a single pixel (CLS). The slot clips them,
+   so the swap is a transform-only mask transition. Padding widens the clip
+   window for the italic ascenders; the negative margin keeps the line box
+   identical. */
+.accent-slot {
+  display: inline-grid;
+  overflow: hidden;
+  padding: 0.16em 0.05em;
+  margin: -0.16em -0.05em;
+  color: var(--blue);
+  font-family: var(--body);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.accent-word {
+  grid-area: 1 / 1;
+}
+
+.accent-word + .accent-word {
+  visibility: hidden;
+}
+
+.accent-slot--live .accent-word + .accent-word {
+  visibility: visible;
+}
+
+.hero__foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 6vw, 6rem);
+  align-items: end;
+  margin-top: clamp(2rem, 6vw, 4rem);
+}
+
+.hero__lead {
+  grid-column: 2;
+  font-size: clamp(1.15rem, 1.8vw, 1.5rem);
+  line-height: 1.45;
+  max-width: 34ch;
+}
+
+.hero__cta {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-self: end;
+}
+
+/* image trail — abstract shapes and type fragments follow the cursor.
+   Pure decoration (aria-hidden pool, JS-created), transform/opacity only.
+   No will-change: the pool is tiny and these include text fragments. */
+.trail {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.trail__item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.trail--circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+.trail--ring {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+}
+
+.trail--square {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--ink);
+  background: var(--white);
+}
+
+.trail--tri {
+  width: 40px;
+  height: 40px;
+  background: var(--blue);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+}
+
+.trail--bar {
+  width: 76px;
+  height: 7px;
+  background: var(--blue);
+}
+
+.trail--dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ink);
+}
+
+.trail--word {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.7rem;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.trail--word:nth-child(even) {
+  color: var(--blue);
+}
+
+/* ---------------------------------------------------------------- marquee
+   Full-bleed hairline band of discipline words, duplicated once so GSAP can
+   loop xPercent -50 seamlessly. Static by default; script.js starts the loop
+   only with motion allowed and pauses it off-screen (IntersectionObserver). */
+.marquee {
+  overflow: hidden;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 0.85rem 0;
+  background: var(--white);
+}
+
+.marquee--alt {
+  border-top: 0;
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+}
+
+.marquee__set {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.74rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding-right: 0.24em;
+}
+
+/* --------------------------------------------------------------- services
+   Huge type rows. The detail sits in a fixed third column (so revealing it
+   never animates layout — clip-path/opacity/transform only). Hidden state
+   only applies where a pointer can actually reveal it: on touch and on
+   narrow widths the detail is simply visible. */
+.services {
+  padding: clamp(4.5rem, 10vw, 8rem) 0;
+  border-top: 1px solid var(--ink);
+}
+
+/* Asymmetric section heads: eyebrow parked far left, statement offset right. */
+.section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+  gap: clamp(1rem, 4vw, 3rem);
+  align-items: start;
+  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.section-head .eyebrow {
+  margin: 0;
+}
+
+.services__list {
+  list-style: none;
+  border-top: 1px solid var(--ink);
+}
+
+.service {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr) minmax(0, 0.82fr);
+  gap: clamp(1rem, 3vw, 2.5rem);
+  align-items: center;
+  min-height: clamp(7rem, 13vw, 10.5rem);
+  padding: clamp(1.5rem, 3vw, 2.5rem) 0;
+  border-bottom: 1px solid var(--ink);
+}
+
+.service__num {
+  align-self: start;
+  padding-top: 0.4rem;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+  transition: color 0.3s var(--ease);
+}
+
+.service__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+  gap: clamp(1rem, 3vw, 2.75rem);
+  align-items: center;
+}
+
+.service__name {
+  /* Min is tuned so the longest single word ("experience", Syne 800) fits
+     the narrowest supported column without breaking: at 360px the column is
+     264px and 1.85rem renders it at ~258px. */
+  font-size: clamp(1.85rem, 6.2vw, 4.4rem);
+  line-height: 0.94;
+  overflow-wrap: break-word;
+  transition: transform 0.45s var(--ease);
+}
+
+.service__body {
+  color: var(--muted);
+  font-size: clamp(1rem, 1.3vw, 1.12rem);
+  line-height: 1.5;
+  max-width: 46ch;
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--blue);
+}
+
+.service__mark {
+  position: absolute;
+  right: 0;
+  top: clamp(1.5rem, 3vw, 2.5rem);
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--blue);
+  opacity: 0;
+  transform: translateX(-12px);
+  transition: opacity 0.35s var(--ease), transform 0.45s var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .service__body {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(18px);
+    transition: clip-path 0.5s var(--ease), opacity 0.35s var(--ease),
+      transform 0.5s var(--ease);
+  }
+
+  .service:hover .service__body,
+  .service:focus .service__body,
+  .service:focus-within .service__body {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+
+  .service:hover .service__name,
+  .service:focus .service__name,
+  .service:focus-within .service__name {
+    transform: translateX(0.4rem);
+  }
+
+  .service:hover .service__num,
+  .service:focus .service__num,
+  .service:focus-within .service__num {
+    color: var(--blue);
+  }
+
+  .service:hover .service__mark,
+  .service:focus .service__mark,
+  .service:focus-within .service__mark {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* --------------------------------------------------------------- showcase
+   Default: a vertical stack of full panels. The horizontal row is applied
+   only under .has-hscroll (added by script.js on desktop with motion) and
+   its pre-paint twin .hscroll-pending. The zone carries the scroll length
+   (inline height set by JS); the stage is plain CSS sticky — no
+   ScrollTrigger pin, no reparenting, no layout shift. */
+.showcase {
+  padding: clamp(4.5rem, 10vw, 8rem) 0;
+  border-top: 1px solid var(--ink);
+}
+
+.showcase__intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.7fr);
+  gap: clamp(1rem, 4vw, 3rem);
+  align-items: start;
+  margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.showcase__intro .eyebrow {
+  margin: 0;
+}
+
+.showcase__intro .h2,
+.showcase__intro .showcase__lead {
+  grid-column: 2;
+}
+
+.showcase__lead {
+  margin-top: 1rem;
+  color: var(--muted);
+  max-width: 54ch;
+}
+
+.showcase__zone {
+  position: relative;
+}
+
+.showcase__pin {
+  position: relative;
+}
+
+.showcase__track {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 2.75rem);
+  padding-inline: var(--gutter);
+}
+
+.panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--ink);
+  background: var(--white);
+  overflow: hidden;
+  transition: transform 0.35s var(--ease);
+}
+
+/* Blue flood: expands from the pointer position via clip-path only.
+   --px/--py are set by script.js on pointermove; the static default covers
+   from the top right for keyboard focus. */
+.panel__flood {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: var(--blue);
+  clip-path: circle(0% at var(--px, 62%) var(--py, 28%));
+  transition: clip-path 0.6s var(--ease);
+  pointer-events: none;
+}
+
+/* Giant outline index over the artwork; flips to white over the flood. */
+.panel__idx {
+  position: absolute;
+  top: clamp(0.5rem, 1.4vw, 1rem);
+  left: clamp(0.75rem, 1.6vw, 1.15rem);
+  z-index: 2;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(3.6rem, 6.5vw, 6rem);
+  line-height: 0.82;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--ink);
+  transition: -webkit-text-stroke-color 0.4s var(--ease);
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .panel:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.panel:hover .panel__flood,
+.panel:focus .panel__flood {
+  clip-path: circle(150% at var(--px, 62%) var(--py, 28%));
+}
+
+.panel:hover .panel__idx,
+.panel:focus .panel__idx {
+  -webkit-text-stroke-color: var(--white);
+}
+
+.panel:hover .panel__name,
+.panel:hover .panel__tags,
+.panel:hover .panel__num,
+.panel:focus .panel__name,
+.panel:focus .panel__tags,
+.panel:focus .panel__num {
+  color: var(--white);
+}
+
+.panel__art {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: var(--gray);
+  border-bottom: 1px solid var(--ink);
+  overflow: hidden;
+}
+
+.panel__meta {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 0.4rem;
+  padding: clamp(1rem, 2vw, 1.4rem);
+}
+
+.panel__num {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  transition: color 0.3s var(--ease);
+}
+
+.panel__name {
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  line-height: 1;
+  transition: color 0.3s var(--ease);
+}
+
+.panel__tags {
+  font-size: 0.94rem;
+  color: var(--muted);
+  transition: color 0.3s var(--ease);
+}
+
+/* panel art — abstract, animated, no photographs. Each panel has its own
+   loop (rotating rings / drawing lines / shifting grid / scrolling stripes /
+   morphing shape). The loops are paused until script.js marks the art
+   .is-inview, and every animated property is transform, clip-path or
+   stroke-dashoffset. Every base state is a complete, visible drawing, so
+   motion-off / JS-off shows finished artwork. */
+
+/* 01 — rotating rings with an orbiting dot (gaps make the spin legible) */
+.ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ring--1 {
+  width: 74%;
+  aspect-ratio: 1;
+  border-right-color: transparent;
+}
+
+.ring--2 {
+  width: 50%;
+  aspect-ratio: 1;
+  border-color: var(--blue);
+  border-left-color: transparent;
+}
+
+.ring--3 {
+  width: 26%;
+  aspect-ratio: 1;
+  border-top-color: transparent;
+}
+
+.ring-orbit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.ring-dot {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  width: 12%;
+  aspect-ratio: 1;
+  background: var(--blue);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* 02 — drawing lines: dashoffset loops draw each path in and out.
+   pathLength="1" normalises the pattern; base offset 0 = fully drawn. */
+.panel__art--lines {
+  background: var(--white);
+}
+
+.art-lines {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 88%;
+  transform: translate(-50%, -50%);
+}
+
+.ln {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+.ln--b {
+  stroke: var(--blue);
+}
+
+.ln--c {
+  stroke-width: 3;
+}
+
+@keyframes ln-draw {
+  0% {
+    stroke-dashoffset: 1;
+  }
+  50% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -1;
+  }
+}
+
+/* 03 — shifting grid: two dot fields sliding across each other, each
+   translated by exactly one tile per cycle so the loop never pops. */
+.panel__art--grid {
+  background-color: var(--white);
+}
+
+.art-grid__layer {
+  position: absolute;
+  inset: -52px;
+  background-image: radial-gradient(var(--ink) 1.6px, transparent 1.7px);
+  background-size: 26px 26px;
+}
+
+.art-grid__layer--b {
+  background-image: radial-gradient(var(--blue) 2.6px, transparent 2.7px);
+  background-size: 52px 52px;
+}
+
+@keyframes grid-shift {
+  to {
+    transform: translate(-26px, -26px);
+  }
+}
+
+@keyframes grid-shift-b {
+  to {
+    transform: translate(-52px, -52px);
+  }
+}
+
+/* 04 — scrolling stripes: one blue hairline field gliding down the panel */
+.panel__art--stripes {
+  background-color: var(--white);
+}
+
+.art-stripes__band {
+  position: absolute;
+  inset: -44px 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    var(--blue) 0,
+    var(--blue) 3px,
+    transparent 3px,
+    transparent 26px
+  );
+}
+
+@keyframes stripe-scroll {
+  to {
+    transform: translateY(26px);
+  }
+}
+
+/* 05 — morphing shape inside a counter-rotating ring */
+.panel__art--morph {
+  background-color: var(--gray);
+}
+
+.art-morph {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 54%;
+  aspect-ratio: 1;
+  background: var(--blue);
+  transform: translate(-50%, -50%);
+  clip-path: polygon(0 14%, 86% 0, 100% 84%, 16% 100%);
+}
+
+@keyframes morph {
+  0%,
+  100% {
+    clip-path: polygon(0 14%, 86% 0, 100% 84%, 16% 100%);
+  }
+  50% {
+    clip-path: polygon(0 0, 100% 16%, 84% 100%, 14% 84%);
+  }
+}
+
+.art-morph-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  aspect-ratio: 1;
+  border: 3px solid var(--ink);
+  border-top-color: transparent;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Loop scope: animations are declared ONLY under .is-inview, which script.js
+   adds when motion is allowed and the art scrolls into view (and removes when
+   it leaves). Outside that state there is no animation at all — so reduced
+   motion, blocked JS and off-screen panels all show the complete base
+   drawing instead of a frozen half-frame. Everything animated is
+   transform / clip-path / stroke-dashoffset; no will-change anywhere. */
+.panel__art.is-inview .art-spin--a {
+  animation: spin 15s linear infinite;
+}
+
+.panel__art.is-inview .art-spin--b {
+  animation: spin 23s linear infinite reverse;
+}
+
+.panel__art.is-inview .art-spin--c {
+  animation: spin 11s linear infinite;
+}
+
+.panel__art.is-inview .art-spin--d {
+  animation: spin-plain 7s linear infinite;
+}
+
+.panel__art.is-inview .ln {
+  animation: ln-draw 6s linear infinite;
+}
+
+.panel__art.is-inview .ln--b {
+  animation-delay: -2s;
+}
+
+.panel__art.is-inview .ln--c {
+  animation-delay: -4s;
+}
+
+.panel__art.is-inview .art-grid__layer {
+  animation: grid-shift 9s linear infinite;
+}
+
+.panel__art.is-inview .art-grid__layer--b {
+  animation: grid-shift-b 15s linear infinite reverse;
+}
+
+.panel__art.is-inview .art-stripes__band {
+  animation: stripe-scroll 3.4s linear infinite;
+}
+
+.panel__art.is-inview .art-morph {
+  animation: morph 7s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes spin-plain {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.showcase__progress {
+  display: none;
+}
+
+.showcase__note {
+  margin-top: clamp(1.25rem, 3vw, 2rem);
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+/* Desktop horizontal track. .hscroll-pending is added by the head gate before
+   first paint and .has-hscroll by script.js once GSAP confirms it (same media
+   query, same failsafe), so the browser never lays out — and never re-flows —
+   the tall stacked form on desktop. The zone carries the scroll length
+   (estimate here, exact px set inline by script.js = 100vh + one track
+   width of travel) and the pin is plain CSS sticky: no ScrollTrigger pin,
+   no reparenting, zero CLS. */
+.has-hscroll .showcase__zone,
+.hscroll-pending .showcase__zone {
+  height: calc(100vh + 1240px);
+}
+
+.has-hscroll .showcase__pin,
+.hscroll-pending .showcase__pin {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.has-hscroll .showcase__track,
+.hscroll-pending .showcase__track {
+  display: flex;
+  flex: 0 0 auto;
+  width: max-content;
+  gap: clamp(1rem, 2vw, 1.75rem);
+  padding-inline: var(--gutter);
+  align-items: stretch;
+}
+
+.has-hscroll .panel,
+.hscroll-pending .panel {
+  flex: 0 0 clamp(21rem, 32vw, 30rem);
+}
+
+.has-hscroll .showcase__progress,
+.hscroll-pending .showcase__progress {
+  display: block;
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(1.25rem, 4vw, 2.5rem);
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.showcase__progress span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--blue);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+/* ------------------------------------------------------------- blue wipe
+   Full-viewport blue panel between work and process. Static state (no JS,
+   reduced motion, blocked GSAP) is a plain readable blue band; when
+   script.js enables motion it adds .has-wipe (taller zone + CSS sticky) and
+   scrubs clip-path in → hold → out. White on #1F3BFF is 6.7:1 — passes AA. */
+.wipe {
+  position: relative;
+}
+
+.wipe__panel {
+  position: relative;
+  min-height: 64vh;
+  display: grid;
+  align-items: center;
+  background: var(--blue);
+  color: var(--white);
+  overflow: hidden;
+}
+
+.wipe__inner {
+  padding-block: clamp(3rem, 8vw, 5rem);
+}
+
+.label--onblue {
+  color: var(--white);
+}
+
+.wipe__text {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 9vw, 7rem);
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  margin-top: clamp(1rem, 2.5vw, 1.75rem);
+  max-width: 13ch;
+}
+
+.has-wipe .wipe {
+  height: 180vh;
+}
+
+.has-wipe .wipe__panel {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  min-height: 0;
+}
+
+/* -------------------------------------------------------------- manifesto */
+.process {
+  padding: clamp(4.5rem, 10vw, 8rem) 0;
+  border-top: 1px solid var(--ink);
+}
+
+.process__grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.manifesto {
+  font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+  max-width: 24ch;
+}
+
+.manifesto em {
+  font-style: italic;
+  color: var(--blue);
+}
+
+.steps {
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.step {
+  display: grid;
+  grid-template-columns: 3rem 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding: clamp(1.25rem, 2.5vw, 1.75rem) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.step__k {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: var(--blue);
+}
+
+.step__name {
+  font-size: clamp(1.3rem, 2.2vw, 1.7rem);
+  line-height: 1;
+}
+
+.step__body {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 1.02rem;
+  max-width: 40ch;
+}
+
+/* ---------------------------------------------------------------- clients */
+.clients {
+  padding: clamp(2.5rem, 6vw, 4rem) 0;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.clients__row {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: clamp(1.25rem, 3.5vw, 3rem);
+  margin-top: 1.25rem;
+}
+
+.clients__row li {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
+  letter-spacing: -0.01em;
+  color: color-mix(in srgb, var(--ink) 62%, var(--white));
+}
+
+.clients__row li:nth-child(3n) {
+  font-style: italic;
+  font-family: var(--body);
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------------- quote */
+.quote {
+  padding: clamp(3.5rem, 9vw, 7rem) 0;
+}
+
+.pull {
+  margin: 0;
+}
+
+.pull__text {
+  font-size: clamp(1.6rem, 4.4vw, 3.4rem);
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  max-width: 26ch;
+}
+
+.pull__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: clamp(1.25rem, 3vw, 2rem);
+}
+
+.pull__cite {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-style: normal;
+}
+
+/* ---------------------------------------------------------------- contact */
+.contact {
+  padding: clamp(4.5rem, 10vw, 8rem) 0;
+  border-top: 1px solid var(--ink);
+}
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.contact__body {
+  margin-top: 1.1rem;
+  color: var(--muted);
+  max-width: 40ch;
+}
+
+.contact__meta {
+  list-style: none;
+  margin-top: 2rem;
+  border-top: 1px solid var(--line);
+}
+
+.contact__meta li {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 1rem;
+}
+
+.contact__meta span {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 0.35em;
+}
+
+.contact__meta a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--blue);
+}
+
+.contact__meta a:hover {
+  color: var(--blue);
+}
+
+.form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.field {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--white);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: color-mix(in srgb, var(--ink) 62%, var(--white));
+}
+
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 0;
+}
+
+.form__submit {
+  justify-self: start;
+}
+
+.form__note {
+  font-size: 0.92rem;
+  color: var(--muted);
+  max-width: 44ch;
+}
+
+/* --------------------------------------------------------- oversized CTA
+   script.js splits the label into per-letter inline-grid units; each unit
+   stacks a blue duplicate directly under the black base. Hover / keyboard
+   focus staggers the duplicates up — transform only. Without JS (or with
+   motion off) the plain black label is the entire CTA, still fully legible. */
+.bigcta-band {
+  border-top: 1px solid var(--ink);
+}
+
+.bigcta {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.bigcta__inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  width: min(1320px, 100% - 2.5rem);
+  margin-inline: auto;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+}
+
+.bigcta__text {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 12vw, 10rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  overflow-wrap: break-word;
+}
+
+/* Per-letter units: both glyphs share one grid cell, so the line width is
+   exactly the plain-text width and can never reflow. Padding widens the clip
+   window past descenders ('j', 'p'); the negative margin keeps the line box. */
+.bcl {
+  display: inline-grid;
+  overflow: hidden;
+  padding: 0.18em 0.03em;
+  margin: -0.18em -0.03em;
+}
+
+.bcl > span {
+  grid-area: 1 / 1;
+}
+
+.bcl__fill {
+  color: var(--blue);
+}
+
+.bigcta__arrow {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2rem, 8vw, 6rem);
+  line-height: 0.8;
+  transition: transform 0.4s var(--ease), color 0.3s var(--ease);
+}
+
+.bigcta:hover .bigcta__arrow,
+.bigcta:focus-visible .bigcta__arrow {
+  transform: translateX(0.35em);
+  color: var(--blue);
+}
+
+.bigcta:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: -6px;
+}
+
+/* ---------------------------------------------------------------- footer */
+.footer {
+  padding: clamp(3rem, 7vw, 5rem) 0 2rem;
+  background: var(--white);
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr 1fr 1fr;
+  gap: clamp(1.5rem, 4vw, 3rem);
+}
+
+.footer__blurb {
+  margin-top: 1.1rem;
+  font-size: 0.98rem;
+  color: var(--muted);
+  max-width: 34ch;
+}
+
+.footer__col h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.9rem;
+}
+
+.footer__col ul {
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.footer__col a {
+  text-decoration: none;
+  font-size: 1.02rem;
+}
+
+.footer__col a:hover {
+  color: var(--blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.footer__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.footer__type {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------- ribbon */
+/* In normal flow at the very end of the document, so it can never be painted
+   over page content at any width or scroll position. */
+.ribbon-nav {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 1.25rem max(2rem, env(safe-area-inset-bottom));
+}
+.ribbon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--ink);
+  background: color-mix(in srgb, var(--white) 94%, transparent);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: transform 0.18s var(--ease), color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+
+.ribbon__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--blue);
+}
+
+@media (hover: hover) {
+  .ribbon:hover {
+    transform: translateY(-2px);
+    color: var(--blue);
+    border-color: var(--blue);
+  }
+}
+
+/* --------------------------------------------------------------- reveals
+   Hidden only when JS runs AND motion is allowed, so a no-JS or
+   reduced-motion visitor always sees the content. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+/* ------------------------------------------------------------ breakpoints */
+@media (max-width: 1000px) {
+  .nav__links {
+    display: none;
+  }
+  .nav__toggle {
+    display: grid;
+  }
+  .nav__cta {
+    display: none;
+  }
+  .process__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero__foot {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .hero__lead {
+    grid-column: 1;
+  }
+  .hero__cta {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .section-head,
+  .showcase__intro {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+  .showcase__intro .h2,
+  .showcase__intro .showcase__lead {
+    grid-column: 1;
+  }
+  .service {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: 0.75rem 1rem;
+  }
+  .service__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.85rem;
+  }
+  .service__body {
+    padding-top: 0;
+    max-width: 56ch;
+  }
+  /* Narrow always shows the detail — no hover-dependent hiding. */
+  .service__body {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
+  }
+  .service__mark {
+    display: none;
+  }
+  .contact__grid {
+    grid-template-columns: 1fr;
+  }
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .nav__inner > .concept-tag {
+    display: none;
+  }
+  .hero__top {
+    justify-content: flex-start;
+    gap: 0.35rem 1rem;
+  }
+  .contact__meta li {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+  .footer__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .brand__word {
+    font-size: 0.98rem;
+  }
+}
+
+/* --------------------------------------------------------- reduced motion
+   Scoped with html:not([data-motion='full']) so the motion override in
+   ../motion.js can force animation on or off independently of the OS. */
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-motion='full']) {
+    scroll-behavior: auto;
+  }
+  html:not([data-motion='full']) *,
+  html:not([data-motion='full']) *::before,
+  html:not([data-motion='full']) *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  html:not([data-motion='full']) [data-reveal],
+  html:not([data-motion='full']) .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+  html:not([data-motion='full']) .trail {
+    display: none;
+  }
+  /* Hover-dependent hiding is a motion affordance too: with reduce on, the
+     service detail is simply always present. (Specificity beats the
+     hover:block's plain .service__body base.) */
+  html:not([data-motion='full']) .service__body {
+    opacity: 1;
+    clip-path: none;
+    transform: none;
+  }
+  html:not([data-motion='full']) .bigcta__text,
+  html:not([data-motion='full']) .bigcta__arrow,
+  html:not([data-motion='full']) .marquee__track {
+    transition: none;
+  }
+}
+
+/* ================================ motion override (html[data-motion], ../motion.js)
+   'full' = motion forced ON (?motion=full), even when the
+   OS asks for reduce - the no-preference blocks above do not match then, so the
+   hidden reveal start-state is restated here. 'reduced' = motion forced OFF
+   regardless of the OS - the same contract (trail and bigcta fallbacks) as the
+   reduce block above. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-motion='full'] .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+html[data-motion='reduced'] {
+  scroll-behavior: auto;
+}
+html[data-motion='reduced'] *,
+html[data-motion='reduced'] *::before,
+html[data-motion='reduced'] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+}
+html[data-motion='reduced'] [data-reveal],
+html[data-motion='reduced'] .js [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+html[data-motion='reduced'] .trail {
+  display: none;
+}
+html[data-motion='reduced'] .service__body {
+  opacity: 1;
+  clip-path: none;
+  transform: none;
+}
+html[data-motion='reduced'] .bigcta__text,
+html[data-motion='reduced'] .bigcta__arrow,
+html[data-motion='reduced'] .marquee__track {
+  transition: none;
+}

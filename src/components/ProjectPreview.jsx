@@ -30,7 +30,7 @@ function Inkflow() {
           <Bar width={86} />
           <Bar width={64} />
           <span className={`${styles.line} ${styles.lineAccent}`} style={{ '--w': '78%' }}>
-            <span className={styles.caret} />
+            <span className={`${styles.caret} motion-light`} />
           </span>
           <Bar width={52} />
           <Bar width={72} />
@@ -87,7 +87,7 @@ function Cadenza() {
         </span>
         <svg className={styles.chart} viewBox="0 0 220 88" role="presentation" aria-hidden="true">
           <polyline
-            className={styles.chartLine}
+            className={`${styles.chartLine} motion-light`}
             points="0,70 26,58 52,64 78,40 104,46 130,22 156,30 182,14 208,20"
             fill="none"
           />
@@ -122,7 +122,7 @@ function AtelierNoor() {
 function Kora() {
   return (
     <span className={`${styles.pv} ${styles.kora}`}>
-      <span className={styles.steam} aria-hidden="true">
+      <span className={`${styles.steam} motion-light`} aria-hidden="true">
         <i />
         <i />
       </span>
@@ -131,7 +131,7 @@ function Kora() {
         <span className={styles.vesselBody} />
       </span>
       <span className={styles.koraBase} data-depth="0.3" />
-      <span className={styles.koraDots} aria-hidden="true">
+      <span className={`${styles.koraDots} motion-light`} aria-hidden="true">
         <i data-depth="0.9" />
         <i data-depth="1.2" />
         <i data-depth="1.5" />
@@ -149,7 +149,7 @@ function RepClub() {
       <span className={styles.ring} data-depth="0.4">
         <svg viewBox="0 0 64 64" role="presentation" aria-hidden="true">
           <circle className={styles.ringTrack} cx="32" cy="32" r="26" />
-          <circle className={styles.ringFill} cx="32" cy="32" r="26" />
+          <circle className={`${styles.ringFill} motion-light`} cx="32" cy="32" r="26" />
         </svg>
         <span className={styles.ringLabel}>3×</span>
       </span>

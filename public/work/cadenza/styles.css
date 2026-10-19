@@ -625,6 +625,68 @@ ol {
   overflow: hidden;
 }
 
+/* LIGHT motion — the deal card drifts slowly and its live markers breathe, so
+   the first screen always has a pulse. Transform/opacity only, so nothing here
+   is repaint-bound. The .motion-light class on .rec exempts them from the
+   global reduced-motion contract (two-gate policy: light motion always runs). */
+@keyframes cadenza-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+.rec.motion-light {
+  animation: cadenza-float 7s ease-in-out infinite;
+}
+
+@keyframes cadenza-badge {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.72;
+    transform: scale(1.06);
+  }
+}
+.rec__badge.motion-light {
+  animation: cadenza-badge 2.6s ease-in-out infinite;
+}
+
+@keyframes cadenza-open {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.72);
+  }
+}
+.feed__dot--open.motion-light {
+  animation: cadenza-open 2.2s ease-in-out infinite;
+}
+
+/* The current stage marker sweeps a soft highlight so "Proposal" reads as
+   the live step without moving any layout. */
+@keyframes cadenza-stage {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 var(--accent-soft, rgba(37, 99, 235, 0.3));
+  }
+  50% {
+    box-shadow: 0 0 0 6px transparent;
+  }
+}
+.stepper__step.is-current.motion-light {
+  animation: cadenza-stage 2.8s ease-in-out infinite;
+}
+
 .rec__bar {
   display: flex;
   align-items: center;
@@ -2234,9 +2296,9 @@ ol {
   html:not([data-motion='full']) {
     scroll-behavior: auto;
   }
-  html:not([data-motion='full']) *,
-  html:not([data-motion='full']) *::before,
-  html:not([data-motion='full']) *::after {
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *),
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *)::before,
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *)::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -2263,9 +2325,9 @@ ol {
 html[data-motion='reduced'] {
   scroll-behavior: auto;
 }
-html[data-motion='reduced'] *,
-html[data-motion='reduced'] *::before,
-html[data-motion='reduced'] *::after {
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *),
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *)::before,
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *)::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.001ms !important;

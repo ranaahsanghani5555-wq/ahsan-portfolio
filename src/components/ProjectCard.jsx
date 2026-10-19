@@ -53,12 +53,13 @@ export default function ProjectCard({ project, index, onOpen }) {
       const card = cardRef.current;
       const art = artRef.current;
       if (!card || !art) return undefined;
-      if (!motionOK()) return undefined;
 
       const layers = gsap.utils.toArray('[data-depth]', art);
       if (!layers.length) return undefined;
 
-      const amount = 16;
+      /* A pointer parallax over a preview is a LIGHT hover effect, so it runs
+         for everyone; it is dialled down when heavy motion is not allowed. */
+      const amount = motionOK() ? 16 : 7;
       const move = (nx, ny, strength) => {
         layers.forEach((layer) => {
           const depth = Number(layer.dataset.depth) || 0;

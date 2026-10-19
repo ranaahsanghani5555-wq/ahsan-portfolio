@@ -18,8 +18,9 @@ const STORAGE_KEY = 'ag:preloaded';
  * Preloader — a fast name reveal plus a clip-path curtain wipe.
  *
  * Budget: it always finishes well under 1.2s and can be skipped with a click
- * or Esc. It plays once per session (sessionStorage) and is skipped entirely
- * under reduced motion. Decorative, so it is hidden from assistive tech.
+ * or Esc. It plays once per session (sessionStorage). The full-screen curtain
+ * is heavy, so under reduced motion it plays a light version (name + counter,
+ * then a short fade — no wipe). Decorative, hidden from assistive tech.
  *
  * @param {object} props
  * @param {() => void} props.onDone  called when the curtain has cleared
@@ -46,7 +47,10 @@ export default function Preloader({ onDone }) {
       const root = rootRef.current;
       if (!root) return undefined;
 
-      const reduced = !motionOK();
+      /* The full-screen curtain wipe is heavy. Under reduced motion the
+         preloader still plays — name + counter — but finishes on a short fade
+         instead of a wipe. A revisit in the same session skips it entirely. */
+      const heavy = motionOK();
       let seen = false;
       try {
         seen = sessionStorage.getItem(STORAGE_KEY) === '1';
@@ -54,7 +58,7 @@ export default function Preloader({ onDone }) {
         seen = false;
       }
 
-      if (reduced || seen) {
+      if (seen) {
         finish();
         return undefined;
       }
@@ -83,8 +87,15 @@ export default function Preloader({ onDone }) {
           { yPercent: 115, duration: 0.55, ease: 'expo.out', stagger: 0.06 },
           0
         )
-        .to('[data-preloader-inner]', { opacity: 0, duration: 0.2 }, 0.55)
-        .to(root, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.5, ease: 'curtain' }, 0.66);
+        .to('[data-preloader-inner]', { opacity: 0, duration: 0.2 }, 0.55);
+
+      if (heavy) {
+        // Full curtain wipe — heavy motion.
+        timeline.to(root, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.5, ease: 'curtain' }, 0.66);
+      } else {
+        // LIGHT variant: no wipe, a short fade to reveal the page.
+        timeline.to(root, { autoAlpha: 0, duration: 0.34, ease: 'power2.out' }, 0.6);
+      }
 
       return () => timeline.kill();
     },

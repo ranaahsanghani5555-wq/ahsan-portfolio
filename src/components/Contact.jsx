@@ -3,7 +3,7 @@ import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import styles from './Contact.module.css';
 import { profile, socialLinks } from '../data/profile';
-import { useReducedMotion } from '../hooks/useReducedMotion';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 /*
   Contact — the last screen before the footer.
@@ -46,7 +46,8 @@ function validate(values) {
 }
 
 export default function Contact() {
-  const reduced = useReducedMotion();
+  const scope = useScrollReveal('[data-reveal-item]', [], { threshold: 0.1 });
+
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   /* 'idle' | 'sending' | 'success' | 'error' | 'fallback'. Nothing renders
@@ -74,17 +75,13 @@ export default function Contact() {
   };
 
   /* Headline reveal: a masked line lifts into view on hover or keyboard focus.
-     Under reduced motion the line is simply shown in full (static).
+     A one-shot masked lift is LIGHT, so it runs for everyone.
      GSAP owns the hidden state (not CSS): a CSS translateY(110%) would be
      parsed by GSAP as a pixel `y`, which yPercent alone cannot undo. */
   useGSAP(
     () => {
       const line = revealRef.current;
       if (!line) return undefined;
-      if (reduced) {
-        gsap.set(line, { yPercent: 0, y: 0, autoAlpha: 1 });
-        return undefined;
-      }
       gsap.fromTo(
         line,
         { yPercent: 110, y: 0, autoAlpha: 0 },
@@ -99,19 +96,15 @@ export default function Contact() {
       );
       return undefined;
     },
-    { dependencies: [revealed, reduced], revertOnUpdate: true }
+    { dependencies: [revealed], revertOnUpdate: true }
   );
 
-  /* Success panel entrance (static under reduced motion). */
+  /* Success panel entrance (a light fade + 12px rise). */
   useGSAP(
     () => {
       if (status !== 'success') return undefined;
       const el = document.querySelector('[data-contact-status]');
       if (!el) return undefined;
-      if (reduced) {
-        gsap.set(el, { autoAlpha: 1, y: 0 });
-        return undefined;
-      }
       gsap.fromTo(
         el,
         { autoAlpha: 0, y: 12 },
@@ -119,7 +112,7 @@ export default function Contact() {
       );
       return undefined;
     },
-    { dependencies: [status, reduced] }
+    { dependencies: [status] }
   );
 
   useEffect(
@@ -232,7 +225,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="section">
+    <section id="contact" className="section" ref={scope}>
       <div className="container">
         <p className="eyebrow">Contact</p>
         <h2
@@ -256,7 +249,7 @@ export default function Contact() {
       </div>
 
       <div className={`container grid-12 ${styles.grid}`}>
-        <div className={`col-span-5 ${styles.intro}`}>
+        <div className={`col-span-5 ${styles.intro}`} data-reveal-item>
           <p className={styles.lead}>
             If you need a landing page or a marketing site designed and built, the fastest path
             is a short message with the goal and the page you have in mind. If you are here for a
@@ -313,7 +306,12 @@ export default function Contact() {
           </dl>
         </div>
 
-        <form className={`col-span-7 ${styles.form}`} onSubmit={onSubmit} noValidate>
+        <form
+          className={`col-span-7 ${styles.form}`}
+          onSubmit={onSubmit}
+          noValidate
+          data-reveal-item
+        >
           <div className={styles.field}>
             <label className={styles.label} htmlFor="contact-name">
               Name

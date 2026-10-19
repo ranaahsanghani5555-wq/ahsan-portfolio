@@ -574,6 +574,52 @@ ol {
   box-shadow: var(--shadow-lg);
 }
 
+/* LIGHT motion — the two hero cards drift on a slow, opposing rhythm so the
+   first screen always has a pulse. Transform-only (translateY + the resting
+   rotation), so it is cheap and never touches layout. The .motion-light class
+   on .stack exempts them from the global reduced-motion contract. */
+@keyframes hisaab-float-a {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-3.2deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-3.2deg);
+  }
+}
+@keyframes hisaab-float-b {
+  0%,
+  100% {
+    transform: translateY(0) rotate(2.4deg);
+  }
+  50% {
+    transform: translateY(9px) rotate(2.4deg);
+  }
+}
+.stack.motion-light .stack__card--invoice {
+  animation: hisaab-float-a 6.5s ease-in-out infinite;
+}
+.stack.motion-light .stack__card--payout {
+  animation: hisaab-float-b 6.5s ease-in-out infinite;
+  animation-delay: -3.25s;
+}
+
+/* The "Settled today" dot breathes — a small, calm confirmation beat. */
+@keyframes hisaab-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.78);
+  }
+}
+.status__dot.motion-light {
+  animation: hisaab-dot 2.2s ease-in-out infinite;
+}
+
 .inv__head {
   display: flex;
   justify-content: space-between;
@@ -2105,9 +2151,9 @@ ol {
   html:not([data-motion='full']) {
     scroll-behavior: auto;
   }
-  html:not([data-motion='full']) *,
-  html:not([data-motion='full']) *::before,
-  html:not([data-motion='full']) *::after {
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *),
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *)::before,
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *)::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -2157,9 +2203,9 @@ ol {
 html[data-motion='reduced'] {
   scroll-behavior: auto;
 }
-html[data-motion='reduced'] *,
-html[data-motion='reduced'] *::before,
-html[data-motion='reduced'] *::after {
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *),
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *)::before,
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *)::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.001ms !important;

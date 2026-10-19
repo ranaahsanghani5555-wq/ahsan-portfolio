@@ -2,15 +2,17 @@ import { useEffect, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { splitLines } from '../lib/splitLines';
-import { motionOK } from '../lib/motion.js';
 
 /**
  * SplitText — our own line-by-line mask reveal (no paid SplitText plugin).
  *
  * The original string stays the source of truth for assistive tech via
  * `aria-label`; the generated visual lines are wrapped and marked
- * `aria-hidden`. Under reduced motion nothing is split or hidden, so the
- * plain text is simply read and shown.
+ * `aria-hidden`.
+ *
+ * The reveal is a LIGHT feature (one short, one-shot line lift — transform +
+ * opacity), so it runs for everyone, including an OS set to reduce motion,
+ * exactly as src/lib/motion.js documents. motionOK() gates heavy motion only.
  *
  * @param {object} props
  * @param {string} [props.as]       element tag, defaults to "h1"
@@ -34,20 +36,10 @@ export default function SplitText({
   const timelineRef = useRef(null);
   const plain = parts.map((part) => part.text).join('');
 
-  /* Read the motion preference once, at first render. Under reduced motion the
-     component renders the parts as styled spans (so the emphasis word keeps its
-     italic + accent) instead of dropping to un-styled plain text. Read once, not
-     subscribed, so a mid-session preference change can never re-render over the
-     line-split DOM that GSAP owns. */
-  const reducedRef = useRef(!motionOK());
-  const reduced = reducedRef.current;
-
   useGSAP(
     () => {
       const element = ref.current;
       if (!element) return undefined;
-
-      if (reduced) return undefined; // plain, readable, un-animated
 
       const { lines, restore } = splitLines(element, parts);
       if (!lines.length) return undefined;
@@ -102,17 +94,7 @@ export default function SplitText({
 
   return (
     <Tag ref={ref} className={className} aria-label={plain}>
-      {reduced
-        ? parts.map((part, index) =>
-            part.emphasis ? (
-              <span key={index} className="split-word is-emphasis">
-                {part.text}
-              </span>
-            ) : (
-              <span key={index}>{part.text}</span>
-            )
-          )
-        : plain}
+      {plain}
     </Tag>
   );
 }

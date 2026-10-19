@@ -23,10 +23,16 @@ npm run dev        # start the dev server (http://localhost:5173)
 npm run build      # production build into dist/
 npm run preview    # serve the production build (http://localhost:4173)
 npm run lint       # eslint over the whole project
+npm run audit      # motion audit in both modes (needs `npm run preview` running)
 ```
 
 `npm run build` + `npm run preview` is the honest way to check performance —
 the dev server is not representative.
+
+`npm run audit` drives a headless browser over the site and the six demos in
+**both** motion modes (`?motion=full` and `?motion=reduced`), then fails if any
+page logs an error, a demo script misses, or content marked for reveal is left
+hidden. Frames land in `pw-frames/` (git-ignored) next to `report.json`.
 
 ## Deployment
 
@@ -114,10 +120,14 @@ tags in `index.html`.
 - Colour, type scale and spacing live in `src/styles/tokens.css`. Contrast
   pairs are commented with their measured ratios; the palette is designed to
   pass WCAG AA.
-- **Motion is enhancement, not decoration.** Every animation is skipped under
-  `prefers-reduced-motion: reduce`, animations use transform/opacity, and
-  GSAP contexts are cleaned up on unmount. The preloader can be skipped with a
-  click or **Esc**, and it plays once per session.
+- **Motion is enhancement, not decoration, and it is split into two gates**
+  (`src/lib/motion.js`): a **light** layer — opacity fades, short (≤24px)
+  translates, hovers, ambient loops, slow marquees and the Process horizontal
+  run — always plays; a **heavy** layer — large parallax, the cursor trail,
+  fast loops — is skipped under `prefers-reduced-motion: reduce` or
+  `?motion=reduced`. Motion is transform/opacity only, GSAP contexts are
+  cleaned up on unmount, and the preloader can be skipped with a click or
+  **Esc** (it plays once per session).
 
 ## Performance notes
 

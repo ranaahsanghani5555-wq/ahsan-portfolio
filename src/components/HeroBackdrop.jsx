@@ -48,11 +48,12 @@ function blobPath(ctx, cx, cy, radius, points, seed, phase) {
 }
 
 /**
- * HeroBackdrop — slow, mouse-reactive ink washes on paper.
+ * HeroBackdrop — slow ink washes on paper.
  *
  * No WebGL, no libraries. Irregular blobs are rasterised small and scaled up
- * for a soft organic edge. The rAF loop only runs while the hero is on screen;
- * under reduced motion it paints one balanced, faithful static frame.
+ * for a soft organic edge. The rAF drift loop is a LIGHT ambient feature, so it
+ * always runs while the hero is on screen; the pointer parallax is the only
+ * heavy part, so mousemove is attached only when heavy motion is allowed.
  */
 export default function HeroBackdrop() {
   // Defer the paint loop until after first paint + a free main thread; the
@@ -70,7 +71,9 @@ function BackdropCanvas() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return undefined;
 
-    const reduced = !motionOK();
+    /* The wash drift is an ambient loop (LIGHT), so it always runs. Only the
+       pointer parallax is heavy, so mousemove is attached only when allowed. */
+    const heavy = motionOK();
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     let width = 0;
@@ -106,11 +109,14 @@ function BackdropCanvas() {
 
       const span = Math.max(width, height);
       WASHES.forEach((wash, index) => {
-        const drift = Math.sin(phase + index * 1.9) * 0.02;
-        const lift = Math.cos(phase * 0.8 + index * 1.3) * 0.02;
+        const drift = Math.sin(phase + index * 1.9) * 0.038;
+        const lift = Math.cos(phase * 0.8 + index * 1.3) * 0.032;
+        /* Each wash also "breathes" — the radius swells and eases back slowly,
+           so the ink reads as alive rather than sliding rigidly. */
+        const breathe = 1 + Math.sin(phase * 0.6 + index * 2.4) * 0.07;
         const cx = (wash.x + drift + (eased.x - 0.5) * 0.1 * wash.depth) * width;
         const cy = (wash.y + lift + (eased.y - 0.5) * 0.1 * wash.depth) * height;
-        const base = wash.r * span;
+        const base = wash.r * span * breathe;
 
         // A wider, fainter outer pass under a denser core: a graded ink wash.
         bctx.fillStyle = `rgba(${wash.rgb}, ${wash.a * 0.55})`;
@@ -133,13 +139,13 @@ function BackdropCanvas() {
     const tick = () => {
       eased.x += (pointer.x - eased.x) * 0.045;
       eased.y += (pointer.y - eased.y) * 0.045;
-      phase += 0.0032;
+      phase += 0.0058;
       draw();
       raf = window.requestAnimationFrame(tick);
     };
 
     const start = () => {
-      if (running || reduced) return;
+      if (running) return;
       running = true;
       raf = window.requestAnimationFrame(tick);
     };
@@ -173,18 +179,14 @@ function BackdropCanvas() {
     if (typeof ResizeObserver !== 'undefined') {
       resizeObserver = new ResizeObserver(() => {
         resize();
-        if (reduced) draw();
+        if (!running) draw();
       });
       resizeObserver.observe(canvas);
     }
 
-    if (reduced) {
-      draw(); // one faithful, balanced static frame
-    } else {
-      window.addEventListener('mousemove', onPointerMove, { passive: true });
-      // Draw immediately so there is no empty flash before the observer fires.
-      draw();
-    }
+    if (heavy) window.addEventListener('mousemove', onPointerMove, { passive: true });
+    // Draw immediately so there is no empty flash before the observer fires.
+    draw();
 
     return () => {
       stop();

@@ -1,6 +1,7 @@
 import styles from './About.module.css';
 import Portrait from './Portrait';
 import { profile } from '../data/profile';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 
 /*
   About — who I am, how I work, and what I look for.
@@ -28,8 +29,10 @@ const PRINCIPLES = [
 ];
 
 export default function About() {
+  const scope = useScrollReveal('[data-reveal-item]', []);
+
   return (
-    <section id="about" className="section">
+    <section id="about" className="section" ref={scope}>
       <div className={`container grid-12 ${styles.grid}`}>
         <div className={`col-span-5 ${styles.aside}`}>
           <p className="eyebrow">About</p>
@@ -71,7 +74,7 @@ export default function About() {
           <h3 className={styles.subhead}>Working set</h3>
           <ul className={styles.tools} data-tools>
             {profile.tools.map((tool) => (
-              <li key={tool} className={styles.tool}>
+              <li key={tool} className={styles.tool} data-reveal-item>
                 {tool}
               </li>
             ))}
@@ -88,7 +91,7 @@ export default function About() {
 
           <ul className={styles.principleList}>
             {PRINCIPLES.map((item) => (
-              <li key={item.n} className={styles.principle}>
+              <li key={item.n} className={styles.principle} data-reveal-item>
                 <span className={styles.principleNum} aria-hidden="true">
                   {item.n}
                 </span>

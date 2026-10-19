@@ -16,8 +16,12 @@ const DEVICES = [
 /**
  * PreviewModal — fullscreen live preview of a concept demo in an iframe.
  *
- * The demo is served from the same origin, so it can be sandboxed with
- * allow-scripts + allow-same-origin. A device toggle narrows the iframe to
+ * The demos are our own static files on this origin and touch no storage, no
+ * cookies and no window.parent, so the frame is deliberately left unsandboxed:
+ * the only sandbox value that keeps their self-hosted webfonts loading
+ * ("allow-scripts allow-same-origin") is a no-op that also makes the browser log
+ * an escape warning, while "allow-scripts" alone makes the frame an opaque
+ * origin that blocks those fonts outright. A device toggle narrows the iframe to
  * 768px / 390px so a reviewer can test the demo's responsive behaviour without
  * leaving the portfolio.
  */
@@ -53,13 +57,13 @@ export default function PreviewModal({ project, onClose, restoreRef }) {
   useFocusTrap(modalRef, { onClose: close, restoreTo: restoreRef });
 
   useGSAP(() => {
-    if (reduced) return undefined;
+    /* A modal open is LIGHT; the light variant drops the scale/rise. */
     const timeline = gsap
       .timeline()
       .fromTo(scrimRef.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.25, ease: 'power2.out' })
       .fromTo(
         modalRef.current,
-        { autoAlpha: 0, yPercent: 3, scale: 0.985 },
+        reduced ? { autoAlpha: 0 } : { autoAlpha: 0, yPercent: 3, scale: 0.985 },
         { autoAlpha: 1, yPercent: 0, scale: 1, duration: 0.42, ease: 'power3.out' },
         0
       );
@@ -114,7 +118,6 @@ export default function PreviewModal({ project, onClose, restoreRef }) {
               src={href}
               title={`${name} concept demo preview`}
               loading="lazy"
-              sandbox="allow-scripts allow-same-origin"
               onLoad={() => setLoaded(true)}
             />
           </div>

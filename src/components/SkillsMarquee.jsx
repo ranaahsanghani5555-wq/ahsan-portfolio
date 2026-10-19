@@ -2,7 +2,6 @@ import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import styles from './SkillsMarquee.module.css';
-import { motionOK } from '../lib/motion.js';
 
 const SKILLS = [
   'Landing Pages',
@@ -17,8 +16,8 @@ const SKILLS = [
  * SkillsMarquee — the running band of disciplines under the hero.
  *
  * The track holds two identical lists and slides by exactly half its width,
- * so the loop is seamless. Hover/focus pauses it; under reduced motion the
- * duplicate is hidden and the single list simply wraps.
+ * so the loop is seamless. Hover/focus pauses it. A slow marquee is a LIGHT
+ * feature (see src/lib/motion.js), so it runs for everyone.
  */
 export default function SkillsMarquee() {
   const rootRef = useRef(null);
@@ -27,9 +26,6 @@ export default function SkillsMarquee() {
     () => {
       const root = rootRef.current;
       if (!root) return undefined;
-
-      const reduced = !motionOK();
-      if (reduced) return undefined;
 
       const track = root.querySelector('[data-marquee-track]');
       if (!track) return undefined;

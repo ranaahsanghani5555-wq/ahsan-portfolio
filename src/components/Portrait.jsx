@@ -3,7 +3,6 @@ import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import styles from './Portrait.module.css';
 import { profile } from '../data/profile';
-import { motionOK } from '../lib/motion.js';
 
 /*
   Portrait — the single, easy-to-swap portrait. It reads its path, sizes and
@@ -14,8 +13,8 @@ import { motionOK } from '../lib/motion.js';
   - loading="lazy" / decoding="async": the portrait is below the fold.
   - If the image fails to load, a stylised CSS/SVG frame takes its place, so
     the layout never breaks.
-  - A gentle tilt on hover — transform only, and disabled on touch and under
-    reduced motion.
+  - A gentle tilt on hover — transform only, and limited to fine pointers
+    (never touch, where hover does not exist).
 */
 
 export default function Portrait() {
@@ -27,9 +26,9 @@ export default function Portrait() {
       const el = tiltRef.current;
       if (!el || failed) return undefined;
 
-      const canTilt =
-        window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
-        motionOK();
+      /* A gentle hover tilt is LIGHT, so it runs for everyone; it is limited
+         to fine pointers only (never touch, where hover does not exist). */
+      const canTilt = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
       if (!canTilt) return undefined;
 
       const enter = () =>

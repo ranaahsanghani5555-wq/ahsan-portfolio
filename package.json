@@ -9,7 +9,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
-    "shots": "node screenshots.mjs"
+    "shots": "node screenshots.mjs",
+    "audit": "node pw-audit.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

@@ -6,7 +6,6 @@ import { profile } from '../data/profile';
 import { useMagnetic } from '../hooks/useMagnetic';
 import SplitText from './SplitText.jsx';
 import HeroBackdrop from './HeroBackdrop.jsx';
-import { motionOK } from '../lib/motion.js';
 import SkillsMarquee from './SkillsMarquee.jsx';
 
 /**
@@ -29,9 +28,9 @@ export default function Hero({ play = true }) {
       const root = rootRef.current;
       if (!root) return undefined;
 
-      const reduced = !motionOK();
-      if (reduced) return undefined;
-
+      /* The entrance is light (fades, <=24px reveals, a short stagger), so it
+         runs for everyone; only heavy motion (backdrop drift, cursor trail) is
+         gated through motionOK(). */
       const reveals = gsap.utils.toArray('[data-hero-reveal]', root);
       gsap.set(reveals, { y: 22, autoAlpha: 0 });
 
@@ -86,6 +85,7 @@ export default function Hero({ play = true }) {
       <div className={`container ${styles.inner}`}>
         <p className={styles.availability} data-hero-reveal>
           <span className={styles.pulse} aria-hidden="true">
+            <span className={`${styles.pulseRing} motion-light`} />
             <span className={styles.pulseDot} data-hero-pulse />
           </span>
           Available for projects · {profile.location}
@@ -121,6 +121,13 @@ export default function Hero({ play = true }) {
       </div>
 
       <SkillsMarquee />
+
+      <div className={`${styles.scrollCue} motion-light`} aria-hidden="true">
+        <span className={styles.scrollCueTrack}>
+          <span className={styles.scrollCueDot} />
+        </span>
+        <span className={styles.scrollCueLabel}>Scroll</span>
+      </div>
     </section>
   );
 }

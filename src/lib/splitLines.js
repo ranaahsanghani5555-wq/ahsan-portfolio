@@ -29,7 +29,12 @@ export function splitLines(element, parts) {
       }
       const word = document.createElement('span');
       word.className = 'split-word';
-      if (part.emphasis) word.classList.add('is-emphasis');
+      if (part.emphasis) {
+        word.classList.add('is-emphasis');
+        /* Emphasis words carry a LIGHT ambient underline sweep (see base.css),
+           so they are opted out of the global reduced-motion contract. */
+        word.classList.add('motion-light');
+      }
       word.textContent = token;
       element.appendChild(word);
     });

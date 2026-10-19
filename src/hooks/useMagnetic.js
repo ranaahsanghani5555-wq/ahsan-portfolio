@@ -1,24 +1,23 @@
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import { useReducedMotion } from './useReducedMotion';
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
 /**
  * useMagnetic — attaches a subtle magnetic pull to a single element.
- * Returns a ref to spread onto the element. Disabled entirely under
- * prefers-reduced-motion, and always springs back to rest on pointer-leave.
+ * Returns a ref to spread onto the element. A subtle pull is a LIGHT hover
+ * effect, so it runs for everyone, and always springs back to rest on
+ * pointer-leave.
  *
  * Pass `enabled: false` while the target is not in the DOM (e.g. a ref inside
  * a conditionally-rendered overlay) so the listeners attach once it mounts.
  */
 export function useMagnetic({ strength = 0.32, max = 22, enabled = true } = {}) {
   const ref = useRef(null);
-  const reduced = useReducedMotion();
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || reduced || !enabled) return undefined;
+    if (!el || !enabled) return undefined;
 
     const onMove = (event) => {
       const rect = el.getBoundingClientRect();
@@ -45,7 +44,7 @@ export function useMagnetic({ strength = 0.32, max = 22, enabled = true } = {}) 
       gsap.killTweensOf(el);
       gsap.set(el, { x: 0, y: 0 });
     };
-  }, [reduced, strength, max, enabled]);
+  }, [strength, max, enabled]);
 
   return ref;
 }

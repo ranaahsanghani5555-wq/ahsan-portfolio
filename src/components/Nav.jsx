@@ -213,8 +213,9 @@ export default function Nav() {
     () => {
       if (!menuOpen || !overlayRef.current) return undefined;
 
-      const reduced = !motionOK();
-      if (reduced) return undefined;
+      /* The stagger travels >100px, so it is heavy: skipped under reduced
+         motion. The overlay itself still opens with all links visible. */
+      if (!motionOK()) return undefined;
 
       const items = gsap.utils.toArray('[data-menu-item]', overlayRef.current);
       const timeline = gsap.timeline();

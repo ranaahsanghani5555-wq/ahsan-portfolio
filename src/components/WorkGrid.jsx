@@ -42,18 +42,22 @@ export default function WorkGrid({ visible, onOpen, gridRef, flipState, counterR
     () => {
       const grid = gridRef.current;
       if (!grid) return undefined;
-      if (!motionOK()) return undefined;
 
+      /* A card reveal is LIGHT (one-shot fade + a short rise), so it runs for
+         everyone. The clip-path wipe + 46px rise is the heavy variant. */
+      const heavy = motionOK();
       const cards = gsap.utils.toArray('[data-card]', grid);
       cards.forEach((card) => {
         gsap.fromTo(
           card,
-          { clipPath: 'inset(0% 0% 100% 0%)', y: 46, opacity: 0 },
+          heavy
+            ? { clipPath: 'inset(0% 0% 100% 0%)', y: 46, opacity: 0 }
+            : { y: 18, opacity: 0 },
           {
-            clipPath: 'inset(0% 0% 0% 0%)',
+            ...(heavy ? { clipPath: 'inset(0% 0% 0% 0%)' } : {}),
             y: 0,
             opacity: 1,
-            duration: 0.9,
+            duration: heavy ? 0.9 : 0.5,
             ease: 'expo.out',
             scrollTrigger: { trigger: card, start: 'top 88%', once: true },
             onComplete: () => gsap.set(card, { clearProps: 'clipPath,transform,opacity' }),

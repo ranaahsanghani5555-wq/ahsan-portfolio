@@ -1376,20 +1376,21 @@ img {
   font-style: normal;
 }
 
+/* LIGHT motion — a slow review marquee is decorative-but-calm, so it runs for
+   every visitor (two-gate policy: light motion is never gated). The track
+   carries .motion-light so the global reduced-motion contract leaves it alone. */
+.marquee__track {
+  flex-wrap: nowrap;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.marquee__group--clone {
+  display: flex;
+}
 /* paused on hover / focus inside */
-@media (prefers-reduced-motion: no-preference) {
-  .marquee__track {
-    flex-wrap: nowrap;
-    width: max-content;
-    animation: marquee 40s linear infinite;
-  }
-  .marquee__group--clone {
-    display: flex;
-  }
-  .marquee:hover .marquee__track,
-  .marquee:focus-within .marquee__track {
-    animation-play-state: paused;
-  }
+.marquee:hover .marquee__track,
+.marquee:focus-within .marquee__track {
+  animation-play-state: paused;
 }
 
 @keyframes marquee {
@@ -1922,9 +1923,9 @@ img {
   html:not([data-motion='full']) {
     scroll-behavior: auto;
   }
-  html:not([data-motion='full']) *,
-  html:not([data-motion='full']) *::before,
-  html:not([data-motion='full']) *::after {
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *),
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *)::before,
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *)::after {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
@@ -1932,17 +1933,6 @@ img {
   html:not([data-motion='full']) [data-reveal] {
     opacity: 1;
     transform: none;
-  }
-  html:not([data-motion='full']) .marquee__track {
-    flex-wrap: wrap;
-    width: auto;
-    animation: none !important;
-  }
-  html:not([data-motion='full']) .marquee__group--clone {
-    display: none;
-  }
-  html:not([data-motion='full']) .streak__dot.is-today {
-    animation: none !important;
   }
   html:not([data-motion='full']) .week.is-entering .day {
     opacity: 1;
@@ -1987,9 +1977,9 @@ img {
 html[data-motion='reduced'] {
   scroll-behavior: auto;
 }
-html[data-motion='reduced'] *,
-html[data-motion='reduced'] *::before,
-html[data-motion='reduced'] *::after {
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *),
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *)::before,
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *)::after {
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.001ms !important;
@@ -1997,17 +1987,6 @@ html[data-motion='reduced'] *::after {
 html[data-motion='reduced'] [data-reveal] {
   opacity: 1;
   transform: none;
-}
-html[data-motion='reduced'] .marquee__track {
-  flex-wrap: wrap;
-  width: auto;
-  animation: none !important;
-}
-html[data-motion='reduced'] .marquee__group--clone {
-  display: none;
-}
-html[data-motion='reduced'] .streak__dot.is-today {
-  animation: none !important;
 }
 html[data-motion='reduced'] .toast,
 html[data-motion='reduced'] .ph__ringprog,

@@ -51,12 +51,20 @@ export default function CaseStudyPanel({ project, onClose, onPreview, restoreRef
 
   /* --- slide in ----------------------------------------------------------- */
   useGSAP(() => {
-    if (reduced) return undefined;
     const node = panelRef.current;
+    if (!node) return undefined;
+    /* Opening is LIGHT. Under reduced motion it is a plain fade (no slide). */
     const timeline = gsap
       .timeline()
       .fromTo(scrimRef.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3, ease: 'power2.out' })
-      .fromTo(node, { xPercent: 100 }, { xPercent: 0, duration: 0.5, ease: 'power3.out' }, 0);
+      .fromTo(
+        node,
+        reduced ? { autoAlpha: 0 } : { xPercent: 100 },
+        reduced
+          ? { autoAlpha: 1, duration: 0.35, ease: 'power2.out' }
+          : { xPercent: 0, duration: 0.5, ease: 'power3.out' },
+        0
+      );
 
     return () => timeline.kill();
   }, { scope: panelRef });

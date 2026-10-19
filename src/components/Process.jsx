@@ -3,21 +3,20 @@ import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './Process.module.css';
-import { useReducedMotion } from '../hooks/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
 /*
   Process — how the work is made.
 
-  Desktop (>= 901px, motion allowed): a horizontally-pinned scroll. The pin
-  lasts about 2.5 viewport heights, releases cleanly, and the page scrolls
-  normally afterwards. Everything is driven with gsap.matchMedia() so the pin
-  exists only where it is safe; everywhere else (narrow screens, reduced
-  motion) the section is a normal vertical stack.
+  Desktop (>= 901px): a horizontally-pinned scroll. The pin lasts about 2.5
+  viewport heights, releases cleanly, and the page scrolls normally afterwards.
+  gsap.matchMedia() keeps it to wide screens only; narrow screens get a plain
+  vertical stack. The horizontal run is LIGHT, so it runs for everyone too.
 
-  Each step carries a small stroke icon that draws itself (stroke-dashoffset
-  on the SVG paths) the moment the step comes into view.
+  Each step reveals as it comes into view (a short fade + rise) and carries a
+  small stroke icon that draws itself (stroke-dashoffset on the SVG paths).
+  Both are LIGHT, so they run for everyone — including under reduced motion.
 */
 
 const STEPS = [
@@ -91,45 +90,11 @@ const ICONS = [
 ];
 
 function Step({ step, index }) {
-  const ref = useRef(null);
-  const pathsRef = useRef(null);
-  const reduced = useReducedMotion();
-
-  useEffect(() => {
-    const paths = pathsRef.current ? Array.from(pathsRef.current.querySelectorAll('[data-draw]')) : [];
-    if (!paths.length) return undefined;
-
-    /* Reduced motion: icons are simply drawn, no animation. */
-    if (reduced) {
-      gsap.set(paths, { strokeDashoffset: 0 });
-      return undefined;
-    }
-
-    const card = ref.current;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          gsap.fromTo(
-            paths,
-            { strokeDashoffset: 1 },
-            { strokeDashoffset: 0, duration: 1, ease: 'power2.inOut', stagger: 0.16, overwrite: true }
-          );
-          observer.disconnect();
-        });
-      },
-      { threshold: 0.3 }
-    );
-    observer.observe(card);
-    return () => observer.disconnect();
-  }, [reduced]);
-
   return (
-    <li ref={ref} className={styles.card} style={{ '--step-index': index }} data-index={index}>
+    <li className={styles.card} style={{ '--step-index': index }} data-index={index} data-step>
       <div className={styles.cardHead}>
         <svg
-          ref={pathsRef}
-          className={styles.icon}
+          className={`${styles.icon} motion-light`}
           viewBox="0 0 24 24"
           fill="none"
           aria-hidden="true"
@@ -148,7 +113,7 @@ function Step({ step, index }) {
             />
           ))}
         </svg>
-        <span className={styles.number}>{step.n}</span>
+        <span className={`${styles.number} motion-light`}>{step.n}</span>
       </div>
       <h3 className={styles.title}>{step.title}</h3>
       <p className={styles.body}>{step.body}</p>
@@ -161,20 +126,17 @@ export default function Process() {
   const pinRef = useRef(null);
   const trackRef = useRef(null);
   const fillRef = useRef(null);
-  const reduced = useReducedMotion();
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
 
-      /* Desktop only, and never when motion is off (the resolved mode from
-         src/lib/motion.js — the OS setting by default, or the visitor's
-         ?motion= / Motion-toggle override). The width is the only media
-         condition: a forced-ON visitor on an OS "reduce" setting must still
-         get the pin, which a prefers-reduced-motion media query could never
-         express. */
+      /* Desktop only: the width is the only condition. The signature "the
+         steps scroll past you" run is part of the design's light layer, so a
+         wide screen always gets it — including a visit whose OS asks for
+         reduced motion, which a prefers-reduced-motion media query could never
+         express. Narrow screens keep the plain vertical stack. */
       mm.add('(min-width: 901px)', () => {
-        if (reduced) return undefined;
         const pin = pinRef.current;
         const track = trackRef.current;
         const fill = fillRef.current;
@@ -208,7 +170,67 @@ export default function Process() {
 
       return () => mm.revert();
     },
-    { scope: rootRef, dependencies: [reduced] }
+    { scope: rootRef }
+  );
+
+  /* --- step reveal: the five cards rise in one after another as you scroll --
+     A light one-shot fade + rise per card, staggered so a group that crosses
+     the line together still cascades, with each step's icon drawing itself just
+     behind its card. LIGHT, so it runs for everyone (the heavy pin above stays
+     gated). */
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      if (!root) return undefined;
+
+      const cards = gsap.utils.toArray('[data-step]', root);
+      if (!cards.length) return undefined;
+
+      /* Hide before paint so a late trigger can never flash the finished card. */
+      gsap.set(cards, { autoAlpha: 0, y: 24 });
+      cards.forEach((card) => {
+        gsap.set(card.querySelectorAll('[data-draw]'), { strokeDashoffset: 1 });
+      });
+
+      const reveal = (batch) => {
+        gsap.to(batch, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out',
+          stagger: 0.16,
+          overwrite: true,
+        });
+        const paths = batch.reduce(
+          (all, card) => all.concat(Array.from(card.querySelectorAll('[data-draw]'))),
+          []
+        );
+        if (paths.length) {
+          gsap.to(paths, {
+            strokeDashoffset: 0,
+            duration: 1,
+            ease: 'power2.inOut',
+            stagger: 0.1,
+          });
+        }
+      };
+
+      if (typeof ScrollTrigger.batch !== 'function') {
+        reveal(cards);
+        return undefined;
+      }
+
+      /* batch() groups the cards that cross the line within a beat and staggers
+         them, so the steps arrive one after another rather than all at once. */
+      const triggers = ScrollTrigger.batch(cards, {
+        start: 'top 85%',
+        once: true,
+        onEnter: reveal,
+      });
+
+      return () => (triggers || []).forEach((trigger) => trigger.kill());
+    },
+    { scope: rootRef }
   );
 
   /* Re-measure so late fonts/images cannot leave the pin (or the Work section

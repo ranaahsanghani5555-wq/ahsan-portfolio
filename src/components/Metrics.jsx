@@ -2,10 +2,10 @@ import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import { gsap } from 'gsap';
 import styles from './Metrics.module.css';
+import { useScrollReveal } from '../hooks/useScrollReveal';
 import { profile } from '../data/profile';
 import { projects, projectCount } from '../data/projects';
 import { lighthouse } from '../data/lighthouse';
-import { useReducedMotion } from '../hooks/useReducedMotion';
 
 /*
   Metrics — a verifiable strip. Every number has a real source:
@@ -28,7 +28,6 @@ const sectionsBuilt = projects.reduce((sum, project) => sum + project.facts.sect
 
 function Metric({ label, value, note, placeholder }) {
   const valueRef = useRef(null);
-  const reduced = useReducedMotion();
   const valueText = placeholder ?? String(value);
 
   useGSAP(
@@ -41,28 +40,49 @@ function Metric({ label, value, note, placeholder }) {
         return undefined;
       }
 
-      if (reduced) {
-        node.textContent = String(value);
-        return undefined;
-      }
-
+      /* A counter is LIGHT, so it runs for everyone — but it starts when the
+         strip actually scrolls into view, not at mount (the section is lazy
+         and sits below the fold, so a mount-time run would be over unseen). */
       node.textContent = '0';
       const counter = { n: 0 };
-      const tween = gsap.to(counter, {
-        n: value,
-        duration: 1.4,
-        ease: 'power3.out',
-        onUpdate: () => {
-          node.textContent = String(Math.round(counter.n));
+      let tween;
+
+      const start = () => {
+        tween = gsap.to(counter, {
+          n: value,
+          duration: 1.4,
+          ease: 'power3.out',
+          onUpdate: () => {
+            node.textContent = String(Math.round(counter.n));
+          },
+        });
+      };
+
+      if (!('IntersectionObserver' in window)) {
+        start();
+        return () => tween?.kill();
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          observer.disconnect();
+          start();
         },
-      });
-      return () => tween.kill();
+        { threshold: 0.4 }
+      );
+      observer.observe(node);
+
+      return () => {
+        observer.disconnect();
+        tween?.kill();
+      };
     },
-    { dependencies: [value, placeholder, reduced], revertOnUpdate: true }
+    { dependencies: [value, placeholder], revertOnUpdate: true }
   );
 
   return (
-    <li className={styles.metric}>
+    <li className={styles.metric} data-reveal-item>
       <p
         className={`${styles.value} ${placeholder != null ? styles.valueText : ''}`}
         ref={valueRef}
@@ -81,6 +101,8 @@ function Metric({ label, value, note, placeholder }) {
 }
 
 export default function Metrics() {
+  const scope = useScrollReveal('[data-reveal-item]', []);
+
   const metrics = [
     {
       label: 'Concept projects shipped',
@@ -113,7 +135,12 @@ export default function Metrics() {
   ];
 
   return (
-    <section id="metrics" className={`section section--tight ${styles.section}`} aria-label="Metrics">
+    <section
+      id="metrics"
+      className={`section section--tight ${styles.section}`}
+      aria-label="Metrics"
+      ref={scope}
+    >
       <div className={`container ${styles.inner}`}>
         <p className="eyebrow">By the numbers</p>
         <ul className={styles.grid}>

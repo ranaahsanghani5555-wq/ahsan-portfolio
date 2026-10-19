@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import styles from './Critique.module.css';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { useScrollReveal } from '../../hooks/useScrollReveal';
 import {
   critiqueExamples,
   scoreDimensions,
@@ -39,6 +40,8 @@ const PANEL_ID = 'critique-teardown-panel';
 const RAIL_QUERY = '(min-width: 60rem)';
 
 export default function Critique() {
+  const scope = useScrollReveal('[data-reveal-item]', []);
+
   const [activeId, setActiveId] = useState(critiqueExamples[0].id);
   const [openHotspot, setOpenHotspot] = useState(null);
   const [positions, setPositions] = useState({});
@@ -170,10 +173,10 @@ export default function Critique() {
   const activeTabId = `critique-tab-${example.id}`;
 
   return (
-    <section id="critique" className="band band--pine section on-pine">
+    <section id="critique" className="band band--pine section on-pine" ref={scope}>
       <div className="container">
         {/* ---- title block ------------------------------------------------ */}
-        <header className={styles.head}>
+        <header className={styles.head} data-reveal-item>
           <p className="eyebrow">Critique practice</p>
           <h2 className={styles.heading}>How I judge landing pages.</h2>
           <p className={styles.intro}>
@@ -185,7 +188,7 @@ export default function Critique() {
         </header>
 
         {/* ---- teardown --------------------------------------------------- */}
-        <div className={styles.block}>
+        <div className={styles.block} data-reveal-item>
           <div className={styles.blockHead}>
             <p className="eyebrow">Teardown</p>
             <h3 className={styles.blockTitle}>Three screens, annotated.</h3>
@@ -371,7 +374,7 @@ export default function Critique() {
         </div>
 
         {/* ---- AI draft vs my refinement ---------------------------------- */}
-        <div className={styles.block}>
+        <div className={styles.block} data-reveal-item>
           <div className={styles.blockHead}>
             <p className="eyebrow">Revision</p>
             <h3 className={styles.blockTitle}>AI draft vs my refinement.</h3>
@@ -385,7 +388,7 @@ export default function Critique() {
 
           <ul className={styles.revisionNotes}>
             {heroBrief.notes.map((note) => (
-              <li key={note.key} className={styles.revisionNote}>
+              <li key={note.key} className={styles.revisionNote} data-reveal-item>
                 <p className={styles.revisionKey}>{note.key}</p>
                 <p className={styles.revisionBody}>{note.body}</p>
               </li>
@@ -394,7 +397,7 @@ export default function Critique() {
         </div>
 
         {/* ---- convergence vs divergence ---------------------------------- */}
-        <div className={styles.block}>
+        <div className={styles.block} data-reveal-item>
           <div className={styles.blockHead}>
             <p className="eyebrow">Position</p>
             <h3 className={styles.blockTitle}>Convergence vs divergence.</h3>
@@ -413,7 +416,7 @@ export default function Critique() {
         </div>
 
         {/* ---- checklist -------------------------------------------------- */}
-        <div className={styles.block}>
+        <div className={styles.block} data-reveal-item>
           <div className={styles.blockHead}>
             <p className="eyebrow">Before it ships</p>
             <h3 className={styles.blockTitle}>My evaluation checklist.</h3>
@@ -421,7 +424,7 @@ export default function Critique() {
 
           <ul className={styles.checklist}>
             {checklist.map((item, index) => (
-              <li key={item} className={styles.checkitem}>
+              <li key={item} className={styles.checkitem} data-reveal-item>
                 <span className={styles.checkNum} aria-hidden="true">
                   {String(index + 1).padStart(2, '0')}
                 </span>

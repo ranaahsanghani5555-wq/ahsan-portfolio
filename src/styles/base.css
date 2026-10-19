@@ -268,9 +268,47 @@ small {
 }
 
 .split-word.is-emphasis {
+  position: relative;
   font-style: italic;
   color: var(--accent-text);
   font-variation-settings: 'opsz' var(--fraunces-opsz-display), 'WONK' var(--fraunces-wonk-on);
+}
+
+/* LIGHT motion — a highlighter sweeps along the emphasis words on a slow loop,
+   so the headline keeps a pulse after the one-shot reveal has finished.
+   Transform-only (scaleX on a pseudo-element), so nothing reflows. The word
+   carries .motion-light, so the reduced-motion contract leaves it running. */
+.split-word.is-emphasis::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -0.06em;
+  block-size: 0.075em;
+  border-radius: var(--radius-pill, 999px);
+  background: currentColor;
+  opacity: 0.85;
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: emphasis-sweep 5.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes emphasis-sweep {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  42% {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+  58% {
+    transform: scaleX(1);
+    transform-origin: right center;
+  }
+  100% {
+    transform: scaleX(0);
+    transform-origin: right center;
+  }
 }
 
 /* -------------------------------------------------------------------------
@@ -320,9 +358,12 @@ html.is-locked body {
    at the end of this file.
    ------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  html:not([data-motion='full']) *,
-  html:not([data-motion='full']) *::before,
-  html:not([data-motion='full']) *::after {
+  /* `.motion-light` is the opt-out for LIGHT ambient motion (slow marquees,
+     gentle float loops). Per the two-gate contract in src/lib/motion.js that
+     class of motion always runs, so it is excluded from the kill below. */
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *),
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *)::before,
+  html:not([data-motion='full']) *:not(.motion-light, .motion-light *)::after {
     /* No movement and no loops, ever. */
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
@@ -351,9 +392,9 @@ html[data-motion='reduced'] {
   scroll-behavior: auto;
 }
 
-html[data-motion='reduced'] *,
-html[data-motion='reduced'] *::before,
-html[data-motion='reduced'] *::after {
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *),
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *)::before,
+html[data-motion='reduced'] *:not(.motion-light, .motion-light *)::after {
   /* No movement and no loops, ever. */
   animation-duration: 0.001ms !important;
   animation-iteration-count: 1 !important;

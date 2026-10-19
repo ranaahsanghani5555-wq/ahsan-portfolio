@@ -18,8 +18,8 @@ pnpm-debug.log*
 # Generated screenshots (regenerate any time with `npm run shots`)
 screenshots/
 
-# Local review captures (diagnostic only — not part of the site)
-review/
+# Local audit captures (regenerate any time with `npm run audit`)
+pw-frames/
 
 # Editor / OS cruft
 .vscode/

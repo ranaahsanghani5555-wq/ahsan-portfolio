@@ -36,6 +36,7 @@
 }
 
 .pulse::before,
+.pulseRing,
 .pulseDot {
   position: absolute;
   inset: 0;
@@ -45,6 +46,26 @@
 
 .pulse::before {
   content: '';
+}
+
+/* LIGHT motion — a sonar ring leaves the dot on a slow loop, so the
+   availability line keeps a pulse after the intro. Transform/opacity only.
+   Carries .motion-light so the reduced-motion contract leaves it running. */
+.pulseRing {
+  opacity: 0;
+  animation: availability-ring 2.8s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes availability-ring {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(3.4);
+  }
 }
 
 .pulseDot {
@@ -115,4 +136,67 @@
 
 .secondary:hover {
   text-decoration-color: var(--accent);
+}
+
+/* --- scroll cue ----------------------------------------------------------- */
+/* LIGHT motion — a small "keep going" affordance at the hero's base. The dot
+   runs down a short track on a loop. Transform-only; hidden on short viewports
+   so it never crowds the fold. */
+.scrollCue {
+  position: absolute;
+  inset-block-end: var(--space-5);
+  inset-inline-end: var(--space-5);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+@media (max-height: 720px), (max-width: 640px) {
+  .scrollCue {
+    display: none;
+  }
+}
+
+.scrollCueTrack {
+  position: relative;
+  inline-size: 1px;
+  block-size: 2.4rem;
+  overflow: hidden;
+  background-color: var(--border-strong);
+}
+
+.scrollCueDot {
+  position: absolute;
+  inset-inline-start: 0;
+  block-size: 0.85rem;
+  inline-size: 1px;
+  background-color: var(--accent);
+  animation: scroll-cue 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes scroll-cue {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(240%);
+    opacity: 0;
+  }
+}
+
+.scrollCueLabel {
+  writing-mode: vertical-rl;
 }

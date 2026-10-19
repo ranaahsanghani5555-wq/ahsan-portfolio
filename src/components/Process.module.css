@@ -69,6 +69,9 @@
   inline-size: 1.75rem;
   block-size: 1.75rem;
   color: var(--ink);
+  /* Ambient breathing loop — LIGHT, so the element carries .motion-light and
+     the reduced-motion kill rule leaves it running. */
+  animation: process-icon-breathe 5.6s ease-in-out infinite;
 }
 
 .number {
@@ -76,6 +79,10 @@
   font-size: var(--step--1);
   letter-spacing: var(--tracking-wide);
   color: var(--accent-text);
+  /* Ambient pulse — LIGHT (element carries .motion-light). The per-step delay
+     makes the five numbers breathe in a slow wave. */
+  animation: process-number-pulse 3.2s ease-in-out infinite;
+  animation-delay: calc(var(--step-index, 0) * 0.28s);
 }
 
 .title {
@@ -86,6 +93,31 @@
   max-width: 40ch;
   color: var(--text);
   line-height: 1.55;
+}
+
+/* --- light ambient motion (always runs; `.motion-light` opt-out) ----------
+   These two loops are deliberately outside every reduced-motion gate: per the
+   two-gate contract (src/lib/motion.js) a slow ambient pulse is LIGHT and runs
+   for everyone. The elements that carry them also carry the literal
+   `.motion-light` class so the global kill rule excludes them. */
+@keyframes process-number-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes process-icon-breathe {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
 }
 
 /* --- progress hairline on the pinned scroll ------------------------------ */
@@ -103,11 +135,11 @@
 }
 
 /* --- desktop: pinned horizontal scroll -----------------------------------
-   Gated on no-preference too: under reduced motion the pin never exists, so
-   the track must NOT lay itself out horizontally (it would be clipped and
-   unreachable). Reduced-motion desktops get the vertical stack just like
-   small screens. */
-@media (min-width: 901px) and (prefers-reduced-motion: no-preference) {
+   The signature "the steps scroll past you" run. It is part of the design's
+   light layer, so a wide screen always lays the track out horizontally — the
+   JS pin above matches on the same width alone. Below 901px the track stays a
+   plain vertical stack, so there is nothing wide to clip. */
+@media (min-width: 901px) {
   .stage {
     display: flex;
     align-items: center;
@@ -136,56 +168,12 @@
   }
 }
 
-/* Same desktop layout when the visitor forces motion ON (html[data-motion=
-   'full', set by src/lib/motion.js) on an OS that asks for reduce — the
-   media query above cannot see that override. */
-@media (min-width: 901px) {
-  html[data-motion='full'] .stage {
-    display: flex;
-    align-items: center;
-    min-height: 100vh;
-    min-block-size: 100svh;
-  }
-
-  html[data-motion='full'] .track {
-    display: flex;
-    gap: var(--space-7);
-    inline-size: max-content;
-  }
-
-  html[data-motion='full'] .card {
-    flex: 0 0 auto;
-    inline-size: min(72vw, 30rem);
-  }
-
-  html[data-motion='full'] .rail {
-    position: absolute;
-    inset-inline: var(--process-inset);
-    inset-block-end: 2.5rem;
-    display: block;
-    height: 1px;
-    background-color: var(--line);
-  }
-}
-
 /* Icons draw themselves as a step comes in. Each path is normalised with
    pathLength="1", so a dash of 1 covers the whole path and the offset sweeps
-   it on. GSAP owns the offset; without JS the icons are simply drawn. */
+   it on. The default is DRAWN (offset 0) so a no-JS visitor still sees the
+   icon; when JS is present it sets the hidden start (offset 1) before the
+   draw, and the draw runs for everyone — reduced motion included. */
 .card [data-draw] {
   stroke-dasharray: 1;
-  /* Starts hidden; the IntersectionObserver animates the offset to 0 so the
-     icon appears to draw itself the moment its step comes into view. */
-  stroke-dashoffset: 1;
-}
-
-/* Under reduced motion the icons are always drawn in full (this !important
-   also beats any GSAP inline value) — except when the visitor has forced
-   motion ON via the override (html[data-motion='full'], src/lib/motion.js). */
-@media (prefers-reduced-motion: reduce) {
-  html:not([data-motion='full']) .card [data-draw] {
-    stroke-dashoffset: 0 !important;
-  }
-  html:not([data-motion='full']) .card {
-    opacity: 1;
-  }
+  stroke-dashoffset: 0;
 }
